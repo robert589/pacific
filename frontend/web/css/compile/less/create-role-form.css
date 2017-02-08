@@ -1,0 +1,15 @@
+.crole-form {
+  display: flex;
+}
+.crole-form > .input-field {
+  width: 200%;
+  margin: 0 8px 0 0;
+}
+.crole-form > .input-field > .input-field-input {
+  border: 2px solid initial;
+}
+.crole-form > .button {
+  width: 30%;
+  margin-top: 0;
+  max-height: 38px;
+}

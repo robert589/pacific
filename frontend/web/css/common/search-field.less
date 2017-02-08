@@ -1,0 +1,29 @@
+.search-field {
+    position: relative;
+    
+    &-input:extend(.input-field-input) {
+        border: 1px solid lightgray;
+        padding: 8px;
+        width: 100%;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        
+    }
+    
+    &-input.selected {
+        background: whitesmoke;
+    }
+    
+    &-loading {
+        padding: 8px;
+    }
+    
+    &-dropdown , &-loading {
+        position: absolute;
+        z-index: 1;
+        width: 100%;
+        border: 1px solid lightgray;
+        background: white;
+    }
+}

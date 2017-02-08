@@ -1,0 +1,17 @@
+.daily-report-header {
+  display: flex;
+}
+.daily-report-header > .input-field {
+  width: 300px;
+  margin-bottom: 8px;
+}
+.daily-report-header > .search-field {
+  width: 300px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+.daily-report-refresh {
+  max-width: 120px;
+  margin-bottom: 8px;
+  margin-left: 8px;
+}

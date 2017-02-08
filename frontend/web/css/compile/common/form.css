@@ -1,0 +1,39 @@
+.form-flex {
+  display: flex;
+}
+.form-flex-item {
+  margin-right: 4px;
+}
+.form-subform {
+  display: inline-block;
+  width: 280px;
+  margin-right: 30px;
+  vertical-align: top;
+}
+.form-submit {
+  width: 120px;
+  max-height: 32px;
+  margin-top: 8px;
+}
+.form-inline {
+  display: flex;
+}
+.form-field {
+  width: 100%;
+}
+.form-field-left {
+  text-align: left;
+  font-weight: bold;
+}
+.form-field-right {
+  width: 100%;
+  display: inline-block;
+}
+.form-label {
+  color: #2f4f4f;
+  font-weight: 700;
+  padding: 8px 0;
+  font-size: 16px;
+  border-bottom: 1px solid lightgray;
+  margin-bottom: 8px;
+}

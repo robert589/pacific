@@ -1,0 +1,19 @@
+.or-field-header {
+  font-weight: bold;
+  display: flex;
+}
+.or-field-row {
+  display: flex;
+}
+.or-field-item {
+  width: 100%;
+  display: flex;
+  padding: 8px;
+  border: 1px solid  lightgray;
+}
+.or-field-item > .input-field[data-type="number"] {
+  width: 60px;
+}
+.or-field-margin {
+  margin-top: 10px;
+}

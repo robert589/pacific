@@ -1,0 +1,19 @@
+.dynamic-field {
+  margin-bottom: 16px;
+}
+.dynamic-field-add,
+.dynamic-field-remove {
+  border-radius: 50%;
+  color: white;
+}
+.dynamic-field-add {
+  background: red;
+  border: 2px solid red;
+}
+.dynamic-field-remove {
+  background: blue;
+  border: 2px solid blue;
+}
+.dynamic-field-new {
+  display: flex;
+}

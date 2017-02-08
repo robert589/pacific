@@ -1,0 +1,17 @@
+.custom-report-form {
+  display: flex;
+}
+.custom-report-form > .input-field {
+  width: 300px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+.custom-report-form > .search-field {
+  width: 300px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+.custom-report-form > .button {
+  width: 60px;
+  margin-bottom: 8px;
+}

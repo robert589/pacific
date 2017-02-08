@@ -1,0 +1,250 @@
+@media only screen and (min-width: 200px) and (max-width: 1199px) {
+	
+.top-portion{
+	min-height:160px;
+}
+	
+}
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+	
+.logo{
+	width:300px;
+	height:auto;
+}
+.logo img{
+	width:100%;
+	height:auto;
+	display:block;
+}
+.social_icon{
+	margin-top:50px;
+}
+.banner_text h1{
+	margin:0;
+	font-size:50px;
+	line-height:54px;
+}
+.top-portion{
+	min-height:160px;
+}
+.border-heading::after{
+	left:16%;
+}
+.contact-us-section{
+	height:auto;
+	padding-bottom:30px;
+}
+	
+	
+}
+
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+	
+.header-portion{
+	position:relative;
+	background:#000;
+	margin-top:0;
+	padding-top:10px;
+	padding-bottom:20px;
+}
+.logo{
+	position:relative;
+	width:100%;
+	text-align:center;
+	height:auto;
+}
+.logo img{
+	max-width:100%;
+	height:auto;
+}
+.dl-menuwrapper{
+	max-width:100%;
+	background:#000;
+	float:none;
+	display:block;
+	position:relative;
+	z-index:999; 
+}
+.social_icon{
+	width:100%;
+	margin:10px 0 0;
+	float:none;
+	display:block;
+	text-align:center;
+}
+#owl-demo .owl-controls{
+	display:block !important;
+}
+.border-heading:after,
+.border-heading2:after{
+	left:0;
+	background:none;
+	border:none;
+}
+.white-bg span,
+.border-heading2 span{
+	padding-right:0;
+}
+.border-heading{
+	text-align:center;
+	padding:0 0em;
+}
+
+.overview_section{
+	height:auto;
+	padding-bottom:20px;
+}
+#owl-demo-recent .owl-controls, #owl-demo-ending .owl-controls, #owl-demo-partners .owl-controls{
+	position:relative;
+	top:0;
+	margin-bottom:15px;
+}
+.contact_back{
+	height:auto;
+	padding-bottom:20px;
+}
+.contact_back h2{
+	text-align:center;
+}
+.custom-form-section .form-group{
+	margin-bottom:5px;
+}
+.form-box{
+	margin-bottom:15px;
+}
+.overveiw-image-container{
+	text-align:center;
+}
+.blog_text h3{
+	padding:10px 15px;
+}
+	
+.contact-us-section{
+	height:auto;
+	padding-bottom:30px;
+}
+.side-bar{
+	margin-top:20px;
+}
+
+
+	
+	
+}
+@media only screen and (max-width: 767px) {
+	
+.header-portion{
+	position:relative;
+	background:#000;
+	margin-top:0;
+	padding-top:10px;
+	padding-bottom:20px;
+}
+.logo{
+	position:relative;
+	width:100%;
+	text-align:center;
+	height:auto;
+}
+.logo img{
+	max-width:100%;
+	height:auto;
+}
+.dl-menuwrapper{
+	max-width:100%;
+	background:#000;
+	float:none;
+	display:block;
+	position:relative;
+	z-index:999; 
+}
+.social_icon{
+	width:100%;
+	margin:10px 0 0;
+	float:none;
+	display:block;
+	text-align:center;
+}
+#owl-demo .owl-controls{
+	display:block !important;
+}
+.wel_come_box{
+	margin-bottom:15px;
+}
+.border-heading{
+	text-align:center;
+	padding:0 0em;
+}
+.border-heading:after,
+.border-heading2:after{
+	left:0;
+	background:none;
+	border:none;
+}
+.white-bg span,
+.border-heading2 span{
+	padding-right:0;
+}
+
+.overview_section{
+	height:auto;
+	padding-bottom:20px;
+}
+#owl-demo-recent .owl-controls, #owl-demo-ending .owl-controls, #owl-demo-partners .owl-controls{
+	position:relative;
+	top:0;
+	margin-bottom:15px;
+}
+.contact_back{
+	height:auto;
+	padding-bottom:20px;
+}
+.contact_back h2{
+	text-align:center;
+}
+.custom-form-section .form-group{
+	margin-bottom:5px;
+}
+.form-box{
+	margin-bottom:15px;
+}
+.overveiw-image-container{
+	text-align:center;
+}
+.overveiw-image-container img{
+	display:inline-block;
+}
+.content-image-container{
+	width:100%;
+	margin-left:0;
+	padding:0 15px;
+}
+.content-image-container img{
+	width:100%;
+	height:auto;
+	display:block;
+}
+.abt-text{
+	padding:0 15px;
+}
+.border-heading2 span{
+	padding-left:15px;
+}
+.blog_text h3{
+	padding:10px 15px;
+}
+.contact-us-section{
+	height:auto;
+	padding-bottom:30px;
+}
+.side-bar{
+	margin-top:20px;
+}
+
+	
+}
+ @media only screen and (max-width: 480px) {
+}
+ @media only screen and (max-width: 320px) {
+}

@@ -1,0 +1,12 @@
+.paf-item {
+  display: flex;
+}
+.paf-item-cell {
+  width: 100%;
+  padding: 8px;
+  text-align: center;
+  border: 1px solid black;
+}
+.paf-item-cell > .input-field {
+  margin: 0;
+}

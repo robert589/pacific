@@ -1,0 +1,38 @@
+.dropdown-field {
+  position: relative;
+}
+.dropdown-field-input {
+  display: flex;
+  border: 1px solid lightgrey;
+  padding: 8px;
+}
+.dropdown-field-input:hover {
+  cursor: pointer;
+}
+.dropdown-field-input > .glyphicon {
+  line-height: inherit;
+  color: lightgrey;
+}
+.dropdown-field-dropdown {
+  position: absolute;
+  z-index: 1;
+  border: solid lightgrey;
+  border-width: 0 1px 1px 1px;
+  width: 100%;
+}
+.dropdown-field-item {
+  padding: 8px;
+  background: white;
+  min-height: 32px;
+}
+.dropdown-field-item:hover {
+  cursor: pointer;
+  background: whitesmoke;
+}
+.dropdown-field-text {
+  width: 100%;
+}
+.dropdown-field-placeholder {
+  width: 100%;
+  color: lightgrey;
+}

@@ -1,0 +1,12 @@
+.ship-owner-header {
+  display: flex;
+}
+.ship-owner-header > .search-field {
+  width: 300px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.ship-owner-header > .button {
+  width: 100px;
+  margin-bottom: 10px;
+}

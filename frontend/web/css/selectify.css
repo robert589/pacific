@@ -1,0 +1,113 @@
+.selectify
+{
+    position: relative;
+    color:#555;
+    width: 100% !important;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.selectify .options
+{
+    position:absolute;
+    z-index:2;
+    max-height:250px;
+    overflow-y:auto;
+    width: 100% !important;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.selectify .select-box
+{
+	border-radius:0;
+	border:1px solid #0491ff;
+	height:39px;
+	box-shadow:none;
+	font-size:16px;
+    width: 100% !important;
+	padding: 0;
+	font-size: 16px;
+	line-height: 1.42857143;
+	color: #555;
+	background-color: #fff;
+	background-image: none; 
+	-webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+	-webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
+	-o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+	transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;   
+	cursor:pointer;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.selectify .select-box .icon
+{
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-color: #999 transparent transparent;
+    border-image: none;
+    border-right: 7px solid transparent;
+    border-style: solid;
+    border-width: 7px;
+    content: " ";
+    height: 0;
+    margin-left: -7px;
+    position: absolute;
+    width: 0;
+    right: 0.5em;
+    margin-top: -1px;
+    position: absolute;
+    top: 50%;
+}
+
+.selectify .select-box .selected
+{
+    color:#999;
+	padding: 6px 12px;
+	height:38px;
+	padding-right:20px;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.selectify .select-box.hover .selected
+{
+    color:#555;
+}
+
+.selectify .select-box.hover .icon
+{
+    border-color: #000 transparent transparent;
+}
+
+.selectify .option
+{
+    border: 1px solid #BBB;
+    cursor:pointer;
+    border-top:0;
+    color:#999;
+    padding: 5px 15px;
+    background:#FFF;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.selectify .option.hover
+{
+    background:#0491ff;
+	color:#fff;
+	-webkit-appearance: none;
+	appearance: none;
+}
+
+.selectify .option.active
+{
+    background:#0491ff;
+	color:#fff;
+	-webkit-appearance: none;
+	appearance: none;
+}

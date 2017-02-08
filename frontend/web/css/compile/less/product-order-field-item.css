@@ -1,0 +1,33 @@
+.pof-item {
+  display: flex;
+}
+.pof-item-id {
+  padding: 4px;
+  width: 15%;
+  border: 1px solid lightgrey;
+  text-align: center;
+}
+.pof-item-name {
+  text-align: center;
+  padding: 4px;
+  width: 45%;
+  border: 1px solid lightgrey;
+}
+.pof-item-qty {
+  text-align: center;
+  padding: 4px;
+  border: 1px solid lightgrey;
+  width: 40%;
+}
+.pof-item-qty-value {
+  width: 100%;
+}
+.pof-item-qty-view {
+  display: flex;
+}
+.pof-item-qty-view > .button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: black;
+}

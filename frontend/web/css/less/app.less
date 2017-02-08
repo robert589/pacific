@@ -1,0 +1,81 @@
+@import 'variable.less';
+
+.app {
+    &-menu {
+        width: 100%;
+        height: @menu-height;
+        position: fixed;
+        top: 0;
+        padding-left: @base-size;
+        border-bottom: 1px solid #d3d3d3;
+        z-index: 1;
+    }
+    &-container {
+        width: 100%;
+        padding-left: @base-size;
+        margin-top: @menu-height;
+    }
+    
+    
+    &-hide {
+        display: none !important;
+    }
+    
+    &-fullwidth {
+        width: 100%;
+    }
+    
+    &-row {
+        display: flex;
+    }
+}
+
+.list-item {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.container {
+    max-width: @screen-width;
+    margin: auto;
+    width : 100%;
+}
+
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    margin: 0;
+}
+html {
+    font-size: 10px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+html {
+    font-family: sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+*:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+*:before, *:after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+.required {
+    color: red;
+}

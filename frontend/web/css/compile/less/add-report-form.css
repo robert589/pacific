@@ -1,0 +1,13 @@
+.ar-form {
+  display: flex;
+  margin-top: 16px;
+}
+.ar-form > .button {
+  align-self: flex-end;
+  height: 100%;
+  max-width: 60px;
+  height: 40px;
+}
+.ar-form > .form-field {
+  margin-right: 8px;
+}

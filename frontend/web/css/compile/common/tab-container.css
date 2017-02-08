@@ -1,0 +1,17 @@
+.tab-container-header {
+  background: lightblue;
+  display: flex;
+  color: white;
+  font-weight: bold;
+}
+.tab-container-header-item {
+  width: 100%;
+  padding: 4px;
+}
+.tab-container-header-item:hover,
+.tab-container-header-item.active {
+  background: white;
+  color: lightblue;
+  border: 1px solid lightblue;
+  cursor: pointer;
+}

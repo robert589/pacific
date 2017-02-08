@@ -1,0 +1,28 @@
+.dr-view-header {
+  display: flex;
+}
+.dr-view-header-field {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #000;
+  background: lightgray;
+  border: 1px solid black;
+}
+.dr-view-footer {
+  display: flex;
+}
+.dr-view-footer-item2 {
+  padding: 8px;
+  border: 1px solid black;
+  width: 200%;
+}
+.dr-view-footer-item3 {
+  background: orange;
+  font-weight: bold;
+  padding: 8px 13px;
+  border: 1px solid black;
+  width: 300%;
+}
+.dr-view-area {
+  margin: 16px 0 0 0;
+}

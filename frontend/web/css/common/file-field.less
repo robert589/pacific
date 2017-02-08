@@ -1,0 +1,28 @@
+.file-field {
+    text-align:center;
+    
+    &-img {
+        width: 240px;
+        height: 120px;
+        border: 1px solid lightgray;
+        padding: 8px;
+    }
+    &-lbl {
+        width: 240px;
+        margin: auto;
+        height: 120px;
+        display: table;
+        text-align: center;
+        border: 1px solid lightgray;
+        &-span {
+            display: table-cell;
+            vertical-align: middle;
+        }
+    }
+    
+    &-lbl:hover {
+        cursor: pointer;
+        
+        opacity: 0.6;
+    }
+}

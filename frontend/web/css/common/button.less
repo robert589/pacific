@@ -1,0 +1,51 @@
+@import 'variable.less';
+
+.button {
+    margin: 0;
+    border-radius: 4px;
+    padding: 6px 16px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    border: 1px;
+    width: 100%;
+
+    &-link {
+        border: 0;
+        font-size: 12px;
+        background: none;
+        color: lightblue;        
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+    &-blue {
+        background: @blue;
+    }
+    
+    &-orange {
+        background: @orange;
+    }
+    
+    &-red {
+        background: red;
+    }
+    
+    &-gray {
+        background: lightgray;
+    }
+
+    &-none {
+        background: none;
+    }
+
+    &:hover {
+        opacity: 0.6;
+        cursor: pointer;
+    }
+    
+    &:disabled {
+        cursor:not-allowed;
+        background: lightgray;
+    }
+}   

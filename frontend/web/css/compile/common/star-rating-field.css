@@ -1,0 +1,15 @@
+.sr-field {
+  unicode-bidi: bidi-override;
+}
+.sr-field-item {
+  font-size: 24px;
+  display: inline-block;
+  position: relative;
+  width: 0.8em;
+}
+.sr-field-item:hover {
+  cursor: pointer;
+}
+.sr-field-select {
+  color: gold;
+}

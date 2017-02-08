@@ -1,0 +1,42 @@
+.button {
+  margin: 0;
+  border-radius: 4px;
+  padding: 6px 16px;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  border: 1px;
+  width: 100%;
+}
+.button-link {
+  border: 0;
+  font-size: 12px;
+  background: none;
+  color: lightblue;
+}
+.button-link:hover {
+  opacity: 0.8;
+}
+.button-blue {
+  background: #0000FF;
+}
+.button-orange {
+  background: #ffa500;
+}
+.button-red {
+  background: red;
+}
+.button-gray {
+  background: lightgray;
+}
+.button-none {
+  background: none;
+}
+.button:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}
+.button:disabled {
+  cursor: not-allowed;
+  background: lightgray;
+}

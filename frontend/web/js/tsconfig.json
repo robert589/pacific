@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "amd",
+        "sourceMap": true,
+        "outFile" : "build.js"
+    },
+    "files" : [
+        "./typings/jquery/jquery.d.ts",
+        "./typings/jqueryui/jqueryui.d.ts",
+        "./typings/jquerytimepicker/jquery.timepicker.d.ts",
+        "./common/component.ts",
+        "./common/input-field.ts",
+        "./common/button.ts",
+        "./common/modal.ts",
+        "./common/upload-image.ts",
+        "./project/init.ts",
+        "./project/app.ts"
+    ]
+}

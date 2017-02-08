@@ -1,0 +1,7 @@
+.image-view-img {
+  width: 100%;
+}
+.image-view-img:hover {
+  cursor: zoom-in;
+  opacity: 0.8;
+}

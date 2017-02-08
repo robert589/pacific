@@ -1,0 +1,83 @@
+/* The Modal (background) */
+.modal {
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
+  padding-top: 100px;
+  /* Location of the box */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
+  overflow: auto;
+  /* Enable scroll if needed */
+  background-color: #000000;
+  /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.9);
+  /* Black w/ opacity */
+}
+.modal-close-button {
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+.modal-small {
+  padding-left: 30%;
+  padding-right: 30%;
+}
+.modal-medium {
+  padding-left: 300px;
+  padding-right: 300px;
+}
+.modal-large {
+  padding-left: 0;
+  padding-right: 0;
+}
+@media (min-width: 768px) {
+  .modal .modal-content {
+    -webkit-box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  }
+}
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  position: relative;
+  background-color: #fff;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: 1px solid #999;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  outline: 0;
+  -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+}
+.modal-show {
+  display: block;
+}
+.modal-hide {
+  display: none;
+}
+.modal-header {
+  padding: 8px 8px 8px 15px;
+  border-bottom: 1px solid #e5e5e5;
+  display: flex;
+  justify-content: space-between;
+}
+.modal-body {
+  position: relative;
+  padding: 15px;
+}
+.modal-title {
+  margin: auto;
+  width: 100%;
+  font-size: 16px;
+}

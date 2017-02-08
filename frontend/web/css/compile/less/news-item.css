@@ -1,0 +1,9 @@
+.news-item {
+  margin-bottom: 16px;
+}
+.news-item-item {
+  margin-left: 8px;
+}
+.news-item-footer {
+  font-weight: bold;
+}

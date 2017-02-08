@@ -1,0 +1,6 @@
+.restock-form {
+  max-width: 500px;
+}
+.restock-form > .po-field {
+  margin-bottom: 16px;
+}

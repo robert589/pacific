@@ -1,0 +1,8 @@
+.sfdi {
+  padding: 6px 6px;
+  color: black;
+}
+.sfdi:hover {
+  cursor: pointer;
+  background: lightblue;
+}

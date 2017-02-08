@@ -1,0 +1,25 @@
+.pa-field-header {
+  display: flex;
+}
+.pa-field-header > .search-field {
+  width: 100%;
+  margin-right: 8px;
+}
+.pa-field-header > .button {
+  width: 60px;
+}
+.pa-field-cell {
+  width: 100%;
+  padding: 8px;
+  text-align: center;
+  border: 1px solid black;
+}
+.pa-field-table-header {
+  display: flex;
+}
+.pa-field-list {
+  margin-top: 8px;
+}
+.pa-field-footer {
+  margin-top: 24px;
+}
