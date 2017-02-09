@@ -6,6 +6,7 @@ use common\models\Admin;
 use common\models\Parentt;
 use common\models\Teacher;
 use common\models\Principal;
+use common\models\Owner;
 
 class UserLibrary {
     
@@ -13,6 +14,9 @@ class UserLibrary {
         return Admin::find()->where(['id' => $id])->exists();
     }
     
+    public static function isOwner($id) {
+        return Owner::find()->where(['id' => $id])->exists();
+    }
     
     public static function generateUsername($firstName, $lastName) {
         $base_username = strtolower($firstName) . '.' . strtolower($lastName);

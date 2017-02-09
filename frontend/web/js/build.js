@@ -1380,7 +1380,257 @@ define("project/custom-report", ["require", "exports", "common/component", "proj
     }(component_16.Component));
     exports.CustomReport = CustomReport;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system"], function (require, exports, component_17, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_12) {
+define("project/add-selling-form", ["require", "exports", "common/form", "common/input-field", "common/button"], function (require, exports, form_6, input_field_7, button_8) {
+    "use strict";
+    var AddSellingForm = (function (_super) {
+        __extends(AddSellingForm, _super);
+        function AddSellingForm(root) {
+            return _super.call(this, root) || this;
+        }
+        Object.defineProperty(AddSellingForm, "ADD_SELLING_FORM_SUCCESS", {
+            get: function () { return "addsellingformsuccess"; },
+            enumerable: true,
+            configurable: true
+        });
+        ;
+        AddSellingForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.ship = new input_field_7.InputField(document.getElementById(this.id + "-ship"));
+            this.date = new input_field_7.InputField(document.getElementById(this.id + "-date"));
+            this.remark = new input_field_7.InputField(document.getElementById(this.id + "-remark"));
+            this.price = new input_field_7.InputField(document.getElementById(this.id + "-price"));
+            this.tonase = new input_field_7.InputField(document.getElementById(this.id + "-tonase"));
+            this.total = new input_field_7.InputField(document.getElementById(this.id + "-total"));
+            this.switch = new button_8.Button(document.getElementById(this.id + "-switch"), this.clickSwitch.bind(this));
+            this.totalField = document.getElementById(this.id + "total-el");
+            this.priceField = document.getElementById(this.id + "price-el");
+            this.tonaseField = document.getElementById(this.id + "tonase-el");
+        };
+        AddSellingForm.prototype.clickSwitch = function (e) {
+            e.preventDefault();
+            if (this.totalField.classList.contains('app-hide')) {
+                this.totalField.classList.remove('app-hide');
+                this.priceField.classList.add('app-hide');
+                this.tonaseField.classList.add('app-hide');
+            }
+            else {
+                this.totalField.classList.add('app-hide');
+                this.priceField.classList.remove('app-hide');
+                this.tonaseField.classList.remove('app-hide');
+            }
+            this.total.setValue("0");
+            this.price.setValue("0");
+            this.tonase.setValue("0");
+        };
+        AddSellingForm.prototype.rules = function () {
+            this.setRequiredField([this.total, this.price, this.tonase, this.remark, this.date, this.ship]);
+            this.registerFields([this.total, this.price, this.tonase, this.date, this.ship, this.remark]);
+            var validation = {
+                errorMessage: "Total price atau (harga dan tonase) harus diisi",
+                validate: this.validateFields.bind(this),
+                targetField: this.total
+            };
+            var validation1 = {
+                errorMessage: "Total price atau (harga dan tonase) harus diisi",
+                validate: this.validateFields.bind(this),
+                targetField: this.tonase
+            };
+            this.setValidations([validation, validation1]);
+        };
+        AddSellingForm.prototype.validateFields = function () {
+            if (parseFloat(this.total.getValue()) <= 0.00000001) {
+                if (parseFloat(this.tonase.getValue()) <= 0.0000001 ||
+                    parseFloat(this.price.getValue()) <= 0.000001) {
+                    return false;
+                }
+            }
+            return true;
+        };
+        AddSellingForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddSellingForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddSellingForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddSellingForm;
+    }(form_6.Form));
+    exports.AddSellingForm = AddSellingForm;
+});
+define("project/daily-selling-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_17, button_9, system_12) {
+    "use strict";
+    var DailySellingItem = (function (_super) {
+        __extends(DailySellingItem, _super);
+        function DailySellingItem(root) {
+            var _this = _super.call(this, root) || this;
+            _this.sellingId = _this.root.getAttribute('data-selling-id');
+            return _this;
+        }
+        DailySellingItem.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.viewArea = document.getElementById(this.id + "-view");
+            this.removeArea = document.getElementById(this.id + "-remove-area");
+            this.removeBtn = new button_9.Button(document.getElementById(this.id + "-remove-btn"), this.removeItem.bind(this));
+            this.cancelRemove = new button_9.Button(document.getElementById(this.id + "-cancel"), this.cancelRemoveItem.bind(this));
+        };
+        DailySellingItem.prototype.removeItem = function () {
+            this.removeBtn.disable(true);
+            var data = {};
+            data['selling_id'] = this.sellingId;
+            $.ajax({
+                url: system_12.System.getBaseUrl() + "/selling/remove",
+                data: system_12.System.addCsrf(data),
+                dataType: "json",
+                method: "post",
+                context: this,
+                success: function (data) {
+                    this.removeBtn.disable(false);
+                    this.viewArea.classList.add('app-hide');
+                    this.removeArea.classList.remove('app-hide');
+                },
+                error: function (data) {
+                    this.removeBtn.disable(false);
+                }
+            });
+        };
+        DailySellingItem.prototype.cancelRemoveItem = function () {
+            this.cancelRemove.disable(true);
+            var data = {};
+            data['selling_id'] = this.sellingId;
+            $.ajax({
+                url: system_12.System.getBaseUrl() + "/selling/cancel-remove",
+                data: system_12.System.addCsrf(data),
+                dataType: "json",
+                method: "post",
+                context: this,
+                success: function (data) {
+                    this.cancelRemove.disable(false);
+                    this.viewArea.classList.remove('app-hide');
+                    this.removeArea.classList.add('app-hide');
+                },
+                error: function (data) {
+                    this.removeBtn.disable(false);
+                }
+            });
+        };
+        return DailySellingItem;
+    }(component_17.Component));
+    exports.DailySellingItem = DailySellingItem;
+});
+define("project/daily-selling-view", ["require", "exports", "common/component", "project/add-selling-form", "project/daily-selling-item"], function (require, exports, component_18, add_selling_form_1, daily_selling_item_1) {
+    "use strict";
+    var DailySellingView = (function (_super) {
+        __extends(DailySellingView, _super);
+        function DailySellingView(root) {
+            return _super.call(this, root) || this;
+        }
+        DailySellingView.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.asForm = new add_selling_form_1.AddSellingForm(document.getElementById(this.id + "-asform"));
+            this.area = this.root.getElementsByClassName('ds-view-area')[0];
+            this.items = [];
+            var itemsRaw = this.root.getElementsByClassName('ds-item');
+            for (var i = 0; i < itemsRaw.length; i++) {
+                this.items.push(new daily_selling_item_1.DailySellingItem(itemsRaw.item(i)));
+            }
+        };
+        DailySellingView.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.asForm.attachEvent(add_selling_form_1.AddSellingForm.ADD_SELLING_FORM_SUCCESS, this.addNewDailyItem.bind(this));
+        };
+        DailySellingView.prototype.addNewDailyItem = function (e) {
+            var json = e.detail;
+            var areaRaws = json.views;
+            var div = document.createElement('div');
+            div.innerHTML = areaRaws;
+            var itemRaw = div.getElementsByClassName('ds-item')[0];
+            this.area.appendChild(itemRaw);
+            this.items.push(new daily_selling_item_1.DailySellingItem(itemRaw));
+        };
+        DailySellingView.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        DailySellingView.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return DailySellingView;
+    }(component_18.Component));
+    exports.DailySellingView = DailySellingView;
+});
+define("project/daily-selling", ["require", "exports", "common/component", "common/search-field", "common/input-field", "common/system", "project/daily-selling-view", "common/button"], function (require, exports, component_19, search_field_4, input_field_8, system_13, daily_selling_view_1, button_10) {
+    "use strict";
+    var DailySelling = (function (_super) {
+        __extends(DailySelling, _super);
+        function DailySelling(root) {
+            return _super.call(this, root) || this;
+        }
+        DailySelling.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.ship = new search_field_4.SearchField(document.getElementById(this.id + "-ship"));
+            this.date = new input_field_8.InputField(document.getElementById(this.id + "-date"));
+            this.area = this.root.getElementsByClassName('daily-selling-area')[0];
+            this.refresh = new button_10.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
+        };
+        DailySelling.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.ship.attachEvent(search_field_4.SearchField.GET_VALUE_EVENT, this.enableDateField.bind(this));
+            this.ship.attachEvent(search_field_4.SearchField.LOSE_VALUE_EVENT, this.disableDateField.bind(this));
+            this.date.attachEvent(input_field_8.InputField.VALUE_CHANGED, this.getView.bind(this));
+        };
+        DailySelling.prototype.getView = function () {
+            var data = {};
+            data['ship_id'] = this.ship.getValue();
+            data['date'] = this.date.getValue();
+            this.area.innerHTML = "Loading . . .";
+            this.refresh.disable(true);
+            $.ajax({
+                url: system_13.System.getBaseUrl() + "/selling/get-daily-selling-view",
+                data: system_13.System.addCsrf(data),
+                context: this,
+                dataType: "json",
+                method: "post",
+                success: function (data) {
+                    if (data.status) {
+                        this.addViewToArea(data.views);
+                        this.refresh.disable(false);
+                    }
+                },
+                error: function (data) {
+                }
+            });
+        };
+        DailySelling.prototype.addViewToArea = function (views) {
+            this.area.innerHTML = "";
+            if (!system_13.System.isEmptyValue(this.sellingView)) {
+                this.sellingView.deconstruct();
+            }
+            var wrapper = document.createElement("div");
+            wrapper.innerHTML = views;
+            var sellingViewRaw = wrapper.getElementsByClassName('ds-view')[0];
+            this.area.appendChild(sellingViewRaw);
+            this.sellingView = new daily_selling_view_1.DailySellingView(sellingViewRaw);
+        };
+        DailySelling.prototype.enableDateField = function () {
+            this.date.enable();
+            this.date.setValue("");
+        };
+        DailySelling.prototype.disableDateField = function () {
+            this.date.disable();
+            this.date.setValue("");
+        };
+        DailySelling.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        DailySelling.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return DailySelling;
+    }(component_19.Component));
+    exports.DailySelling = DailySelling;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling"], function (require, exports, component_20, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_14, daily_selling_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1417,6 +1667,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('custom-report').length !== 0) {
                 this.customReport = new custom_report_1.CustomReport(document.getElementById("rcr"));
             }
+            else if (this.root.getElementsByClassName('daily-selling').length !== 0) {
+                this.dailySelling = new daily_selling_1.DailySelling(document.getElementById("sds"));
+            }
             this.hamburgerIcon = this.root.getElementsByClassName('app-hamburger')[0];
             this.leftSide = this.root.getElementsByClassName('left-side')[0];
         };
@@ -1430,7 +1683,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_12.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_14.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };
@@ -1441,7 +1694,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_17.Component));
+    }(component_20.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

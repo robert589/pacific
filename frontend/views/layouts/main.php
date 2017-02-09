@@ -86,14 +86,32 @@ AppAsset::register($this);
                                     
                                 ],    
                                 [   
+                                    'label' => 'Penjualan',
+                                    'href' => '#',
+                                    'items' => [
+                                        ['label' => 'Buat Penjualan', 'href' => Yii::$app->request->baseUrl . "/selling/index"],
+                                        ['label' => 'Cek Kapal Laporan', 'href' => Yii::$app->request->baseUrl . "/selling/custom"]
+                                    ]
+                                    
+                                ],    
+                                [   
                                     'label' => 'Pengguna',
                                     'href' => '#',
                                     'items' => [
-                                        ['label' => 'Pemilik Kapal', 'href' => Yii::$app->request->baseUrl . "/owner/create"],
+                                        ['label' => 'Pemilik Kapal', 'href' => Yii::$app->request->baseUrl . "/owner/index"],
+                                    ]
+                                ],
+                                [
+                                    'label' => 'Pengaturan',
+                                    'href' => '#',
+                                    'items' => [
+                                        ['label' => 'Ganti Password', 'href' => Yii::$app->request->baseUrl . "/user/change-password"]
                                     ]
                                 ]
                             ]
                         ]) ?>
+                    <?php } else if(UserLibrary::isOwner (Yii::$app->user->getId())) {?>
+                    
                     <?php } ?>
                 </div>
            </div>

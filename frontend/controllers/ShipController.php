@@ -17,7 +17,7 @@ class ShipController extends Controller
     
     public function init() {
         if(Yii::$app->user->isGuest) {
-            return $this->redirect(['site/index']);
+            return $this->redirect(['site/index']); 
         }
         $this->service = new ShipService();
         $this->service->user_id = Yii::$app->user->getId();
