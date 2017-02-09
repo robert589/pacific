@@ -1385,7 +1385,11 @@ define("project/app", ["require", "exports", "common/component", "project/login"
     var App = (function (_super) {
         __extends(App, _super);
         function App(root) {
-            return _super.call(this, root) || this;
+            var _this = _super.call(this, root) || this;
+            if (window.innerWidth < 600) {
+                _this.leftSide.classList.add('app-hide');
+            }
+            return _this;
         }
         App.prototype.decorate = function () {
             _super.prototype.decorate.call(this);

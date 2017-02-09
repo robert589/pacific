@@ -38,12 +38,9 @@ html {
 	top: 0;
 	padding-top: 0;
 	background: #455160;
-	display: block;
 	margin-left: 0;
 }
-.hide-sidebar {
-	margin-left: -230px !important;
-}
+
 #sidebar {
         position: relative;
 }
@@ -157,7 +154,6 @@ html {
 }
 .top-profile-section {
 	float: right;
-	margin-right: 65px;
 }
 .top-profile-name {
 	float: left;
@@ -1389,3 +1385,20 @@ img {
 /*----------------------- chat design end -------------------------------*/
 
 
+
+@media(max-width: 600px) {
+    .top-right-section {
+        margin-left: 0;
+    }
+    
+    .logo-section {
+        display: none;
+    }
+    
+    #sidebar{
+        
+    position: fixed;
+    z-index: 10;
+    margin-top: 63px;
+    }
+}

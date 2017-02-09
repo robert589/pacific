@@ -33,6 +33,9 @@ export class App extends Component{
 
     constructor(root: HTMLElement) {
         super(root);
+        if(window.innerWidth < 600) { 
+            this.leftSide.classList.add('app-hide');
+        }
     }
     
     decorate() {
@@ -68,6 +71,7 @@ export class App extends Component{
     }
     
     toggleLeftSide() {
+        
         if(this.leftSide.classList.contains('app-hide')) {
             this.leftSide.classList.remove('app-hide');
         } else {
