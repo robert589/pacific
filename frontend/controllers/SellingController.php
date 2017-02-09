@@ -1,6 +1,9 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\vos\SellingVo;
+use frontend\widgets\DailySellingItem;
+use frontend\models\AddSellingForm;
 use frontend\widgets\DailySellingView;
 use frontend\services\SellingService;
 use Yii;
@@ -20,7 +23,34 @@ class SellingController extends Controller
     
     public function actionIndex() {
         return $this->render('daily-selling', ['id' => 'sds']);
+    }
+    
+    
+    public function actionPCreate() {
+        $model = new AddSellingForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $selling = $model->add();
+        $data['status'] = $selling ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
         
+        if($data['status']) {
+            $builder = SellingVo::createBuilder();
+            $builder->setId($selling->id);
+            $builder->setShipId($selling->ship_id);
+            $builder->setRemark($selling->remark);
+            $builder->setDate($selling->date);
+            $builder->setStatus($selling->status);
+            $builder->setTonase($selling->tonase);
+            $builder->setPrice($selling->price);
+            $builder->setTotal($selling->total);
+            
+            $data['views'] = 
+                    DailySellingItem::widget(
+                            ['id' => 'dsi-' . $builder->getId(), 'vo' => $builder->build()]);
+        }
+        
+        return json_encode($data);
         
     }
     

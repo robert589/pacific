@@ -1385,7 +1385,9 @@ define("project/add-selling-form", ["require", "exports", "common/form", "common
     var AddSellingForm = (function (_super) {
         __extends(AddSellingForm, _super);
         function AddSellingForm(root) {
-            return _super.call(this, root) || this;
+            var _this = _super.call(this, root) || this;
+            _this.successCb = _this.successCallback.bind(_this);
+            return _this;
         }
         Object.defineProperty(AddSellingForm, "ADD_SELLING_FORM_SUCCESS", {
             get: function () { return "addsellingformsuccess"; },
@@ -1393,6 +1395,16 @@ define("project/add-selling-form", ["require", "exports", "common/form", "common
             configurable: true
         });
         ;
+        AddSellingForm.prototype.successCallback = function (data) {
+            var json = {
+                views: data.views
+            };
+            this.successEvent = new CustomEvent(AddSellingForm.ADD_SELLING_FORM_SUCCESS, { detail: json });
+            this.root.dispatchEvent(this.successEvent);
+            this.price.setValue("0");
+            this.tonase.setValue("0");
+            this.total.setValue("0");
+        };
         AddSellingForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.ship = new input_field_7.InputField(document.getElementById(this.id + "-ship"));

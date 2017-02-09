@@ -33,6 +33,22 @@ export class AddSellingForm extends Form{
 
     constructor(root: HTMLElement) {
         super(root);
+        this.successCb = this.successCallback.bind(this);
+
+    }
+
+    successCallback(data) {
+        let json : AddSellingFormSuccessJson = {
+            views : data.views
+        }
+        this.successEvent = new CustomEvent(AddSellingForm.ADD_SELLING_FORM_SUCCESS,
+                        {detail : json});
+        this.root.dispatchEvent(this.successEvent);
+
+        this.price.setValue("0");
+        this.tonase.setValue("0");
+        this.total.setValue("0");
+   
     }
     
     decorate() {

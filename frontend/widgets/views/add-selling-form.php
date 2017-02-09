@@ -10,7 +10,7 @@
         ['id' => $id, 
          'method' => 'post', 
          'url' => \Yii::$app->request->baseUrl 
-                    . '/report/p-create', 
+                    . '/selling/p-create', 
         'widget_class' => 'form as-form' , 'enable_button' => false
         ]) ?>   
     <div class="form-field">
