@@ -1380,7 +1380,7 @@ define("project/custom-report", ["require", "exports", "common/component", "proj
     }(component_16.Component));
     exports.CustomReport = CustomReport;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report"], function (require, exports, component_17, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system"], function (require, exports, component_17, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_12) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1426,7 +1426,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
+            if (!system_12.System.isEmptyValue(this.hamburgerIcon)) {
+                this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
+            }
         };
         App.prototype.detach = function () {
             _super.prototype.detach.call(this);

@@ -7,6 +7,7 @@ import {ListShip} from './list-ship';
 import {ShipOwnership} from './ship-ownership';
 import {DailyReport} from './daily-report';
 import {CustomReport} from './custom-report';
+import {System} from './../common/system';
 
 export class App extends Component{
 
@@ -60,9 +61,8 @@ export class App extends Component{
         else if(this.root.getElementsByClassName('custom-report').length !== 0) {
             this.customReport = new CustomReport(document.getElementById("rcr"));
         }
-        
         this.hamburgerIcon = <HTMLElement> 
-                        this.root.getElementsByClassName('app-hamburger')[0];
+                        this.root.getElementsByClassName('app-hamburger')[0];   
         this.leftSide = <HTMLElement> this.root.getElementsByClassName('left-side')[0];
     
     }
@@ -77,8 +77,10 @@ export class App extends Component{
 
     bindEvent() {
         super.bindEvent();
-        this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this)); 
-    
+        if(!System.isEmptyValue(this.hamburgerIcon)) {
+            this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this)); 
+        }
+        
     }
     
     detach() {
