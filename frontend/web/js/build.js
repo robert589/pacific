@@ -1799,7 +1799,123 @@ define("project/list-code-type", ["require", "exports", "common/component", "com
     }(component_23.Component));
     exports.ListCodeType = ListCodeType;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type"], function (require, exports, component_24, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_16, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1) {
+define("project/create-code-type-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_8, input_field_10, text_area_field_3, system_16) {
+    "use strict";
+    var CreateCodeTypeForm = (function (_super) {
+        __extends(CreateCodeTypeForm, _super);
+        function CreateCodeTypeForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_16.System.getBaseUrl() + "/code/type";
+            };
+            return _this;
+        }
+        CreateCodeTypeForm.prototype.rules = function () {
+            this.setRequiredField([this.nameField]);
+            this.registerFields([this.nameField, this.descField]);
+        };
+        CreateCodeTypeForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.nameField = new input_field_10.InputField(document.getElementById(this.id + "-name"));
+            this.descField = new text_area_field_3.TextAreaField(document.getElementById(this.id + "-desc"));
+        };
+        CreateCodeTypeForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CreateCodeTypeForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateCodeTypeForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateCodeTypeForm;
+    }(form_8.Form));
+    exports.CreateCodeTypeForm = CreateCodeTypeForm;
+});
+define("project/create-code-type", ["require", "exports", "common/component", "project/create-code-type-form"], function (require, exports, component_24, create_code_type_form_1) {
+    "use strict";
+    var CreateCodeType = (function (_super) {
+        __extends(CreateCodeType, _super);
+        function CreateCodeType(root) {
+            return _super.call(this, root) || this;
+        }
+        CreateCodeType.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new create_code_type_form_1.CreateCodeTypeForm(document.getElementById(this.id + "-form"));
+        };
+        CreateCodeType.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CreateCodeType.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateCodeType.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateCodeType;
+    }(component_24.Component));
+    exports.CreateCodeType = CreateCodeType;
+});
+define("project/create-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system"], function (require, exports, form_9, input_field_11, text_area_field_4, search_field_6, system_17) {
+    "use strict";
+    var CreateCodeForm = (function (_super) {
+        __extends(CreateCodeForm, _super);
+        function CreateCodeForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_17.System.getBaseUrl() + "/code/index";
+            };
+            return _this;
+        }
+        CreateCodeForm.prototype.rules = function () {
+            this.setRequiredField([this.nameField, this.typeIdField, this.idField]);
+            this.registerFields([this.nameField, this.descField, this.typeIdField, this.idField]);
+        };
+        CreateCodeForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.idField = new input_field_11.InputField(document.getElementById(this.id + "-id"));
+            this.typeIdField = new search_field_6.SearchField(document.getElementById(this.id + "-type-id"));
+            this.nameField = new input_field_11.InputField(document.getElementById(this.id + "-name"));
+            this.descField = new text_area_field_4.TextAreaField(document.getElementById(this.id + "-desc"));
+        };
+        CreateCodeForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CreateCodeForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateCodeForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateCodeForm;
+    }(form_9.Form));
+    exports.CreateCodeForm = CreateCodeForm;
+});
+define("project/create-code", ["require", "exports", "common/component", "project/create-code-form"], function (require, exports, component_25, create_code_form_1) {
+    "use strict";
+    var CreateCode = (function (_super) {
+        __extends(CreateCode, _super);
+        function CreateCode(root) {
+            return _super.call(this, root) || this;
+        }
+        CreateCode.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new create_code_form_1.CreateCodeForm(document.getElementById(this.id + "-form"));
+        };
+        CreateCode.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CreateCode.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CreateCode.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CreateCode;
+    }(component_25.Component));
+    exports.CreateCode = CreateCode;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code"], function (require, exports, component_26, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_18, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1848,6 +1964,12 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('list-code-type').length !== 0) {
                 this.listCodeType = new list_code_type_1.ListCodeType(document.getElementById("clct"));
             }
+            else if (this.root.getElementsByClassName('create-codetype').length !== 0) {
+                this.createCodeType = new create_code_type_1.CreateCodeType(document.getElementById("ccct"));
+            }
+            else if (this.root.getElementsByClassName('create-code').length !== 0) {
+                this.createCode = new create_code_1.CreateCode(document.getElementById("ccc"));
+            }
             this.hamburgerIcon = this.root.getElementsByClassName('app-hamburger')[0];
             this.leftSide = this.root.getElementsByClassName('left-side')[0];
         };
@@ -1861,7 +1983,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_16.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_18.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };
@@ -1872,7 +1994,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_24.Component));
+    }(component_26.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

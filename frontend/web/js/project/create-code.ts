@@ -1,7 +1,9 @@
 import {Component} from '../common/component';
-
+import {CreateCodeForm} from './create-code-form';
 
 export class CreateCode extends Component{
+
+    form  : CreateCodeForm;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -9,7 +11,7 @@ export class CreateCode extends Component{
     
     decorate() {
         super.decorate();
-        
+        this.form = new CreateCodeForm(document.getElementById(this.id + "-form"));    
     }
     
     bindEvent() {

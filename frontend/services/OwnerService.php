@@ -37,16 +37,10 @@ class OwnerService extends RService
         if(!$this->validate()) {
             return false;
         }
-        
         if(UserLibrary::isAdmin($this->user_id)) {
             return $this->ownerDao->searchOwners($q);
-            
         }
-        
         return [];
-
-        
-        
     }
     
     public function getAllOwners() {

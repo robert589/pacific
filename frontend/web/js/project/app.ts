@@ -13,6 +13,7 @@ import {CustomSelling} from './custom-selling';
 import {ListCode} from './list-code';
 import {ListCodeType} from './list-code-type';
 import {CreateCodeType} from './create-code-type';
+import {CreateCode} from './create-code';
 
 export class App extends Component{
 
@@ -45,6 +46,8 @@ export class App extends Component{
     listCodeType : ListCodeType;
 
     createCodeType : CreateCodeType;
+
+    createCode : CreateCode;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -93,6 +96,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('create-codetype').length !== 0) {
             this.createCodeType = new CreateCodeType(document.getElementById("ccct"));
+        }
+        else if(this.root.getElementsByClassName('create-code').length !== 0) {
+            this.createCode = new CreateCode(document.getElementById("ccc"));
         }
 
         this.hamburgerIcon = <HTMLElement> 

@@ -31,14 +31,20 @@ class CodeService extends RService
         ];
     }
     
-    public function getCodeList() {
+    public function searchType($query) {
         if(!$this->validate()) {
             return false;
         }
         
+        return $this->codeDao->searchCodeType($query);
+    }
+    
+    public function getCodeList() {
+        if(!$this->validate()) {
+            return false;
+        }
         $models = [];
         $model = [];
-        
         $vos = $this->codeDao->getCodeList();
         foreach($vos  as $vo) {
             $model['code'] = $vo->getId();
@@ -47,8 +53,6 @@ class CodeService extends RService
             $model['type'] = $vo->getEntityType()->getName();
             $models[] = $model;
         }
-        
-        
         return new ArrayDataProvider([
             'allModels' => $models,
             'pagination' => [
@@ -73,8 +77,6 @@ class CodeService extends RService
             $model['description'] = $vo->getDescription();
             $models[] = $model;
         }
-        
-        
         return new ArrayDataProvider([
             'allModels' => $models,
             'pagination' => [
