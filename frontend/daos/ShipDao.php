@@ -4,6 +4,7 @@ namespace frontend\daos;
 use Yii;
 use common\models\Ship;
 use common\components\Dao;
+use common\models\ShipOwner;
 use frontend\vos\OwnerVo;
 use frontend\vos\UserVo;
 use frontend\vos\ShipVo;
@@ -23,12 +24,13 @@ class ShipDao implements Dao
                                         user.id as user_id
                                 from owner, user, ship_owner
                                 where ship_owner.ship_id = :ship_id and ship_owner.owner_id = owner.id
-                                    and owner.id = user.id";
+                                    and owner.id = user.id and ship_owner.status = :status";
     
-    public function getShipOwnership($shipId) {
+    public function getShipOwnership($shipId, $status = ShipOwner::STATUS_ACTIVE) {
         $results =  \Yii::$app->db
             ->createCommand(self::GET_SHIP_OWNERSHIP)
             ->bindParam(":ship_id", $shipId)
+            ->bindParam(":status", $status)
             ->queryAll();
         
         $vos = [];

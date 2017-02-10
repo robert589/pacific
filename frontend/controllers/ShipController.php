@@ -2,7 +2,9 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\ChangeShipOwnerStatusForm;
 use common\models\Ship;
+use common\models\ShipOwner;
 use frontend\widgets\OwnershipGridview;
 use frontend\models\AssignShipToOwnerForm;
 use common\widgets\SearchFieldDropdownItem;
@@ -59,8 +61,16 @@ class ShipController extends Controller
     
     public function actionOwnership() {
         return $this->render('ship-ownership', ['id' => 'sso']);
+    }
     
-        
+    public function actionRemoveOwner() {
+        $model = new ChangeShipOwnerStatusForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->status = ShipOwner::STATUS_DELETED;
+        $model->loadData($_POST);
+        $data['status'] = $model->change() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
     }
     
     public function actionSearch() {

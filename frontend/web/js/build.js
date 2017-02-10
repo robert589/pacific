@@ -1031,7 +1031,59 @@ define("common/search-field", ["require", "exports", "common/Field", "common/sys
     }(field_1.Field));
     exports.SearchField = SearchField;
 });
-define("project/ship-ownership", ["require", "exports", "common/component", "common/search-field", "common/button", "common/system"], function (require, exports, component_11, search_field_1, button_6, system_9) {
+define("project/ownership-gridview", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_11, button_6, system_9) {
+    "use strict";
+    var OwnershipGridview = (function (_super) {
+        __extends(OwnershipGridview, _super);
+        function OwnershipGridview(root) {
+            return _super.call(this, root) || this;
+        }
+        OwnershipGridview.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            var elements = this.root.getElementsByClassName('own-gv-delete');
+            this.deletes = [];
+            for (var i = 0; i < elements.length; i++) {
+                this.deletes.push(new button_6.Button(elements.item(i), this.showDeleteDialog.bind(this, elements.item(i))));
+            }
+        };
+        OwnershipGridview.prototype.showDeleteDialog = function (raw) {
+            system_9.System.showConfirmDialog(this.deleteOwnership.bind(null, raw), "Are you sure", "Are you sure?");
+        };
+        OwnershipGridview.prototype.deleteOwnership = function (raw) {
+            var shipId = raw.getAttribute('data-ship-id');
+            var ownerId = raw.getAttribute('data-owner-id');
+            var data = {};
+            data['ship_id'] = shipId;
+            data['owner_id'] = ownerId;
+            $.ajax({
+                url: system_9.System.getBaseUrl() + "/ship/remove-owner",
+                data: system_9.System.addCsrf(data),
+                context: this,
+                dataType: "json",
+                method: "post",
+                success: function (data) {
+                    if (data.status) {
+                        window.location.reload();
+                    }
+                },
+                error: function (data) {
+                }
+            });
+        };
+        OwnershipGridview.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        OwnershipGridview.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        OwnershipGridview.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return OwnershipGridview;
+    }(component_11.Component));
+    exports.OwnershipGridview = OwnershipGridview;
+});
+define("project/ship-ownership", ["require", "exports", "common/component", "common/search-field", "common/button", "common/system", "project/ownership-gridview"], function (require, exports, component_12, search_field_1, button_7, system_10, ownership_gridview_1) {
     "use strict";
     var ShipOwnership = (function (_super) {
         __extends(ShipOwnership, _super);
@@ -1043,16 +1095,16 @@ define("project/ship-ownership", ["require", "exports", "common/component", "com
             this.ship = new search_field_1.SearchField(document.getElementById(this.id + "-ship"));
             this.area = this.root.getElementsByClassName('ship-owner-area')[0];
             this.owner = new search_field_1.SearchField(document.getElementById(this.id + "-owner"));
-            this.add = new button_6.Button(document.getElementById(this.id + "-add"), this.assignShip.bind(this));
+            this.add = new button_7.Button(document.getElementById(this.id + "-add"), this.assignShip.bind(this));
         };
         ShipOwnership.prototype.assignShip = function () {
             var data = {};
             data['ship_id'] = this.ship.getValue();
             data['owner_id'] = this.owner.getValue();
-            data = system_9.System.addCsrf(data);
+            data = system_10.System.addCsrf(data);
             this.add.disable(true);
             $.ajax({
-                url: system_9.System.getBaseUrl() + "/ship/assign",
+                url: system_10.System.getBaseUrl() + "/ship/assign",
                 data: data,
                 dataType: "json",
                 context: this,
@@ -1076,20 +1128,31 @@ define("project/ship-ownership", ["require", "exports", "common/component", "com
             var data = {};
             data['ship_id'] = this.ship.getValue();
             $.ajax({
-                url: system_9.System.getBaseUrl() + "/ship/get-ownership-gv",
-                data: system_9.System.addCsrf(data),
+                url: system_10.System.getBaseUrl() + "/ship/get-ownership-gv",
+                data: system_10.System.addCsrf(data),
                 dataType: "json",
                 context: this,
                 method: "post",
                 success: function (data) {
                     this.add.disable(false);
                     if (data.status) {
-                        this.area.innerHTML = data.views;
+                        this.addGridviewToArea(data.views);
                     }
                 },
                 error: function (data) {
                 }
             });
+        };
+        ShipOwnership.prototype.addGridviewToArea = function (views) {
+            this.area.innerHTML = "";
+            if (!system_10.System.isEmptyValue(this.ownershipGridview)) {
+                this.ownershipGridview.deconstruct();
+            }
+            var wrapper = document.createElement("div");
+            wrapper.innerHTML = views;
+            var raw = wrapper.getElementsByClassName('grid-view')[0];
+            this.area.appendChild(raw);
+            this.ownershipGridview = new ownership_gridview_1.OwnershipGridview(raw);
         };
         ShipOwnership.prototype.disableOwnerField = function () {
             this.owner.disable();
@@ -1117,7 +1180,7 @@ define("project/ship-ownership", ["require", "exports", "common/component", "com
             // no event to unbind
         };
         return ShipOwnership;
-    }(component_11.Component));
+    }(component_12.Component));
     exports.ShipOwnership = ShipOwnership;
 });
 define("project/add-report-form", ["require", "exports", "common/form", "common/input-field"], function (require, exports, form_4, input_field_4) {
@@ -1173,7 +1236,7 @@ define("project/add-report-form", ["require", "exports", "common/form", "common/
     }(form_4.Form));
     exports.AddReportForm = AddReportForm;
 });
-define("project/daily-report-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_12, button_7, system_10) {
+define("project/daily-report-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_13, button_8, system_11) {
     "use strict";
     var DailyReportItem = (function (_super) {
         __extends(DailyReportItem, _super);
@@ -1186,16 +1249,16 @@ define("project/daily-report-item", ["require", "exports", "common/component", "
             _super.prototype.decorate.call(this);
             this.viewArea = document.getElementById(this.id + "-view");
             this.removeArea = document.getElementById(this.id + "-remove-area");
-            this.removeBtn = new button_7.Button(document.getElementById(this.id + "-remove-btn"), this.removeItem.bind(this));
-            this.cancelRemove = new button_7.Button(document.getElementById(this.id + "-cancel"), this.cancelRemoveItem.bind(this));
+            this.removeBtn = new button_8.Button(document.getElementById(this.id + "-remove-btn"), this.removeItem.bind(this));
+            this.cancelRemove = new button_8.Button(document.getElementById(this.id + "-cancel"), this.cancelRemoveItem.bind(this));
         };
         DailyReportItem.prototype.removeItem = function () {
             this.removeBtn.disable(true);
             var data = {};
             data['report_id'] = this.reportId;
             $.ajax({
-                url: system_10.System.getBaseUrl() + "/report/remove",
-                data: system_10.System.addCsrf(data),
+                url: system_11.System.getBaseUrl() + "/report/remove",
+                data: system_11.System.addCsrf(data),
                 dataType: "json",
                 method: "post",
                 context: this,
@@ -1214,8 +1277,8 @@ define("project/daily-report-item", ["require", "exports", "common/component", "
             var data = {};
             data['report_id'] = this.reportId;
             $.ajax({
-                url: system_10.System.getBaseUrl() + "/report/cancel-remove",
-                data: system_10.System.addCsrf(data),
+                url: system_11.System.getBaseUrl() + "/report/cancel-remove",
+                data: system_11.System.addCsrf(data),
                 dataType: "json",
                 method: "post",
                 context: this,
@@ -1239,10 +1302,10 @@ define("project/daily-report-item", ["require", "exports", "common/component", "
             // no event to unbind
         };
         return DailyReportItem;
-    }(component_12.Component));
+    }(component_13.Component));
     exports.DailyReportItem = DailyReportItem;
 });
-define("project/daily-report-view", ["require", "exports", "common/component", "project/add-report-form", "project/daily-report-item"], function (require, exports, component_13, add_report_form_1, daily_report_item_1) {
+define("project/daily-report-view", ["require", "exports", "common/component", "project/add-report-form", "project/daily-report-item"], function (require, exports, component_14, add_report_form_1, daily_report_item_1) {
     "use strict";
     var DailyReportView = (function (_super) {
         __extends(DailyReportView, _super);
@@ -1279,10 +1342,10 @@ define("project/daily-report-view", ["require", "exports", "common/component", "
             // no event to unbind
         };
         return DailyReportView;
-    }(component_13.Component));
+    }(component_14.Component));
     exports.DailyReportView = DailyReportView;
 });
-define("project/daily-report", ["require", "exports", "common/component", "common/search-field", "common/input-field", "common/system", "project/daily-report-view", "common/button"], function (require, exports, component_14, search_field_2, input_field_5, system_11, daily_report_view_1, button_8) {
+define("project/daily-report", ["require", "exports", "common/component", "common/search-field", "common/input-field", "common/system", "project/daily-report-view", "common/button"], function (require, exports, component_15, search_field_2, input_field_5, system_12, daily_report_view_1, button_9) {
     "use strict";
     var DailyReport = (function (_super) {
         __extends(DailyReport, _super);
@@ -1294,7 +1357,7 @@ define("project/daily-report", ["require", "exports", "common/component", "commo
             this.ship = new search_field_2.SearchField(document.getElementById(this.id + "-ship"));
             this.date = new input_field_5.InputField(document.getElementById(this.id + "-date"));
             this.area = this.root.getElementsByClassName('daily-report-area')[0];
-            this.refresh = new button_8.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
+            this.refresh = new button_9.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
         };
         DailyReport.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1309,8 +1372,8 @@ define("project/daily-report", ["require", "exports", "common/component", "commo
             this.area.innerHTML = "Loading . . .";
             this.refresh.disable(true);
             $.ajax({
-                url: system_11.System.getBaseUrl() + "/report/get-daily-report-view",
-                data: system_11.System.addCsrf(data),
+                url: system_12.System.getBaseUrl() + "/report/get-daily-report-view",
+                data: system_12.System.addCsrf(data),
                 context: this,
                 dataType: "json",
                 method: "post",
@@ -1326,7 +1389,7 @@ define("project/daily-report", ["require", "exports", "common/component", "commo
         };
         DailyReport.prototype.addViewToArea = function (views) {
             this.area.innerHTML = "";
-            if (!system_11.System.isEmptyValue(this.reportView)) {
+            if (!system_12.System.isEmptyValue(this.reportView)) {
                 this.reportView.deconstruct();
             }
             var wrapper = document.createElement("div");
@@ -1350,7 +1413,7 @@ define("project/daily-report", ["require", "exports", "common/component", "commo
             // no event to unbind
         };
         return DailyReport;
-    }(component_14.Component));
+    }(component_15.Component));
     exports.DailyReport = DailyReport;
 });
 define("project/custom-report-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_5, search_field_3, input_field_6) {
@@ -1397,7 +1460,7 @@ define("project/custom-report-form", ["require", "exports", "common/form", "comm
     }(form_5.Form));
     exports.CustomReportForm = CustomReportForm;
 });
-define("project/report-view", ["require", "exports", "common/component"], function (require, exports, component_15) {
+define("project/report-view", ["require", "exports", "common/component"], function (require, exports, component_16) {
     "use strict";
     var ReportView = (function (_super) {
         __extends(ReportView, _super);
@@ -1417,10 +1480,10 @@ define("project/report-view", ["require", "exports", "common/component"], functi
             // no event to unbind
         };
         return ReportView;
-    }(component_15.Component));
+    }(component_16.Component));
     exports.ReportView = ReportView;
 });
-define("project/custom-report", ["require", "exports", "common/component", "project/custom-report-form", "project/report-view"], function (require, exports, component_16, custom_report_form_1, report_view_1) {
+define("project/custom-report", ["require", "exports", "common/component", "project/custom-report-form", "project/report-view"], function (require, exports, component_17, custom_report_form_1, report_view_1) {
     "use strict";
     var CustomReport = (function (_super) {
         __extends(CustomReport, _super);
@@ -1449,10 +1512,10 @@ define("project/custom-report", ["require", "exports", "common/component", "proj
             this.reportView = new report_view_1.ReportView(reportViewRaw);
         };
         return CustomReport;
-    }(component_16.Component));
+    }(component_17.Component));
     exports.CustomReport = CustomReport;
 });
-define("project/add-selling-form", ["require", "exports", "common/form", "common/input-field", "common/button"], function (require, exports, form_6, input_field_7, button_9) {
+define("project/add-selling-form", ["require", "exports", "common/form", "common/input-field", "common/button"], function (require, exports, form_6, input_field_7, button_10) {
     "use strict";
     var AddSellingForm = (function (_super) {
         __extends(AddSellingForm, _super);
@@ -1485,7 +1548,7 @@ define("project/add-selling-form", ["require", "exports", "common/form", "common
             this.price = new input_field_7.InputField(document.getElementById(this.id + "-price"));
             this.tonase = new input_field_7.InputField(document.getElementById(this.id + "-tonase"));
             this.total = new input_field_7.InputField(document.getElementById(this.id + "-total"));
-            this.switch = new button_9.Button(document.getElementById(this.id + "-switch"), this.clickSwitch.bind(this));
+            this.switch = new button_10.Button(document.getElementById(this.id + "-switch"), this.clickSwitch.bind(this));
             this.totalField = document.getElementById(this.id + "total-el");
             this.priceField = document.getElementById(this.id + "price-el");
             this.tonaseField = document.getElementById(this.id + "tonase-el");
@@ -1543,7 +1606,7 @@ define("project/add-selling-form", ["require", "exports", "common/form", "common
     }(form_6.Form));
     exports.AddSellingForm = AddSellingForm;
 });
-define("project/daily-selling-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_17, button_10, system_12) {
+define("project/daily-selling-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_18, button_11, system_13) {
     "use strict";
     var DailySellingItem = (function (_super) {
         __extends(DailySellingItem, _super);
@@ -1556,16 +1619,16 @@ define("project/daily-selling-item", ["require", "exports", "common/component", 
             _super.prototype.decorate.call(this);
             this.viewArea = document.getElementById(this.id + "-view");
             this.removeArea = document.getElementById(this.id + "-remove-area");
-            this.removeBtn = new button_10.Button(document.getElementById(this.id + "-remove-btn"), this.removeItem.bind(this));
-            this.cancelRemove = new button_10.Button(document.getElementById(this.id + "-cancel"), this.cancelRemoveItem.bind(this));
+            this.removeBtn = new button_11.Button(document.getElementById(this.id + "-remove-btn"), this.removeItem.bind(this));
+            this.cancelRemove = new button_11.Button(document.getElementById(this.id + "-cancel"), this.cancelRemoveItem.bind(this));
         };
         DailySellingItem.prototype.removeItem = function () {
             this.removeBtn.disable(true);
             var data = {};
             data['selling_id'] = this.sellingId;
             $.ajax({
-                url: system_12.System.getBaseUrl() + "/selling/remove",
-                data: system_12.System.addCsrf(data),
+                url: system_13.System.getBaseUrl() + "/selling/remove",
+                data: system_13.System.addCsrf(data),
                 dataType: "json",
                 method: "post",
                 context: this,
@@ -1584,8 +1647,8 @@ define("project/daily-selling-item", ["require", "exports", "common/component", 
             var data = {};
             data['selling_id'] = this.sellingId;
             $.ajax({
-                url: system_12.System.getBaseUrl() + "/selling/cancel-remove",
-                data: system_12.System.addCsrf(data),
+                url: system_13.System.getBaseUrl() + "/selling/cancel-remove",
+                data: system_13.System.addCsrf(data),
                 dataType: "json",
                 method: "post",
                 context: this,
@@ -1600,10 +1663,10 @@ define("project/daily-selling-item", ["require", "exports", "common/component", 
             });
         };
         return DailySellingItem;
-    }(component_17.Component));
+    }(component_18.Component));
     exports.DailySellingItem = DailySellingItem;
 });
-define("project/daily-selling-view", ["require", "exports", "common/component", "project/add-selling-form", "project/daily-selling-item"], function (require, exports, component_18, add_selling_form_1, daily_selling_item_1) {
+define("project/daily-selling-view", ["require", "exports", "common/component", "project/add-selling-form", "project/daily-selling-item"], function (require, exports, component_19, add_selling_form_1, daily_selling_item_1) {
     "use strict";
     var DailySellingView = (function (_super) {
         __extends(DailySellingView, _super);
@@ -1640,10 +1703,10 @@ define("project/daily-selling-view", ["require", "exports", "common/component", 
             // no event to unbind
         };
         return DailySellingView;
-    }(component_18.Component));
+    }(component_19.Component));
     exports.DailySellingView = DailySellingView;
 });
-define("project/daily-selling", ["require", "exports", "common/component", "common/search-field", "common/input-field", "common/system", "project/daily-selling-view", "common/button"], function (require, exports, component_19, search_field_4, input_field_8, system_13, daily_selling_view_1, button_11) {
+define("project/daily-selling", ["require", "exports", "common/component", "common/search-field", "common/input-field", "common/system", "project/daily-selling-view", "common/button"], function (require, exports, component_20, search_field_4, input_field_8, system_14, daily_selling_view_1, button_12) {
     "use strict";
     var DailySelling = (function (_super) {
         __extends(DailySelling, _super);
@@ -1655,7 +1718,7 @@ define("project/daily-selling", ["require", "exports", "common/component", "comm
             this.ship = new search_field_4.SearchField(document.getElementById(this.id + "-ship"));
             this.date = new input_field_8.InputField(document.getElementById(this.id + "-date"));
             this.area = this.root.getElementsByClassName('daily-selling-area')[0];
-            this.refresh = new button_11.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
+            this.refresh = new button_12.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
         };
         DailySelling.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1670,8 +1733,8 @@ define("project/daily-selling", ["require", "exports", "common/component", "comm
             this.area.innerHTML = "Loading . . .";
             this.refresh.disable(true);
             $.ajax({
-                url: system_13.System.getBaseUrl() + "/selling/get-daily-selling-view",
-                data: system_13.System.addCsrf(data),
+                url: system_14.System.getBaseUrl() + "/selling/get-daily-selling-view",
+                data: system_14.System.addCsrf(data),
                 context: this,
                 dataType: "json",
                 method: "post",
@@ -1687,7 +1750,7 @@ define("project/daily-selling", ["require", "exports", "common/component", "comm
         };
         DailySelling.prototype.addViewToArea = function (views) {
             this.area.innerHTML = "";
-            if (!system_13.System.isEmptyValue(this.sellingView)) {
+            if (!system_14.System.isEmptyValue(this.sellingView)) {
                 this.sellingView.deconstruct();
             }
             var wrapper = document.createElement("div");
@@ -1711,7 +1774,7 @@ define("project/daily-selling", ["require", "exports", "common/component", "comm
             // no event to unbind
         };
         return DailySelling;
-    }(component_19.Component));
+    }(component_20.Component));
     exports.DailySelling = DailySelling;
 });
 define("project/custom-selling-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_7, search_field_5, input_field_9) {
@@ -1758,7 +1821,7 @@ define("project/custom-selling-form", ["require", "exports", "common/form", "com
     }(form_7.Form));
     exports.CustomSellingForm = CustomSellingForm;
 });
-define("project/selling-view", ["require", "exports", "common/component"], function (require, exports, component_20) {
+define("project/selling-view", ["require", "exports", "common/component"], function (require, exports, component_21) {
     "use strict";
     var SellingView = (function (_super) {
         __extends(SellingView, _super);
@@ -1778,10 +1841,10 @@ define("project/selling-view", ["require", "exports", "common/component"], funct
             // no event to unbind
         };
         return SellingView;
-    }(component_20.Component));
+    }(component_21.Component));
     exports.SellingView = SellingView;
 });
-define("project/custom-selling", ["require", "exports", "common/component", "project/custom-selling-form", "project/selling-view"], function (require, exports, component_21, custom_selling_form_1, selling_view_1) {
+define("project/custom-selling", ["require", "exports", "common/component", "project/custom-selling-form", "project/selling-view"], function (require, exports, component_22, custom_selling_form_1, selling_view_1) {
     "use strict";
     var CustomSelling = (function (_super) {
         __extends(CustomSelling, _super);
@@ -1810,10 +1873,10 @@ define("project/custom-selling", ["require", "exports", "common/component", "pro
             this.sellingView = new selling_view_1.SellingView(sellingViewRaw);
         };
         return CustomSelling;
-    }(component_21.Component));
+    }(component_22.Component));
     exports.CustomSelling = CustomSelling;
 });
-define("project/list-code", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_22, button_12, system_14) {
+define("project/list-code", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_23, button_13, system_15) {
     "use strict";
     var ListCode = (function (_super) {
         __extends(ListCode, _super);
@@ -1821,15 +1884,15 @@ define("project/list-code", ["require", "exports", "common/component", "common/b
             return _super.call(this, root) || this;
         }
         ListCode.prototype.redirectToAdd = function () {
-            window.location.href = system_14.System.getBaseUrl() + "/code/create";
+            window.location.href = system_15.System.getBaseUrl() + "/code/create";
         };
         ListCode.prototype.redirectToCodeType = function () {
-            window.location.href = system_14.System.getBaseUrl() + "/code/type";
+            window.location.href = system_15.System.getBaseUrl() + "/code/type";
         };
         ListCode.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.addBtn = new button_12.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
-            this.codeType = new button_12.Button(document.getElementById(this.id + "-codetype"), this.redirectToCodeType.bind(this));
+            this.addBtn = new button_13.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+            this.codeType = new button_13.Button(document.getElementById(this.id + "-codetype"), this.redirectToCodeType.bind(this));
         };
         ListCode.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1841,10 +1904,10 @@ define("project/list-code", ["require", "exports", "common/component", "common/b
             // no event to unbind
         };
         return ListCode;
-    }(component_22.Component));
+    }(component_23.Component));
     exports.ListCode = ListCode;
 });
-define("project/list-code-type", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_23, button_13, system_15) {
+define("project/list-code-type", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_24, button_14, system_16) {
     "use strict";
     var ListCodeType = (function (_super) {
         __extends(ListCodeType, _super);
@@ -1853,10 +1916,10 @@ define("project/list-code-type", ["require", "exports", "common/component", "com
         }
         ListCodeType.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.addBtn = new button_13.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+            this.addBtn = new button_14.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
         };
         ListCodeType.prototype.redirectToAdd = function () {
-            window.location.href = system_15.System.getBaseUrl() + "/code/create-type";
+            window.location.href = system_16.System.getBaseUrl() + "/code/create-type";
         };
         ListCodeType.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1868,17 +1931,17 @@ define("project/list-code-type", ["require", "exports", "common/component", "com
             // no event to unbind
         };
         return ListCodeType;
-    }(component_23.Component));
+    }(component_24.Component));
     exports.ListCodeType = ListCodeType;
 });
-define("project/create-code-type-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_8, input_field_10, text_area_field_3, system_16) {
+define("project/create-code-type-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_8, input_field_10, text_area_field_3, system_17) {
     "use strict";
     var CreateCodeTypeForm = (function (_super) {
         __extends(CreateCodeTypeForm, _super);
         function CreateCodeTypeForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_16.System.getBaseUrl() + "/code/type";
+                window.location.href = system_17.System.getBaseUrl() + "/code/type";
             };
             return _this;
         }
@@ -1904,7 +1967,7 @@ define("project/create-code-type-form", ["require", "exports", "common/form", "c
     }(form_8.Form));
     exports.CreateCodeTypeForm = CreateCodeTypeForm;
 });
-define("project/create-code-type", ["require", "exports", "common/component", "project/create-code-type-form"], function (require, exports, component_24, create_code_type_form_1) {
+define("project/create-code-type", ["require", "exports", "common/component", "project/create-code-type-form"], function (require, exports, component_25, create_code_type_form_1) {
     "use strict";
     var CreateCodeType = (function (_super) {
         __extends(CreateCodeType, _super);
@@ -1925,17 +1988,17 @@ define("project/create-code-type", ["require", "exports", "common/component", "p
             // no event to unbind
         };
         return CreateCodeType;
-    }(component_24.Component));
+    }(component_25.Component));
     exports.CreateCodeType = CreateCodeType;
 });
-define("project/create-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system"], function (require, exports, form_9, input_field_11, text_area_field_4, search_field_6, system_17) {
+define("project/create-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system"], function (require, exports, form_9, input_field_11, text_area_field_4, search_field_6, system_18) {
     "use strict";
     var CreateCodeForm = (function (_super) {
         __extends(CreateCodeForm, _super);
         function CreateCodeForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_17.System.getBaseUrl() + "/code/index";
+                window.location.href = system_18.System.getBaseUrl() + "/code/index";
             };
             return _this;
         }
@@ -1963,7 +2026,7 @@ define("project/create-code-form", ["require", "exports", "common/form", "common
     }(form_9.Form));
     exports.CreateCodeForm = CreateCodeForm;
 });
-define("project/create-code", ["require", "exports", "common/component", "project/create-code-form"], function (require, exports, component_25, create_code_form_1) {
+define("project/create-code", ["require", "exports", "common/component", "project/create-code-form"], function (require, exports, component_26, create_code_form_1) {
     "use strict";
     var CreateCode = (function (_super) {
         __extends(CreateCode, _super);
@@ -1984,10 +2047,10 @@ define("project/create-code", ["require", "exports", "common/component", "projec
             // no event to unbind
         };
         return CreateCode;
-    }(component_25.Component));
+    }(component_26.Component));
     exports.CreateCode = CreateCode;
 });
-define("project/daily-transaction-view", ["require", "exports", "common/component"], function (require, exports, component_26) {
+define("project/daily-transaction-view", ["require", "exports", "common/component"], function (require, exports, component_27) {
     "use strict";
     var DailyTransactionView = (function (_super) {
         __extends(DailyTransactionView, _super);
@@ -2007,10 +2070,10 @@ define("project/daily-transaction-view", ["require", "exports", "common/componen
             // no event to unbind
         };
         return DailyTransactionView;
-    }(component_26.Component));
+    }(component_27.Component));
     exports.DailyTransactionView = DailyTransactionView;
 });
-define("project/daily-transaction", ["require", "exports", "common/component", "common/input-field", "common/system", "project/daily-transaction-view", "common/button"], function (require, exports, component_27, input_field_12, system_18, daily_transaction_view_1, button_14) {
+define("project/daily-transaction", ["require", "exports", "common/component", "common/input-field", "common/system", "project/daily-transaction-view", "common/button"], function (require, exports, component_28, input_field_12, system_19, daily_transaction_view_1, button_15) {
     "use strict";
     var DailyTransaction = (function (_super) {
         __extends(DailyTransaction, _super);
@@ -2021,7 +2084,7 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
             _super.prototype.decorate.call(this);
             this.date = new input_field_12.InputField(document.getElementById(this.id + "-date"));
             this.area = this.root.getElementsByClassName('daily-transact-area')[0];
-            this.refresh = new button_14.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
+            this.refresh = new button_15.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
         };
         DailyTransaction.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2033,8 +2096,8 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
             this.area.innerHTML = "Loading . . .";
             this.refresh.disable(true);
             $.ajax({
-                url: system_18.System.getBaseUrl() + "/transaction/get-daily-view",
-                data: system_18.System.addCsrf(data),
+                url: system_19.System.getBaseUrl() + "/transaction/get-daily-view",
+                data: system_19.System.addCsrf(data),
                 context: this,
                 dataType: "json",
                 method: "post",
@@ -2050,7 +2113,7 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
         };
         DailyTransaction.prototype.addViewToArea = function (views) {
             this.area.innerHTML = "";
-            if (!system_18.System.isEmptyValue(this.transactView)) {
+            if (!system_19.System.isEmptyValue(this.transactView)) {
                 this.transactView.deconstruct();
             }
             var wrapper = document.createElement("div");
@@ -2066,10 +2129,10 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
             // no event to unbind
         };
         return DailyTransaction;
-    }(component_27.Component));
+    }(component_28.Component));
     exports.DailyTransaction = DailyTransaction;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction"], function (require, exports, component_28, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_19, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction"], function (require, exports, component_29, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_20, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2140,7 +2203,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_19.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_20.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };
@@ -2151,7 +2214,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_28.Component));
+    }(component_29.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

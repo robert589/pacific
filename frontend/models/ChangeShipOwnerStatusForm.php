@@ -5,18 +5,21 @@ use common\models\ShipOwner;
 use common\validators\IsAdminValidator;
 use common\components\RModel;
 /**
- * AssignShipToOwnerForm model
+ * ChangeShipOwnerStatusForm model
  *
  */
-class AssignShipToOwnerForm extends RModel
+class ChangeShipOwnerStatusForm extends RModel
 {
 
     //attributes
     public $user_id;
 
+    public $owner_id;
+
     public $ship_id;
 
-    public $owner_id;
+    public $status;
+    
     
     public function rules() {
         return [
@@ -28,11 +31,13 @@ class AssignShipToOwnerForm extends RModel
             ['ship_id', 'required'],
             
             ['owner_id', 'integer'],
-            ['owner_id', 'required']
+            ['owner_id', 'required'],
+            ['status', 'integer'],
+            ['status', 'required']
         ];
     }
     
-    public function assign() {
+    public function change() {
         if(!$this->validate()) {
             return false;
         }
@@ -42,12 +47,12 @@ class AssignShipToOwnerForm extends RModel
             $model = new ShipOwner();
             $model->ship_id = $this->ship_id;
             $model->owner_id = $this->owner_id;
-            $model->status = ShipOwner::STATUS_ACTIVE;
+            $model->status = $this->status;
             return $model->save();
         }
         
-        if($model->status != ShipOwner::STATUS_ACTIVE) {
-            $model->status = ShipOwner::STATUS_ACTIVE;
+        if($model->status != $this->status) {
+            $model->status = $this->status;
             return $model->update();
         }
         

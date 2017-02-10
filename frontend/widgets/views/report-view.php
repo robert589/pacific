@@ -6,7 +6,6 @@
 <div id="<?= $id ?>" class="report-view">
     <div class="report-view-area">
         <div class="report-view-header">
-            
             <div class="report-view-header-field">
                 Tanggal
             </div>

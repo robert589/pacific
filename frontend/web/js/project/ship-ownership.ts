@@ -2,6 +2,7 @@ import {Component} from '../common/component';
 import {SearchField} from './../common/search-field';
 import {Button} from './../common/button';
 import {System} from './../common/system';
+import {OwnershipGridview} from './ownership-gridview';
 
 export class ShipOwnership extends Component{
 
@@ -12,6 +13,8 @@ export class ShipOwnership extends Component{
     add  : Button;
 
     area  : HTMLElement;
+
+    ownershipGridview : OwnershipGridview;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -67,13 +70,29 @@ export class ShipOwnership extends Component{
             success : function(data) {
                 this.add.disable(false);
                 if(data.status) {
-                    this.area.innerHTML = data.views;
+                    this.addGridviewToArea(data.views);
                 }
             },
             error : function(data) {
 
             }
         })
+    }
+
+    addGridviewToArea(views : string) {
+        this.area.innerHTML  = "";
+
+        if(!System.isEmptyValue(this.ownershipGridview)) {
+            this.ownershipGridview.deconstruct();
+        }
+
+        let wrapper = document.createElement("div");
+        wrapper.innerHTML = views;  
+        let raw : HTMLElement =  <HTMLElement> wrapper.getElementsByClassName('grid-view')[0];
+        this.area.appendChild(raw);
+
+        this.ownershipGridview = new OwnershipGridview(raw);
+
     }
 
     disableOwnerField() {
