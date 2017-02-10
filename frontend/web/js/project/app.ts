@@ -10,6 +10,8 @@ import {CustomReport} from './custom-report';
 import {System} from './../common/system';
 import {DailySelling} from './daily-selling';
 import {CustomSelling} from './custom-selling';
+import {ListCode} from './list-code';
+import {ListCodeType} from './list-code-type';
 
 export class App extends Component{
 
@@ -36,6 +38,10 @@ export class App extends Component{
     dailySelling : DailySelling;
 
     customSelling : CustomSelling;
+
+    listCode : ListCode;
+
+    listCodeType : ListCodeType;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -75,6 +81,12 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('custom-selling').length !== 0) {
             this.customSelling = new CustomSelling(document.getElementById("scs"));
+        }
+        else if(this.root.getElementsByClassName('list-code').length !== 0) {
+            this.listCode = new ListCode(document.getElementById("clc"));
+        }
+        else if(this.root.getElementsByClassName('list-code-type').length !== 0) {
+            this.listCodeType = new ListCodeType(document.getElementById("clct"));
         }
 
         this.hamburgerIcon = <HTMLElement> 

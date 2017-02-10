@@ -86,6 +86,17 @@ AppAsset::register($this);
 
                                     ],    
                                     [   
+                                        'label' => 'Transaksi',
+                                        'href' => '#',
+                                        'items' => [
+                                            ['label' => 'Transaksi Harian', 'href' => Yii::$app->request->baseUrl . "/transaction/index"],
+                                            ['label' => 'Buat Laporan Transaksi', 'href' => Yii::$app->request->baseUrl . "/transaction/custom"],
+                                            ['label' => 'Kode Transaksi', 'href' => Yii::$app->request->baseUrl . "/code/list"],
+                                        ]
+
+                                    ],    
+
+                                    [   
                                         'label' => 'Penjualan',
                                         'href' => '#',
                                         'items' => [

@@ -19,7 +19,7 @@
 .tab-container-header{background:#add8e6;display:-ms-flexbox;display:flex;color:#fff;font-weight:700}.tab-container-header-item{width:100%;padding:4px}.tab-container-header-item.active,.tab-container-header-item:hover{background:#fff;color:#add8e6;border:1px solid #add8e6;cursor:pointer}
 .text-area-field-edit{width:100%;overflow-y:hidden;resize:none;background:#fff;border:1px solid #d3d3d3;padding:8px;height:auto;color:#000;text-align:left;font-size:14px;cursor:text;line-height:24px}.text-area-field-edit:empty:before{content:attr(placeholder);display:block;color:#d3d3d3}
 
-.view{background:#fff;padding:16px}.view-header{padding:8px 0;font-weight:700;font-size:22px}.view-header-btn{max-width:230px;width:auto;padding:4px;float:right}
+.view{background:#fff;padding:16px}.view-header{padding:8px 0;font-weight:700;font-size:22px}.view-header-btn{max-width:230px;width:auto;padding:4px;float:right;margin-left:8px}
 .ac-index-header{display:-ms-flexbox;display:flex;margin-bottom:16px;font-size:16px;font-weight:700}.ac-index-header>.button{width:120px;margin-right:8px}
 
 .ac-role-header{margin-bottom:16px;font-size:16px;font-weight:700}
@@ -39,6 +39,7 @@
 .astock-form{max-width:500px}
 
 .app-container,.app-menu{padding-left:8px;width:100%}.app-fullwidth,.app-menu,.container{width:100%}.app-menu{height:40px;position:fixed;top:0;border-bottom:1px solid #d3d3d3;z-index:1}.app-container{margin-top:40px}.app-hide{display:none!important}.app-row{display:-ms-flexbox;display:flex}.list-item{display:inline-block;vertical-align:top}.container{max-width:1200px;margin:auto}body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#333;margin:0}html{font-size:10px;-webkit-tap-highlight-color:transparent;font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}:after,:before{box-sizing:border-box}*{box-sizing:border-box}button:hover{cursor:pointer}.required{color:red}
+
 
 
 
@@ -66,6 +67,7 @@
 .daily-selling-header{display:-ms-flexbox;display:flex}.daily-selling-header>.input-field{width:300px;margin-bottom:8px}.daily-selling-header>.search-field{width:300px;margin-bottom:8px;margin-right:8px}.daily-selling-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
 
 .dynamic-wfield{max-width:500px}
+
 
 
 

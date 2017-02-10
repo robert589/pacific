@@ -1741,7 +1741,65 @@ define("project/custom-selling", ["require", "exports", "common/component", "pro
     }(component_21.Component));
     exports.CustomSelling = CustomSelling;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling"], function (require, exports, component_22, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_14, daily_selling_1, custom_selling_1) {
+define("project/list-code", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_22, button_11, system_14) {
+    "use strict";
+    var ListCode = (function (_super) {
+        __extends(ListCode, _super);
+        function ListCode(root) {
+            return _super.call(this, root) || this;
+        }
+        ListCode.prototype.redirectToAdd = function () {
+            window.location.href = system_14.System.getBaseUrl() + "/code/create";
+        };
+        ListCode.prototype.redirectToCodeType = function () {
+            window.location.href = system_14.System.getBaseUrl() + "/code/type";
+        };
+        ListCode.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.addBtn = new button_11.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+            this.codeType = new button_11.Button(document.getElementById(this.id + "-codetype"), this.redirectToCodeType.bind(this));
+        };
+        ListCode.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ListCode.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ListCode.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ListCode;
+    }(component_22.Component));
+    exports.ListCode = ListCode;
+});
+define("project/list-code-type", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_23, button_12, system_15) {
+    "use strict";
+    var ListCodeType = (function (_super) {
+        __extends(ListCodeType, _super);
+        function ListCodeType(root) {
+            return _super.call(this, root) || this;
+        }
+        ListCodeType.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.addBtn = new button_12.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+        };
+        ListCodeType.prototype.redirectToAdd = function () {
+            window.location.href = system_15.System.getBaseUrl() + "/code/create-type";
+        };
+        ListCodeType.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ListCodeType.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ListCodeType.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ListCodeType;
+    }(component_23.Component));
+    exports.ListCodeType = ListCodeType;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type"], function (require, exports, component_24, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_16, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1784,6 +1842,12 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('custom-selling').length !== 0) {
                 this.customSelling = new custom_selling_1.CustomSelling(document.getElementById("scs"));
             }
+            else if (this.root.getElementsByClassName('list-code').length !== 0) {
+                this.listCode = new list_code_1.ListCode(document.getElementById("clc"));
+            }
+            else if (this.root.getElementsByClassName('list-code-type').length !== 0) {
+                this.listCodeType = new list_code_type_1.ListCodeType(document.getElementById("clct"));
+            }
             this.hamburgerIcon = this.root.getElementsByClassName('app-hamburger')[0];
             this.leftSide = this.root.getElementsByClassName('left-side')[0];
         };
@@ -1797,7 +1861,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_14.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_16.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };
@@ -1808,7 +1872,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_22.Component));
+    }(component_24.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
