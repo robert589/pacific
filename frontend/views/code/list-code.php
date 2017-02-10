@@ -12,7 +12,7 @@
     <?=  GridView::widget(
             ['dataProvider' => $provider,
              'columns' => [
-                'id',
+                'code',
                 'name',
                 'description'
             ]

@@ -15,6 +15,9 @@ class TransactionService extends RService
     const GET_DAILY_TRANSACTION_VIEW = "getdailytransactionview";
     
     const GET_TRANSACTION_VIEW = "gettransactionview";
+    
+    const GET_TRANSACTION_INFO = "gettransactioninfo";
+    
     //attributes
     public $user_id;
     
@@ -25,6 +28,8 @@ class TransactionService extends RService
     public $from;
     
     public $to;
+    
+    public $transaction_id;
     
     private $transactDao;
     
@@ -38,6 +43,8 @@ class TransactionService extends RService
             ['user_id', 'integer'],
             ['user_id', 'required'],
             
+            ['transaction_id', 'integer'],
+            ['transaction_id' ,'required', 'on' => self::GET_TRANSACTION_INFO],
             
             ['date', 'string'],
             ['date', 'required', 'on' => self::GET_DAILY_TRANSACTION_VIEW],
@@ -57,7 +64,7 @@ class TransactionService extends RService
             return false;
         }
     
-        return $this->transactDao->getDailyTransactionView($this->ship_id, $this->date);
+        return $this->transactDao->getDailyTransactionView($this->date);
     }
     
     
@@ -70,5 +77,14 @@ class TransactionService extends RService
         return $this->transactDao->getAllTransactionsInBetween($this->ship_id, $this->from, $this->to);
 
         
+    }
+    
+    public function getTransactionInfo() {
+        $this->setScenario(self::GET_TRANSACTION_INFO);
+        if(!$this->validate()) {
+            return false;
+        }
+        
+        return $this->transactDao->getTransactionInfo($this->transaction_id);
     }
 }

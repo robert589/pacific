@@ -35,7 +35,7 @@
             Transaksi Harian
         </div>
         <div class="dt-view-footer-item2">
-            <?= "0" ?>
+            <?= $dailySaldo ?>
         </div>
     </div>
     

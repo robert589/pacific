@@ -79,4 +79,18 @@ class TransactionVo implements RVo
     public function getUpdatedAt() { 
         return $this->updatedAt; 
     }
+
+        
+    public function getSaldo() {
+        return floatval($this->debet) - floatval($this->credit);
+    }
+    public function getSaldoElement() {
+        $saldo = $this->getSaldo();
+        if($saldo >= 0) {
+            return "<span style='color:green'>$saldo</span>";
+        } else {
+            return "<span style='color:red'>$saldo</span>";
+        }
+    }
+
 }

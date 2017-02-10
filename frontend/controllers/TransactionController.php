@@ -2,9 +2,12 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\vos\TransactionVo;
+use frontend\widgets\DailyTransactionItem;
 use frontend\widgets\DailyTransactionView;
 use yii\web\Controller;
 use frontend\services\TransactionService;
+use frontend\models\AddTransactionForm;
 /**
  * Transaction controller
  */
@@ -25,7 +28,6 @@ class TransactionController extends Controller
         $data['status'] = 1;
         $this->service->loadData($_POST);
         $vos = $this->service->getDailyView();
-        
         if (!$vos && !is_array($vos)) {
             $data['status'] = 0;
             $data['errors']  = $this->service->hasErrors() ? $this->service->getErrors() : null;
@@ -36,6 +38,25 @@ class TransactionController extends Controller
                             'vos' => $vos, 
                             'date' => $this->service->date]);
         return json_encode($data);
+
+    }
+    
+    public function actionPCreate() {
+        $model = new AddTransactionForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $transaction = $model->add();
+        $data['status'] = $transaction ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        
+        if($data['status']) {
+            $this->service->transaction_id = $transaction->id;
+            $vo = $this->service->getTransactionInfo();
+            $data['views'] = DailyTransactionItem::widget(['id' => 'dti-' . $vo->getId(), 'vo' => $vo]);
+        }
+        
+        return json_encode($data);
+        
 
     }
 }

@@ -1,0 +1,12 @@
+.dt-item-view {
+  display: flex;
+}
+.dt-item-remove {
+  padding: 8px;
+  border: 1px solid black;
+}
+.dt-item-field {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid black;
+}

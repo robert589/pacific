@@ -20,7 +20,7 @@
         </div>
         <?= SearchField::widget(['id' => $id . '-code', 'placeholder' => 'Kode', 
             'url' => \Yii::$app->request->baseUrl . '/code/search',
-            'name' => 'code']) ?>
+            'name' => 'entity_id']) ?>
     </div>
 
     <div class="form-field">

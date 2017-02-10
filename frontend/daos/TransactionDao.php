@@ -17,6 +17,11 @@ class TransactionDao implements Dao
                                 where transaction.date = :date
                                 and transaction.status = :status and entity.id = transaction.entity_id";
     
+    const GET_TRANSACTION_INFO = "SELECT transaction.*, entity.name as entity_name
+                                from transaction, entity
+                                where transaction.status = :status and entity.id = transaction.entity_id
+                                and transaction.id = :id";
+    
     const GET_ALL_TRANSACTIONS_IN_BETWEEN = "
         SELECT * FROM `transaction`
         WHERE STR_TO_DATE( date, \"%d/%m/%Y\") >= STR_TO_DATE(:from, \"%d/%m/%Y\")
@@ -24,6 +29,20 @@ class TransactionDao implements Dao
          AND ship_id = :ship_id and status = :status
         ORDER BY STR_TO_DATE(date, '%d/%m/%Y') DESC;";
 
+    public function getTransactionInfo($id, $status = Transaction::STATUS_ACTIVE) {
+        $result = \Yii::$app->db
+            ->createCommand(self::GET_TRANSACTION_INFO)
+            ->bindParam(':id', $id)
+            ->bindParam(':status', $status)
+            ->queryOne();
+        $builder = TransactionVo::createBuilder();
+        $entityBuilder = EntityVo::createBuilder();
+        $entityBuilder->loadData($result, "entity");
+        $builder->setEntity($entityBuilder->build());
+        $builder->loadData($result);
+        return $builder->build();
+    }
+    
     public function getAllTransactionsInBetween($shipId, $from, $to, $status = Transaction::STATUS_ACTIVE) {
         $results = \Yii::$app->db
             ->createCommand(self::GET_ALL_TRANSACTIONS_IN_BETWEEN)
@@ -39,11 +58,7 @@ class TransactionDao implements Dao
             $builder->loadData($result);
             $vos[] = $builder->build();
         }
-        
         return $vos;
-
-        
-        
     }
     
     public  function getDailyTransactionView($date, $status = Transaction::STATUS_ACTIVE ) {
@@ -52,7 +67,6 @@ class TransactionDao implements Dao
             ->bindParam(':date', $date)
             ->bindParam(':status', $status)
             ->queryAll();
-        
         $vos = [];
         foreach($results as $result) {
             $builder = TransactionVo::createBuilder();
@@ -62,6 +76,7 @@ class TransactionDao implements Dao
             $builder->setEntity($entityBuilder->build());
             $vos[] = $builder->build();
         }
+        
         
         return $vos;
 
