@@ -27,6 +27,10 @@ class CodeController extends Controller
         return $this->render('list-code-type', ['id' => 'clct', 'provider' => $provider]);
     }
     
+    public function actionCreateType() {
+        return $this->render('create-code-type', ['id' => 'ccct']);
+    }
+    
     public function actionCreate() {
         return $this->render('create-code', ['id' => 'ccc']);
     }

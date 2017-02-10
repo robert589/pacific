@@ -7,7 +7,7 @@ class m170209_185357_create_table_entity_type extends Migration
     public function up()
     {
         $this->execute("CREATE TABLE entity_type(
-            id int not null primary key,
+            id int not null primary key auto_increment,
             name varchar(255) not null,
             description text null,
             created_at int not null,

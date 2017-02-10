@@ -2,7 +2,7 @@
     use common\widgets\Button;
     use yii\grid\GridView;
 ?>
-<div id="<?= $id ?>" class="list-codetype view">
+<div id="<?= $id ?>" class="list-code-type view">
     <div class="view-header">
         Daftar Tipe Kode
         <?= Button::widget(['id' => $id . '-add', 'text' => 'Tambah Tipe Kode', 'newClass' => 'view-header-btn']) ?>

@@ -12,6 +12,7 @@ import {DailySelling} from './daily-selling';
 import {CustomSelling} from './custom-selling';
 import {ListCode} from './list-code';
 import {ListCodeType} from './list-code-type';
+import {CreateCodeType} from './create-code-type';
 
 export class App extends Component{
 
@@ -42,6 +43,8 @@ export class App extends Component{
     listCode : ListCode;
 
     listCodeType : ListCodeType;
+
+    createCodeType : CreateCodeType;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -87,6 +90,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('list-code-type').length !== 0) {
             this.listCodeType = new ListCodeType(document.getElementById("clct"));
+        }
+        else if(this.root.getElementsByClassName('create-codetype').length !== 0) {
+            this.createCodeType = new CreateCodeType(document.getElementById("ccct"));
         }
 
         this.hamburgerIcon = <HTMLElement> 
