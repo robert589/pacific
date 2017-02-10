@@ -1,0 +1,17 @@
+.custom-selling-form {
+  display: flex;
+}
+.custom-selling-form > .input-field {
+  width: 300px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+.custom-selling-form > .search-field {
+  width: 300px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+.custom-selling-form > .button {
+  width: 60px;
+  margin-bottom: 8px;
+}

@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\widgets\SellingView;
 use frontend\vos\SellingVo;
 use frontend\widgets\DailySellingItem;
 use frontend\models\AddSellingForm;
@@ -54,6 +55,10 @@ class SellingController extends Controller
         
     }
     
+    public function actionCustom() {
+        return $this->render('custom-selling', ['id' => 'scs']);
+    }
+    
     public function actionGetDailySellingView()  {
         $this->service->loadData($_POST);
         $vos = $this->service->getDailySellingView();
@@ -73,6 +78,25 @@ class SellingController extends Controller
     }
     
 
+    public function actionGetSellingView() {
+        $this->service->loadData($_POST);
+        
+        $vos = $this->service->getSellingView();
+        if(!is_array($vos)) {
+            $data['status'] = 0;
+            $data['errors'] = $this->service->hasErrors() ? $this->service->getErrors() : null;
+            return json_encode($data);
+        }
+        $data['status'] = 1;
+        $data['views'] = SellingView::widget(['id' => 'rv', 'vos' => $vos,
+                               'shipId' => $this->service->ship_id,
+                            'currentSaldo' => "0",
+                            'date' => $this->service->date]);
+        
+        return json_encode($data);
+        
+        
+    }
     
     
     

@@ -75,7 +75,7 @@ class SellingVo implements RVo
     }
 
     public function getTotal() { 
-        return $this->total; 
+        return ($this->total) ? $this->total : (floatval($this->tonase) * floatval($this->price)); 
     }
 
     public function getCreatedAt() { 

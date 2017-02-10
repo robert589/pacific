@@ -31,7 +31,7 @@
             Saldo Harian
         </div>
         <div class="ds-view-footer-item2">
-            <?= "0" ?>
+            <?= $dailySaldo ?>
         </div>
     </div>
     

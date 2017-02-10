@@ -43,6 +43,7 @@ class SellingService extends RService
             ['date', 'string'],
             ['date', 'required', 'on' => self::GET_DAILY_SELLING_VIEW],
             ['date', DateValidator::className()],
+            
             ['from', 'string'],
             ['from', DateValidator::className()],
             ['from', 'required', 'on' => self::GET_SELLING_VIEW],
@@ -52,6 +53,16 @@ class SellingService extends RService
             ['to', DateValidator::className()]
         ];
     }
+    
+    public function getSellingView() {
+        $this->setScenario(self::GET_SELLING_VIEW);
+        if(!$this->validate()) {
+            return false;
+        }
+        
+        return $this->sellingDao->getSellingView($this->ship_id, $this->date, $this->from, $this->to);
+    }
+
     public function getDailySellingView() {
         $this->setScenario(self::GET_DAILY_SELLING_VIEW);
         if(!$this->validate()) {

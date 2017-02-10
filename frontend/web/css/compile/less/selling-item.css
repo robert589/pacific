@@ -1,0 +1,12 @@
+.selling-item-view {
+  display: flex;
+}
+.selling-item-remove {
+  padding: 8px;
+  border: 1px solid black;
+}
+.selling-item-field {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid black;
+}

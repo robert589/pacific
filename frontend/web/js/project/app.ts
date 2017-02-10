@@ -9,6 +9,7 @@ import {DailyReport} from './daily-report';
 import {CustomReport} from './custom-report';
 import {System} from './../common/system';
 import {DailySelling} from './daily-selling';
+import {CustomSelling} from './custom-selling';
 
 export class App extends Component{
 
@@ -33,6 +34,8 @@ export class App extends Component{
     hamburgerIcon : HTMLElement;
 
     dailySelling : DailySelling;
+
+    customSelling : CustomSelling;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -70,7 +73,10 @@ export class App extends Component{
         else if(this.root.getElementsByClassName('daily-selling').length !== 0) {
             this.dailySelling = new DailySelling(document.getElementById("sds"));
         }
-        
+        else if(this.root.getElementsByClassName('custom-selling').length !== 0) {
+            this.customSelling = new CustomSelling(document.getElementById("scs"));
+        }
+
         this.hamburgerIcon = <HTMLElement> 
                         this.root.getElementsByClassName('app-hamburger')[0];   
         this.leftSide = <HTMLElement> this.root.getElementsByClassName('left-side')[0];

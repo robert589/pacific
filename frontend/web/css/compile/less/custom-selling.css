@@ -1,0 +1,13 @@
+.custom-selling-header {
+  display: flex;
+}
+.custom-selling-header > .input-field {
+  width: 300px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}
+.custom-selling-header > .search-field {
+  width: 300px;
+  margin-bottom: 8px;
+  margin-right: 8px;
+}

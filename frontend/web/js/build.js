@@ -1642,7 +1642,106 @@ define("project/daily-selling", ["require", "exports", "common/component", "comm
     }(component_19.Component));
     exports.DailySelling = DailySelling;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling"], function (require, exports, component_20, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_14, daily_selling_1) {
+define("project/custom-selling-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_7, search_field_5, input_field_9) {
+    "use strict";
+    var CustomSellingForm = (function (_super) {
+        __extends(CustomSellingForm, _super);
+        function CustomSellingForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = _this.successCallback.bind(_this);
+            return _this;
+        }
+        Object.defineProperty(CustomSellingForm, "SUCCESS_EVENT", {
+            get: function () { return "CUSTOM_SELLING_FORM_SUCCESS_EVENT"; },
+            enumerable: true,
+            configurable: true
+        });
+        CustomSellingForm.prototype.rules = function () {
+            this.registerFields([this.ship, this.from, this.to]);
+            this.setRequiredField([this.ship, this.from, this.to]);
+        };
+        CustomSellingForm.prototype.successCallback = function (data) {
+            var json = {
+                views: data.views
+            };
+            this.successEvent = new CustomEvent(CustomSellingForm.SUCCESS_EVENT, { detail: json });
+            this.root.dispatchEvent(this.successEvent);
+        };
+        CustomSellingForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.ship = new search_field_5.SearchField(document.getElementById(this.id + "-ship"));
+            this.from = new input_field_9.InputField(document.getElementById(this.id + "-from"));
+            this.to = new input_field_9.InputField(document.getElementById(this.id + "-to"));
+        };
+        CustomSellingForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CustomSellingForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CustomSellingForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CustomSellingForm;
+    }(form_7.Form));
+    exports.CustomSellingForm = CustomSellingForm;
+});
+define("project/selling-view", ["require", "exports", "common/component"], function (require, exports, component_20) {
+    "use strict";
+    var SellingView = (function (_super) {
+        __extends(SellingView, _super);
+        function SellingView(root) {
+            return _super.call(this, root) || this;
+        }
+        SellingView.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+        };
+        SellingView.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        SellingView.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        SellingView.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return SellingView;
+    }(component_20.Component));
+    exports.SellingView = SellingView;
+});
+define("project/custom-selling", ["require", "exports", "common/component", "project/custom-selling-form", "project/selling-view"], function (require, exports, component_21, custom_selling_form_1, selling_view_1) {
+    "use strict";
+    var CustomSelling = (function (_super) {
+        __extends(CustomSelling, _super);
+        function CustomSelling(root) {
+            return _super.call(this, root) || this;
+        }
+        CustomSelling.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new custom_selling_form_1.CustomSellingForm(document.getElementById(this.id + "-form"));
+            this.area = this.root.getElementsByClassName('custom-selling-area')[0];
+        };
+        CustomSelling.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.form.attachEvent(custom_selling_form_1.CustomSellingForm.SUCCESS_EVENT, this.addArea.bind(this));
+        };
+        CustomSelling.prototype.addArea = function (e) {
+            if (this.sellingView) {
+                this.sellingView.deconstruct();
+            }
+            this.area.innerHTML = "";
+            var json = e.detail;
+            var div = document.createElement('div');
+            div.innerHTML = json.views;
+            var sellingViewRaw = div.getElementsByClassName('selling-view')[0];
+            this.area.appendChild(sellingViewRaw);
+            this.sellingView = new selling_view_1.SellingView(sellingViewRaw);
+        };
+        return CustomSelling;
+    }(component_21.Component));
+    exports.CustomSelling = CustomSelling;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling"], function (require, exports, component_22, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_14, daily_selling_1, custom_selling_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1682,6 +1781,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('daily-selling').length !== 0) {
                 this.dailySelling = new daily_selling_1.DailySelling(document.getElementById("sds"));
             }
+            else if (this.root.getElementsByClassName('custom-selling').length !== 0) {
+                this.customSelling = new custom_selling_1.CustomSelling(document.getElementById("scs"));
+            }
             this.hamburgerIcon = this.root.getElementsByClassName('app-hamburger')[0];
             this.leftSide = this.root.getElementsByClassName('left-side')[0];
         };
@@ -1706,7 +1808,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_20.Component));
+    }(component_22.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

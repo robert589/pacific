@@ -1,0 +1,28 @@
+.selling-view-header {
+  display: flex;
+}
+.selling-view-header-field {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #000;
+  background: lightgray;
+  border: 1px solid black;
+}
+.selling-view-footer {
+  display: flex;
+}
+.selling-view-footer-item2 {
+  padding: 8px;
+  border: 1px solid black;
+  width: 100%;
+}
+.selling-view-footer-item3 {
+  background: orange;
+  font-weight: bold;
+  padding: 8px 13px;
+  border: 1px solid black;
+  width: 400%;
+}
+.selling-view-area {
+  margin: 16px 0 0 0;
+}
