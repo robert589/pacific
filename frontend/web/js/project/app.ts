@@ -14,6 +14,7 @@ import {ListCode} from './list-code';
 import {ListCodeType} from './list-code-type';
 import {CreateCodeType} from './create-code-type';
 import {CreateCode} from './create-code';
+import {DailyTransaction} from './daily-transaction';
 
 export class App extends Component{
 
@@ -48,6 +49,8 @@ export class App extends Component{
     createCodeType : CreateCodeType;
 
     createCode : CreateCode;
+
+    dailyTransact : DailyTransaction;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -84,6 +87,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('daily-selling').length !== 0) {
             this.dailySelling = new DailySelling(document.getElementById("sds"));
+        }
+        else if(this.root.getElementsByClassName('daily-transact').length !== 0) {
+            this.dailyTransact = new DailyTransaction(document.getElementById("tdt"));
         }
         else if(this.root.getElementsByClassName('custom-selling').length !== 0) {
             this.customSelling = new CustomSelling(document.getElementById("scs"));

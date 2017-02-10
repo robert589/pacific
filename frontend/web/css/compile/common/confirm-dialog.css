@@ -1,0 +1,8 @@
+.cdialog-footer {
+  display: flex;
+  margin-top: 16px;
+}
+.cdialog-footer > .button {
+  width: 80px;
+  margin-right: 16px;
+}

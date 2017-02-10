@@ -13,7 +13,29 @@
              'columns' => [
                 'id',
                 'name',
-                'description'
+                'description',
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'header'=>'Actions',    
+                    'template' => '{delete}',
+                    'urlCreator' => function ($action, $model, $key, $index) {
+                        
+                    },
+                    'buttons' => [
+
+                        //view button
+                        'delete' => function ($url, $model) {
+                            return Button::widget(['id' => 'lsd-del-' . $model['id'],
+                                'widgetClass' => 'button-link list-ship-delete',
+                                'text' => '<span class="glyphicon glyphicon-remove"></span>',
+                                'options' => [
+                                    'data-ship-id' => $model['id']
+                                ],
+                                'color' => Button::NONE_COLOR]);
+                        }
+                    ],
+
+                ]
             ]
         ]) ?>
 

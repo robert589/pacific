@@ -6,7 +6,17 @@ class m170210_082800_create_table_transaction extends Migration
 {
     public function up()
     {
-
+        $this->execute("Create table transaction(
+            id int not null primary key auto_increment,
+            date varchar(120) not null,
+            entity_id int not null,
+            debet float not null,
+            credit float not null,
+            remark text null,
+            status int not null default 10,
+            created_at int not null,
+            updated_at int not null
+            )");
     }
 
     public function down()

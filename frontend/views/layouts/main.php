@@ -4,15 +4,10 @@
 /* @var $content string */
 
 use yii\helpers\Html;
-use yii\bootstrap\Nav;
-use yii\bootstrap\NavBar;
-use yii\widgets\Breadcrumbs;
 use frontend\assets\AppAsset;
-use common\widgets\Alert;
-use frontend\widgets\MasterSidebar;
 use frontend\widgets\Sidebar;
 use common\libraries\UserLibrary;
-use frontend\widgets\TeacherSidebar;
+use common\widgets\ConfirmDialog;
 AppAsset::register($this);
 ?>
 <?php $this->beginPage() ?>
@@ -39,7 +34,7 @@ AppAsset::register($this);
                 </div>
                 <div class="profile-dropdown">
                     <a href="#" class="account">
-                        <img src=<?= Yii::$app->request->baseUrl  . "/images/profile-pic'.jpg" ?> class="profile-circle"/>
+                        <img src="<?= Yii::$app->request->baseUrl  . "/images/profile-pic'.jpg" ?>" class="profile-circle"/>
                     </a>
                     <div class="submenu" style="display: none;">
                         <ul class="root">
@@ -134,11 +129,10 @@ AppAsset::register($this);
         <?= $content ?>
     <?php } ?>
 <?php $this->endBody() ?>
-<script>
-require(["project/init"], function() {
-});
-</script>
+<script>require(["project/init"], function() {});</script>
 <input id="base-url" type="hidden" value="<?= Yii::$app->request->baseUrl ?>">
+<?=ConfirmDialog::widget(['id' => 'confirmdialog']) ?>
 </body>
+
 </html>
 <?php $this->endPage() ?>

@@ -47,7 +47,110 @@ define("common/component", ["require", "exports"], function (require, exports) {
     }());
     exports.Component = Component;
 });
-define("common/system", ["require", "exports"], function (require, exports) {
+define("common/button", ["require", "exports", "common/component"], function (require, exports, component_1) {
+    "use strict";
+    var Button = (function (_super) {
+        __extends(Button, _super);
+        function Button(root, clickEvent) {
+            var _this = _super.call(this, root) || this;
+            _this.addClickEvent(clickEvent);
+            return _this;
+        }
+        Button.prototype.addClickEvent = function (cb) {
+            this.root.onclick = function (e) {
+                if (!this.isDisabled()) {
+                    cb(e);
+                }
+            }.bind(this);
+        };
+        Button.prototype.disable = function (on) {
+            this.root.disabled = on;
+        };
+        Button.prototype.isDisabled = function () {
+            return this.root.disabled;
+        };
+        Button.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+            this.root.onclick = null;
+            this.root = null;
+        };
+        return Button;
+    }(component_1.Component));
+    exports.Button = Button;
+});
+define("common/modal", ["require", "exports", "common/component", "common/button"], function (require, exports, component_2, button_1) {
+    "use strict";
+    var Modal = (function (_super) {
+        __extends(Modal, _super);
+        function Modal(root) {
+            return _super.call(this, root) || this;
+        }
+        Modal.prototype.show = function () {
+            this.root.classList.add('modal-show');
+            this.root.classList.remove('modal-hide');
+        };
+        Modal.prototype.hide = function () {
+            this.root.classList.add('modal-hide');
+            this.root.classList.remove('modal-show');
+        };
+        Modal.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.title = this.root.getElementsByClassName('modal-title')[0];
+            this.closeButton = new button_1.Button(document.getElementById(this.id + "-close-button"), function (e) {
+                this.hide();
+            }.bind(this));
+        };
+        Modal.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.root.addEventListener('click', function (e) {
+                if (e.target && !e.target.closest('.modal-content')) {
+                    this.hide();
+                }
+            }.bind(this));
+        };
+        Modal.prototype.setTitle = function (title) {
+            this.title.innerHTML = title;
+        };
+        return Modal;
+    }(component_2.Component));
+    exports.Modal = Modal;
+});
+define("common/confirm-dialog", ["require", "exports", "common/modal", "common/button"], function (require, exports, modal_1, button_2) {
+    "use strict";
+    var ConfirmDialog = (function (_super) {
+        __extends(ConfirmDialog, _super);
+        function ConfirmDialog(root) {
+            return _super.call(this, root) || this;
+        }
+        ConfirmDialog.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.text = this.root.getElementsByClassName('cdialog-text')[0];
+        };
+        ConfirmDialog.prototype.setText = function (text) {
+            this.text.innerHTML = text;
+        };
+        ConfirmDialog.prototype.clickOk = function (cb) {
+            cb();
+            this.hide();
+        };
+        ConfirmDialog.prototype.clickCancel = function () {
+            this.hide();
+        };
+        ConfirmDialog.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ConfirmDialog.prototype.detach = function () {
+        };
+        ConfirmDialog.prototype.run = function (cb) {
+            this.okBtn = new button_2.Button(document.getElementById(this.id + "-ok"), this.clickOk.bind(this, cb));
+            this.cancelBtn = new button_2.Button(document.getElementById(this.id + "-cancel"), this.clickCancel.bind(this));
+            this.show();
+        };
+        return ConfirmDialog;
+    }(modal_1.Modal));
+    exports.ConfirmDialog = ConfirmDialog;
+});
+define("common/system", ["require", "exports", "common/confirm-dialog"], function (require, exports, confirm_dialog_1) {
     "use strict";
     var System = (function () {
         function System() {
@@ -87,11 +190,17 @@ define("common/system", ["require", "exports"], function (require, exports) {
         System.checkIdExist = function (id) {
             return !System.isEmptyValue(document.getElementById(id));
         };
+        System.showConfirmDialog = function (cb, title, content) {
+            var dialog = new confirm_dialog_1.ConfirmDialog(document.getElementById('confirmdialog'));
+            dialog.setText(content);
+            dialog.setTitle(title);
+            dialog.run(cb);
+        };
         return System;
     }());
     exports.System = System;
 });
-define("common/Field", ["require", "exports", "common/component", "common/system"], function (require, exports, component_1, system_1) {
+define("common/Field", ["require", "exports", "common/component", "common/system"], function (require, exports, component_3, system_1) {
     "use strict";
     var Field = (function (_super) {
         __extends(Field, _super);
@@ -136,7 +245,7 @@ define("common/Field", ["require", "exports", "common/component", "common/system
             return parseInt(this.root.getAttribute('data-index'));
         };
         return Field;
-    }(component_1.Component));
+    }(component_3.Component));
     exports.Field = Field;
 });
 define("common/input-field", ["require", "exports", "common/Field", "common/system"], function (require, exports, Field_1, system_2) {
@@ -242,70 +351,6 @@ define("common/input-field", ["require", "exports", "common/Field", "common/syst
     }(Field_1.Field));
     exports.InputField = InputField;
 });
-define("common/button", ["require", "exports", "common/component"], function (require, exports, component_2) {
-    "use strict";
-    var Button = (function (_super) {
-        __extends(Button, _super);
-        function Button(root, clickEvent) {
-            var _this = _super.call(this, root) || this;
-            _this.addClickEvent(clickEvent);
-            return _this;
-        }
-        Button.prototype.addClickEvent = function (cb) {
-            this.root.onclick = function (e) {
-                if (!this.isDisabled()) {
-                    cb(e);
-                }
-            }.bind(this);
-        };
-        Button.prototype.disable = function (on) {
-            this.root.disabled = on;
-        };
-        Button.prototype.isDisabled = function () {
-            return this.root.disabled;
-        };
-        Button.prototype.detach = function () {
-            _super.prototype.detach.call(this);
-            this.root.onclick = null;
-            this.root = null;
-        };
-        return Button;
-    }(component_2.Component));
-    exports.Button = Button;
-});
-define("common/modal", ["require", "exports", "common/component", "common/button"], function (require, exports, component_3, button_1) {
-    "use strict";
-    var Modal = (function (_super) {
-        __extends(Modal, _super);
-        function Modal(root) {
-            return _super.call(this, root) || this;
-        }
-        Modal.prototype.show = function () {
-            this.root.classList.add('modal-show');
-            this.root.classList.remove('modal-hide');
-        };
-        Modal.prototype.hide = function () {
-            this.root.classList.add('modal-hide');
-            this.root.classList.remove('modal-show');
-        };
-        Modal.prototype.decorate = function () {
-            _super.prototype.decorate.call(this);
-            this.closeButton = new button_1.Button(document.getElementById(this.id + "-close-button"), function (e) {
-                this.hide();
-            }.bind(this));
-        };
-        Modal.prototype.bindEvent = function () {
-            _super.prototype.bindEvent.call(this);
-            this.root.addEventListener('click', function (e) {
-                if (e.target && !e.target.closest('.modal-content')) {
-                    this.hide();
-                }
-            }.bind(this));
-        };
-        return Modal;
-    }(component_3.Component));
-    exports.Modal = Modal;
-});
 define("common/validation", ["require", "exports"], function (require, exports) {
     "use strict";
     var Validation = (function () {
@@ -359,7 +404,7 @@ define("common/range-validation", ["require", "exports", "common/validation"], f
     }(validation_1.Validation));
     exports.RangeValidation = RangeValidation;
 });
-define("common/form", ["require", "exports", "common/component", "common/system", "common/button"], function (require, exports, component_4, system_3, button_2) {
+define("common/form", ["require", "exports", "common/component", "common/system", "common/button"], function (require, exports, component_4, system_3, button_3) {
     "use strict";
     var Form = (function (_super) {
         __extends(Form, _super);
@@ -380,7 +425,7 @@ define("common/form", ["require", "exports", "common/component", "common/system"
             this.method = this.root.getAttribute('method');
             this.url = this.root.getAttribute('url');
             this.file = Boolean(this.root.getAttribute('data-file'));
-            this.submitButton = new button_2.Button(document.getElementById(this.id + "-submit-btn"), this.submit.bind(this));
+            this.submitButton = new button_3.Button(document.getElementById(this.id + "-submit-btn"), this.submit.bind(this));
         };
         Form.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -659,7 +704,7 @@ define("project/create-owner", ["require", "exports", "common/component", "proje
     }(component_6.Component));
     exports.CreateOwner = CreateOwner;
 });
-define("project/list-owner", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_7, button_3, system_5) {
+define("project/list-owner", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_7, button_4, system_5) {
     "use strict";
     var ListOwner = (function (_super) {
         __extends(ListOwner, _super);
@@ -668,7 +713,7 @@ define("project/list-owner", ["require", "exports", "common/component", "common/
         }
         ListOwner.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.addBtn = new button_3.Button(document.getElementById(this.id + "-add"), this.redirectToAddOwner.bind(this));
+            this.addBtn = new button_4.Button(document.getElementById(this.id + "-add"), this.redirectToAddOwner.bind(this));
         };
         ListOwner.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -743,7 +788,7 @@ define("project/create-ship", ["require", "exports", "common/component", "projec
     }(component_8.Component));
     exports.CreateShip = CreateShip;
 });
-define("project/list-ship", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_9, button_4, system_7) {
+define("project/list-ship", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_9, button_5, system_7) {
     "use strict";
     var ListShip = (function (_super) {
         __extends(ListShip, _super);
@@ -752,7 +797,34 @@ define("project/list-ship", ["require", "exports", "common/component", "common/b
         }
         ListShip.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.addBtn = new button_4.Button(document.getElementById(this.id + "-add"), this.redirectToAddShip.bind(this));
+            this.addBtn = new button_5.Button(document.getElementById(this.id + "-add"), this.redirectToAddShip.bind(this));
+            this.deletes = [];
+            var deleteRaws = this.root.getElementsByClassName('list-ship-delete');
+            for (var i = 0; i < deleteRaws.length; i++) {
+                this.deletes.push(new button_5.Button(deleteRaws.item(i), this.showDeleteDialog.bind(this, deleteRaws.item(i))));
+            }
+        };
+        ListShip.prototype.showDeleteDialog = function (raw) {
+            system_7.System.showConfirmDialog(this.deleteShip.bind(null, raw), "Are you sure", "Once it is deleted, you have to ask admin to retrieve it");
+        };
+        ListShip.prototype.deleteShip = function (raw) {
+            var shipId = raw.getAttribute('data-ship-id');
+            var data = {};
+            data['ship_id'] = shipId;
+            $.ajax({
+                url: system_7.System.getBaseUrl() + "/ship/remove",
+                data: system_7.System.addCsrf(data),
+                context: this,
+                dataType: "json",
+                method: "post",
+                success: function (data) {
+                    if (data.status) {
+                        window.location.reload();
+                    }
+                },
+                error: function (data) {
+                }
+            });
         };
         ListShip.prototype.redirectToAddShip = function () {
             window.location.href = system_7.System.getBaseUrl() + "/ship/create";
@@ -959,7 +1031,7 @@ define("common/search-field", ["require", "exports", "common/Field", "common/sys
     }(field_1.Field));
     exports.SearchField = SearchField;
 });
-define("project/ship-ownership", ["require", "exports", "common/component", "common/search-field", "common/button", "common/system"], function (require, exports, component_11, search_field_1, button_5, system_9) {
+define("project/ship-ownership", ["require", "exports", "common/component", "common/search-field", "common/button", "common/system"], function (require, exports, component_11, search_field_1, button_6, system_9) {
     "use strict";
     var ShipOwnership = (function (_super) {
         __extends(ShipOwnership, _super);
@@ -971,7 +1043,7 @@ define("project/ship-ownership", ["require", "exports", "common/component", "com
             this.ship = new search_field_1.SearchField(document.getElementById(this.id + "-ship"));
             this.area = this.root.getElementsByClassName('ship-owner-area')[0];
             this.owner = new search_field_1.SearchField(document.getElementById(this.id + "-owner"));
-            this.add = new button_5.Button(document.getElementById(this.id + "-add"), this.assignShip.bind(this));
+            this.add = new button_6.Button(document.getElementById(this.id + "-add"), this.assignShip.bind(this));
         };
         ShipOwnership.prototype.assignShip = function () {
             var data = {};
@@ -1101,7 +1173,7 @@ define("project/add-report-form", ["require", "exports", "common/form", "common/
     }(form_4.Form));
     exports.AddReportForm = AddReportForm;
 });
-define("project/daily-report-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_12, button_6, system_10) {
+define("project/daily-report-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_12, button_7, system_10) {
     "use strict";
     var DailyReportItem = (function (_super) {
         __extends(DailyReportItem, _super);
@@ -1114,8 +1186,8 @@ define("project/daily-report-item", ["require", "exports", "common/component", "
             _super.prototype.decorate.call(this);
             this.viewArea = document.getElementById(this.id + "-view");
             this.removeArea = document.getElementById(this.id + "-remove-area");
-            this.removeBtn = new button_6.Button(document.getElementById(this.id + "-remove-btn"), this.removeItem.bind(this));
-            this.cancelRemove = new button_6.Button(document.getElementById(this.id + "-cancel"), this.cancelRemoveItem.bind(this));
+            this.removeBtn = new button_7.Button(document.getElementById(this.id + "-remove-btn"), this.removeItem.bind(this));
+            this.cancelRemove = new button_7.Button(document.getElementById(this.id + "-cancel"), this.cancelRemoveItem.bind(this));
         };
         DailyReportItem.prototype.removeItem = function () {
             this.removeBtn.disable(true);
@@ -1210,7 +1282,7 @@ define("project/daily-report-view", ["require", "exports", "common/component", "
     }(component_13.Component));
     exports.DailyReportView = DailyReportView;
 });
-define("project/daily-report", ["require", "exports", "common/component", "common/search-field", "common/input-field", "common/system", "project/daily-report-view", "common/button"], function (require, exports, component_14, search_field_2, input_field_5, system_11, daily_report_view_1, button_7) {
+define("project/daily-report", ["require", "exports", "common/component", "common/search-field", "common/input-field", "common/system", "project/daily-report-view", "common/button"], function (require, exports, component_14, search_field_2, input_field_5, system_11, daily_report_view_1, button_8) {
     "use strict";
     var DailyReport = (function (_super) {
         __extends(DailyReport, _super);
@@ -1222,7 +1294,7 @@ define("project/daily-report", ["require", "exports", "common/component", "commo
             this.ship = new search_field_2.SearchField(document.getElementById(this.id + "-ship"));
             this.date = new input_field_5.InputField(document.getElementById(this.id + "-date"));
             this.area = this.root.getElementsByClassName('daily-report-area')[0];
-            this.refresh = new button_7.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
+            this.refresh = new button_8.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
         };
         DailyReport.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1380,7 +1452,7 @@ define("project/custom-report", ["require", "exports", "common/component", "proj
     }(component_16.Component));
     exports.CustomReport = CustomReport;
 });
-define("project/add-selling-form", ["require", "exports", "common/form", "common/input-field", "common/button"], function (require, exports, form_6, input_field_7, button_8) {
+define("project/add-selling-form", ["require", "exports", "common/form", "common/input-field", "common/button"], function (require, exports, form_6, input_field_7, button_9) {
     "use strict";
     var AddSellingForm = (function (_super) {
         __extends(AddSellingForm, _super);
@@ -1413,7 +1485,7 @@ define("project/add-selling-form", ["require", "exports", "common/form", "common
             this.price = new input_field_7.InputField(document.getElementById(this.id + "-price"));
             this.tonase = new input_field_7.InputField(document.getElementById(this.id + "-tonase"));
             this.total = new input_field_7.InputField(document.getElementById(this.id + "-total"));
-            this.switch = new button_8.Button(document.getElementById(this.id + "-switch"), this.clickSwitch.bind(this));
+            this.switch = new button_9.Button(document.getElementById(this.id + "-switch"), this.clickSwitch.bind(this));
             this.totalField = document.getElementById(this.id + "total-el");
             this.priceField = document.getElementById(this.id + "price-el");
             this.tonaseField = document.getElementById(this.id + "tonase-el");
@@ -1471,7 +1543,7 @@ define("project/add-selling-form", ["require", "exports", "common/form", "common
     }(form_6.Form));
     exports.AddSellingForm = AddSellingForm;
 });
-define("project/daily-selling-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_17, button_9, system_12) {
+define("project/daily-selling-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_17, button_10, system_12) {
     "use strict";
     var DailySellingItem = (function (_super) {
         __extends(DailySellingItem, _super);
@@ -1484,8 +1556,8 @@ define("project/daily-selling-item", ["require", "exports", "common/component", 
             _super.prototype.decorate.call(this);
             this.viewArea = document.getElementById(this.id + "-view");
             this.removeArea = document.getElementById(this.id + "-remove-area");
-            this.removeBtn = new button_9.Button(document.getElementById(this.id + "-remove-btn"), this.removeItem.bind(this));
-            this.cancelRemove = new button_9.Button(document.getElementById(this.id + "-cancel"), this.cancelRemoveItem.bind(this));
+            this.removeBtn = new button_10.Button(document.getElementById(this.id + "-remove-btn"), this.removeItem.bind(this));
+            this.cancelRemove = new button_10.Button(document.getElementById(this.id + "-cancel"), this.cancelRemoveItem.bind(this));
         };
         DailySellingItem.prototype.removeItem = function () {
             this.removeBtn.disable(true);
@@ -1571,7 +1643,7 @@ define("project/daily-selling-view", ["require", "exports", "common/component", 
     }(component_18.Component));
     exports.DailySellingView = DailySellingView;
 });
-define("project/daily-selling", ["require", "exports", "common/component", "common/search-field", "common/input-field", "common/system", "project/daily-selling-view", "common/button"], function (require, exports, component_19, search_field_4, input_field_8, system_13, daily_selling_view_1, button_10) {
+define("project/daily-selling", ["require", "exports", "common/component", "common/search-field", "common/input-field", "common/system", "project/daily-selling-view", "common/button"], function (require, exports, component_19, search_field_4, input_field_8, system_13, daily_selling_view_1, button_11) {
     "use strict";
     var DailySelling = (function (_super) {
         __extends(DailySelling, _super);
@@ -1583,7 +1655,7 @@ define("project/daily-selling", ["require", "exports", "common/component", "comm
             this.ship = new search_field_4.SearchField(document.getElementById(this.id + "-ship"));
             this.date = new input_field_8.InputField(document.getElementById(this.id + "-date"));
             this.area = this.root.getElementsByClassName('daily-selling-area')[0];
-            this.refresh = new button_10.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
+            this.refresh = new button_11.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
         };
         DailySelling.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1741,7 +1813,7 @@ define("project/custom-selling", ["require", "exports", "common/component", "pro
     }(component_21.Component));
     exports.CustomSelling = CustomSelling;
 });
-define("project/list-code", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_22, button_11, system_14) {
+define("project/list-code", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_22, button_12, system_14) {
     "use strict";
     var ListCode = (function (_super) {
         __extends(ListCode, _super);
@@ -1756,8 +1828,8 @@ define("project/list-code", ["require", "exports", "common/component", "common/b
         };
         ListCode.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.addBtn = new button_11.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
-            this.codeType = new button_11.Button(document.getElementById(this.id + "-codetype"), this.redirectToCodeType.bind(this));
+            this.addBtn = new button_12.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+            this.codeType = new button_12.Button(document.getElementById(this.id + "-codetype"), this.redirectToCodeType.bind(this));
         };
         ListCode.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -1772,7 +1844,7 @@ define("project/list-code", ["require", "exports", "common/component", "common/b
     }(component_22.Component));
     exports.ListCode = ListCode;
 });
-define("project/list-code-type", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_23, button_12, system_15) {
+define("project/list-code-type", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_23, button_13, system_15) {
     "use strict";
     var ListCodeType = (function (_super) {
         __extends(ListCodeType, _super);
@@ -1781,7 +1853,7 @@ define("project/list-code-type", ["require", "exports", "common/component", "com
         }
         ListCodeType.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.addBtn = new button_12.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+            this.addBtn = new button_13.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
         };
         ListCodeType.prototype.redirectToAdd = function () {
             window.location.href = system_15.System.getBaseUrl() + "/code/create-type";
@@ -1915,7 +1987,89 @@ define("project/create-code", ["require", "exports", "common/component", "projec
     }(component_25.Component));
     exports.CreateCode = CreateCode;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code"], function (require, exports, component_26, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_18, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1) {
+define("project/daily-transaction-view", ["require", "exports", "common/component"], function (require, exports, component_26) {
+    "use strict";
+    var DailyTransactionView = (function (_super) {
+        __extends(DailyTransactionView, _super);
+        function DailyTransactionView(root) {
+            return _super.call(this, root) || this;
+        }
+        DailyTransactionView.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+        };
+        DailyTransactionView.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        DailyTransactionView.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        DailyTransactionView.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return DailyTransactionView;
+    }(component_26.Component));
+    exports.DailyTransactionView = DailyTransactionView;
+});
+define("project/daily-transaction", ["require", "exports", "common/component", "common/input-field", "common/system", "project/daily-transaction-view", "common/button"], function (require, exports, component_27, input_field_12, system_18, daily_transaction_view_1, button_14) {
+    "use strict";
+    var DailyTransaction = (function (_super) {
+        __extends(DailyTransaction, _super);
+        function DailyTransaction(root) {
+            return _super.call(this, root) || this;
+        }
+        DailyTransaction.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.date = new input_field_12.InputField(document.getElementById(this.id + "-date"));
+            this.area = this.root.getElementsByClassName('daily-transact-area')[0];
+            this.refresh = new button_14.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
+        };
+        DailyTransaction.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.date.attachEvent(input_field_12.InputField.VALUE_CHANGED, this.getView.bind(this));
+        };
+        DailyTransaction.prototype.getView = function () {
+            var data = {};
+            data['date'] = this.date.getValue();
+            this.area.innerHTML = "Loading . . .";
+            this.refresh.disable(true);
+            $.ajax({
+                url: system_18.System.getBaseUrl() + "/transaction/get-daily-view",
+                data: system_18.System.addCsrf(data),
+                context: this,
+                dataType: "json",
+                method: "post",
+                success: function (data) {
+                    if (data.status) {
+                        this.addViewToArea(data.views);
+                        this.refresh.disable(false);
+                    }
+                },
+                error: function (data) {
+                }
+            });
+        };
+        DailyTransaction.prototype.addViewToArea = function (views) {
+            this.area.innerHTML = "";
+            if (!system_18.System.isEmptyValue(this.transactView)) {
+                this.transactView.deconstruct();
+            }
+            var wrapper = document.createElement("div");
+            wrapper.innerHTML = views;
+            var transactViewRaw = wrapper.getElementsByClassName('dt-view')[0];
+            this.area.appendChild(transactViewRaw);
+            this.transactView = new daily_transaction_view_1.DailyTransactionView(transactViewRaw);
+        };
+        DailyTransaction.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        DailyTransaction.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return DailyTransaction;
+    }(component_27.Component));
+    exports.DailyTransaction = DailyTransaction;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction"], function (require, exports, component_28, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_19, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -1955,6 +2109,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('daily-selling').length !== 0) {
                 this.dailySelling = new daily_selling_1.DailySelling(document.getElementById("sds"));
             }
+            else if (this.root.getElementsByClassName('daily-transact').length !== 0) {
+                this.dailyTransact = new daily_transaction_1.DailyTransaction(document.getElementById("tdt"));
+            }
             else if (this.root.getElementsByClassName('custom-selling').length !== 0) {
                 this.customSelling = new custom_selling_1.CustomSelling(document.getElementById("scs"));
             }
@@ -1983,7 +2140,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_18.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_19.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };
@@ -1994,7 +2151,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_26.Component));
+    }(component_28.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

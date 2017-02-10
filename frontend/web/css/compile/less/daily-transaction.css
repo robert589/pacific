@@ -1,0 +1,12 @@
+.daily-transact-header {
+  display: flex;
+}
+.daily-transact-header > .input-field {
+  width: 300px;
+  margin-bottom: 8px;
+}
+.daily-transact-refresh {
+  max-width: 120px;
+  margin-bottom: 8px;
+  margin-left: 8px;
+}

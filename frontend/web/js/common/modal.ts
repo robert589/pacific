@@ -4,6 +4,8 @@ import {Button} from './../common/button';
 export abstract class Modal extends Component {
     closeButton : Button;
 
+    title : HTMLElement;
+
     constructor(root : HTMLElement) {
         super(root);
     }
@@ -21,6 +23,7 @@ export abstract class Modal extends Component {
     
     decorate() {
         super.decorate();
+        this.title = <HTMLElement> this.root.getElementsByClassName('modal-title')[0];
         this.closeButton = new Button(<HTMLElement> document.getElementById(this.id + "-close-button"),
                                     function(e) {
                                         this.hide();
@@ -36,4 +39,9 @@ export abstract class Modal extends Component {
             }   
         }.bind(this));
     }
+
+    setTitle(title : string) {
+        this.title.innerHTML = title;
+    }
+
 }

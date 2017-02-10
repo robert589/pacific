@@ -1,3 +1,5 @@
+import {ConfirmDialog} from './confirm-dialog';
+
 export class System  {
     public static getUserId() {
     }
@@ -46,4 +48,10 @@ export class System  {
         return !System.isEmptyValue(document.getElementById(id));
     }
 
+    public static showConfirmDialog(cb : () => any, title, content) {
+        let dialog : ConfirmDialog = new ConfirmDialog(document.getElementById('confirmdialog'));
+        dialog.setText(content);
+        dialog.setTitle(title);
+        dialog.run(cb);
+    }
 }

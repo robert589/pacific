@@ -2,12 +2,14 @@
 namespace frontend\controllers;
 
 use Yii;
+use common\models\Ship;
 use frontend\widgets\OwnershipGridview;
 use frontend\models\AssignShipToOwnerForm;
 use common\widgets\SearchFieldDropdownItem;
 use frontend\models\CreateShipForm;
 use frontend\services\ShipService;
 use yii\web\Controller;
+use frontend\models\ChangeShipStatusForm;
 /**
  * Ship controller
  */
@@ -26,6 +28,17 @@ class ShipController extends Controller
     
     public function actionCreate() {
         return $this->render('create-ship', ['id' => 'scs']);
+    }
+    
+    public function actionRemove() {
+        $model = new ChangeShipStatusForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $model->status = Ship::STATUS_DELETED;
+        $data['status'] = $model->change() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+
     }
     
     public function actionPCreate() {

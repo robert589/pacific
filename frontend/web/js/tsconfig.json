@@ -15,6 +15,7 @@
         "./common/modal.ts",
         "./common/upload-image.ts",
         "./project/init.ts",
-        "./project/app.ts"
+        "./project/app.ts",
+        "./typings/krajeedialog.d.ts"
     ]
 }
