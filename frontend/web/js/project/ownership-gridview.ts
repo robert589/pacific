@@ -46,7 +46,7 @@ export class OwnershipGridview extends Component{
             },
             error : function(data) {
             }
-        });
+        }); 
     
     }
     

@@ -2,6 +2,7 @@
 namespace frontend\daos;
 
 use Yii;
+use common\models\Entity;
 use common\components\Dao;
 use common\models\EntityType;
 use frontend\vos\EntityVo;
@@ -23,6 +24,30 @@ class CodeDao implements Dao
                             from entity_type
                             where (entity_type.name LIKE :query or entity_type.id LIKE :query) and
                                         entity_type.status = :status";
+
+    const SEARCH_CODE = "SELECT entity.id, entity.name
+                            from entity
+                            where (entity.name LIKE :query or entity.id LIKE :query) and
+                                        entity.status = :status";
+    
+    public function searchCode($query, $status = Entity::STATUS_ACTIVE) {
+        $q = '%' . $query . '%';
+        $results =  \Yii::$app->db
+            ->createCommand(self::SEARCH_CODE)
+            ->bindParam(':query', $q)
+            ->bindParam(':status', $status)
+            ->queryAll();
+        $vos = [];
+        
+        foreach($results as $result) {
+            $builder = EntityTypeVo::createBuilder();
+            
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        return $vos;    
+    
+    }
     
     public function searchCodeType($query, $status = EntityType::STATUS_ACTIVE) {
         $q = '%' . $query . '%';

@@ -1,0 +1,28 @@
+.dt-view-header {
+  display: flex;
+}
+.dt-view-header-field {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #000;
+  background: lightgray;
+  border: 1px solid black;
+}
+.dt-view-footer {
+  display: flex;
+}
+.dt-view-footer-item2 {
+  padding: 8px;
+  border: 1px solid black;
+  width: 200%;
+}
+.dt-view-footer-item3 {
+  background: orange;
+  font-weight: bold;
+  padding: 8px 13px;
+  border: 1px solid black;
+  width: 300%;
+}
+.dt-view-area {
+  margin: 16px 0 0 0;
+}

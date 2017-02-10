@@ -4,18 +4,18 @@ namespace frontend\widgets;
 
 use yii\base\Widget;
 
-class DailyTransactionItem extends Widget {
+class AddTransactionForm extends Widget {
     
     public $id;
     
-    public $vo;
+    public $date;
     
     public function init() {
         
     }
     
     public function run() {
-        return $this->render('daily-transaction-item',
-                ['id' => $this->id, 'vo' => $this->vo]);
+        return $this->render('add-transaction-form',
+                ['id' => $this->id, 'date' => $this->date]);
     }
 }

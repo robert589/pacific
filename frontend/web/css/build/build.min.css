@@ -33,6 +33,7 @@
 
 
 .as-form{display:-ms-flexbox;display:flex;margin-top:16px}.as-form>.button{-ms-flex-item-align:end;align-self:flex-end;max-width:60px;height:40px}.as-form>.form-field{margin-right:8px}.as-form-switch{height:42px;margin:0 8px 0 0;-ms-flex-item-align:end;align-self:flex-end}
+.at-form{display:-ms-flexbox;display:flex;margin-top:16px}.at-form>.button{-ms-flex-item-align:end;align-self:flex-end;max-width:60px;height:40px}.at-form>.form-field{margin-right:8px}
 
 .au-form>.text-area-field{margin-bottom:8px}
 
@@ -70,7 +71,7 @@
 .ds-view-footer,.ds-view-header{display:-ms-flexbox;display:flex}.ds-view-header-field{width:100%;padding:8px;background:#d3d3d3;border:1px solid #000}.ds-view-footer-item2{padding:8px;border:1px solid #000;width:200%}.ds-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:300%}.ds-view-area{margin:16px 0 0}
 .daily-selling-header{display:-ms-flexbox;display:flex}.daily-selling-header>.input-field{width:300px;margin-bottom:8px}.daily-selling-header>.search-field{width:300px;margin-bottom:8px;margin-right:8px}.daily-selling-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
 
-
+.dt-view-footer,.dt-view-header{display:-ms-flexbox;display:flex}.dt-view-header-field{width:100%;padding:8px;background:#d3d3d3;border:1px solid #000}.dt-view-footer-item2{padding:8px;border:1px solid #000;width:200%}.dt-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:300%}.dt-view-area{margin:16px 0 0}
 .daily-transact-header{display:-ms-flexbox;display:flex}.daily-transact-header>.input-field{width:300px;margin-bottom:8px}.daily-transact-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
 
 .dynamic-wfield{max-width:500px}

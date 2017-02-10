@@ -2050,7 +2050,83 @@ define("project/create-code", ["require", "exports", "common/component", "projec
     }(component_26.Component));
     exports.CreateCode = CreateCode;
 });
-define("project/daily-transaction-view", ["require", "exports", "common/component"], function (require, exports, component_27) {
+define("project/add-transaction-form", ["require", "exports", "common/form", "common/input-field", "common/search-field"], function (require, exports, form_10, input_field_12, search_field_7) {
+    "use strict";
+    var AddTransactionForm = (function (_super) {
+        __extends(AddTransactionForm, _super);
+        function AddTransactionForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = _this.successCallback.bind(_this);
+            return _this;
+        }
+        Object.defineProperty(AddTransactionForm, "ADD_TRANSACTION_FORM_SUCCESS", {
+            get: function () { return "addtransactionformsuccess"; },
+            enumerable: true,
+            configurable: true
+        });
+        ;
+        AddTransactionForm.prototype.rules = function () {
+            this.registerFields([this.debetField, this.remarkField,
+                this.codeField, this.date, this.creditField]);
+            this.setRequiredField([this.debetField, this.codeField,
+                this.date,
+                this.remarkField, this.creditField]);
+        };
+        AddTransactionForm.prototype.successCallback = function (data) {
+            var json = {
+                views: data.views
+            };
+            this.successEvent = new CustomEvent(AddTransactionForm.ADD_TRANSACTION_FORM_SUCCESS, { detail: json });
+            this.root.dispatchEvent(this.successEvent);
+            this.debetField.setValue("0");
+            this.remarkField.setValue("");
+            this.creditField.setValue("0");
+        };
+        AddTransactionForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.date = new input_field_12.InputField(document.getElementById(this.id + "-date"));
+            this.debetField = new input_field_12.InputField(document.getElementById(this.id + "-debet"));
+            this.remarkField = new input_field_12.InputField(document.getElementById(this.id + "-remark"));
+            this.creditField = new input_field_12.InputField(document.getElementById(this.id + "-credit"));
+            this.codeField = new search_field_7.SearchField(document.getElementById(this.id + "-code"));
+        };
+        AddTransactionForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddTransactionForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddTransactionForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddTransactionForm;
+    }(form_10.Form));
+    exports.AddTransactionForm = AddTransactionForm;
+});
+define("project/daily-transaction-item", ["require", "exports", "common/component"], function (require, exports, component_27) {
+    "use strict";
+    var DailyTransactionItem = (function (_super) {
+        __extends(DailyTransactionItem, _super);
+        function DailyTransactionItem(root) {
+            return _super.call(this, root) || this;
+        }
+        DailyTransactionItem.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+        };
+        DailyTransactionItem.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        DailyTransactionItem.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        DailyTransactionItem.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return DailyTransactionItem;
+    }(component_27.Component));
+    exports.DailyTransactionItem = DailyTransactionItem;
+});
+define("project/daily-transaction-view", ["require", "exports", "common/component", "project/add-transaction-form", "project/daily-transaction-item"], function (require, exports, component_28, add_transaction_form_1, daily_transaction_item_1) {
     "use strict";
     var DailyTransactionView = (function (_super) {
         __extends(DailyTransactionView, _super);
@@ -2059,9 +2135,26 @@ define("project/daily-transaction-view", ["require", "exports", "common/componen
         }
         DailyTransactionView.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
+            this.atForm = new add_transaction_form_1.AddTransactionForm(document.getElementById(this.id + "-atform"));
+            this.area = this.root.getElementsByClassName('dt-view-area')[0];
+            this.items = [];
+            var itemsRaw = this.root.getElementsByClassName('dt-item');
+            for (var i = 0; i < itemsRaw.length; i++) {
+                this.items.push(new daily_transaction_item_1.DailyTransactionItem(itemsRaw.item(i)));
+            }
         };
         DailyTransactionView.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
+            this.atForm.attachEvent(add_transaction_form_1.AddTransactionForm.ADD_TRANSACTION_FORM_SUCCESS, this.addNewDailyItem.bind(this));
+        };
+        DailyTransactionView.prototype.addNewDailyItem = function (e) {
+            var json = e.detail;
+            var areaRaws = json.views;
+            var div = document.createElement('div');
+            div.innerHTML = areaRaws;
+            var itemRaw = div.getElementsByClassName('dt-item')[0];
+            this.area.appendChild(itemRaw);
+            this.items.push(new daily_transaction_item_1.DailyTransactionItem(itemRaw));
         };
         DailyTransactionView.prototype.detach = function () {
             _super.prototype.detach.call(this);
@@ -2070,10 +2163,10 @@ define("project/daily-transaction-view", ["require", "exports", "common/componen
             // no event to unbind
         };
         return DailyTransactionView;
-    }(component_27.Component));
+    }(component_28.Component));
     exports.DailyTransactionView = DailyTransactionView;
 });
-define("project/daily-transaction", ["require", "exports", "common/component", "common/input-field", "common/system", "project/daily-transaction-view", "common/button"], function (require, exports, component_28, input_field_12, system_19, daily_transaction_view_1, button_15) {
+define("project/daily-transaction", ["require", "exports", "common/component", "common/input-field", "common/system", "project/daily-transaction-view", "common/button"], function (require, exports, component_29, input_field_13, system_19, daily_transaction_view_1, button_15) {
     "use strict";
     var DailyTransaction = (function (_super) {
         __extends(DailyTransaction, _super);
@@ -2082,13 +2175,13 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
         }
         DailyTransaction.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.date = new input_field_12.InputField(document.getElementById(this.id + "-date"));
+            this.date = new input_field_13.InputField(document.getElementById(this.id + "-date"));
             this.area = this.root.getElementsByClassName('daily-transact-area')[0];
             this.refresh = new button_15.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
         };
         DailyTransaction.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            this.date.attachEvent(input_field_12.InputField.VALUE_CHANGED, this.getView.bind(this));
+            this.date.attachEvent(input_field_13.InputField.VALUE_CHANGED, this.getView.bind(this));
         };
         DailyTransaction.prototype.getView = function () {
             var data = {};
@@ -2129,10 +2222,10 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
             // no event to unbind
         };
         return DailyTransaction;
-    }(component_28.Component));
+    }(component_29.Component));
     exports.DailyTransaction = DailyTransaction;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction"], function (require, exports, component_29, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_20, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction"], function (require, exports, component_30, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_20, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2214,7 +2307,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_29.Component));
+    }(component_30.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

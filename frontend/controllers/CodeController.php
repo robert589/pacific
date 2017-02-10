@@ -50,7 +50,17 @@ class CodeController extends Controller
     }
     
     public function actionSearch() {
-        
+        $query = filter_var($_GET['q']);
+        $id = filter_var($_GET['id']);
+        $data['status'] = 1;
+        $views = '';
+        $vos = $this->service->search($query);
+        foreach($vos as $vo) {
+            $views .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vo->getId(),
+                'itemId' => $vo->getId(), 'text' => $vo->getId() . '. ' . $vo->getName()]);
+        }
+        $data['views'] = $views;
+        return json_encode($data);
     }
     
     public function actionPCreateType() {

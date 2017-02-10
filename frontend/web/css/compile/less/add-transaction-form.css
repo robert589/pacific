@@ -1,0 +1,13 @@
+.at-form {
+  display: flex;
+  margin-top: 16px;
+}
+.at-form > .button {
+  align-self: flex-end;
+  height: 100%;
+  max-width: 60px;
+  height: 40px;
+}
+.at-form > .form-field {
+  margin-right: 8px;
+}

@@ -38,6 +38,14 @@ class CodeService extends RService
         
         return $this->codeDao->searchCodeType($query);
     }
+
+    public function search($query) {
+        if(!$this->validate()) {
+            return false;
+        }
+        
+        return $this->codeDao->searchCode($query);
+    }
     
     public function getCodeList() {
         if(!$this->validate()) {
