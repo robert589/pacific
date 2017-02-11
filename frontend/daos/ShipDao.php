@@ -20,6 +20,12 @@ class ShipDao implements Dao
                             from ship
                             where ship.name like :query and ship.status = :status";
     
+    
+    const SEARCH_SHIPS_BY_OWNER = "SELECT *
+                            from ship, ship_owner
+                            where ship.name like :query and ship.status = :status
+                                and ship.id = ship_owner.ship_id and ship_owner.owner_id = :owner_id";
+    
     const GET_SHIP_OWNERSHIP = "select user.first_name as user_first_name, user.last_name as user_last_name,
                                         user.id as user_id
                                 from owner, user, ship_owner
@@ -84,6 +90,22 @@ class ShipDao implements Dao
     
     }
 
-    
+    public function searchShipsByOwner($q, $ownerId, $status = Ship::STATUS_ACTIVE) {
+        $q = '%' . $q . '%';
+        $results =  \Yii::$app->db
+            ->createCommand(self::SEARCH_SHIPS_BY_OWNER)
+            ->bindParam(':query', $q)
+            ->bindParam(':status', $status)
+            ->bindParam(':owner_id', $ownerId)
+            ->queryAll();
+        $vos = [];
+        
+        foreach($results as $result) {
+            $builder = ShipVo::createBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        return $vos;
+    }
 }
 

@@ -112,5 +112,11 @@ class ShipController extends Controller
         $data['views'] = OwnershipGridview::widget(['id' => 'own-gv', 'provider' => $provider]);
         return json_encode($data);
     }
+    
+    public function actionAssignCode() {
+        
+    }
+    
+    
 }
 

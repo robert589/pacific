@@ -69,6 +69,7 @@ AppAsset::register($this);
                                         'items' => [
                                             ['label' => 'Kapal', 'href' => Yii::$app->request->baseUrl . "/ship/index"],
                                             ['label' => 'Kepemilikan', 'href' => Yii::$app->request->baseUrl . "/ship/ownership"],
+                                            ['label' => 'Kasih Kode Kapal', 'href' => Yii::$app->request->baseUrl . "/ship/assign-code"]
                                         ]
                                     ],
                                     [   
@@ -117,7 +118,42 @@ AppAsset::register($this);
                                 ]
                             ]) ?>
                     <?php } else if(UserLibrary::isOwner (Yii::$app->user->getId())) {?>
-                    
+                    <?= Sidebar::widget(['id' => 'cssmenu', 
+                                'items' => [
+                                    [   
+                                        'label' => 'Laporan',
+                                        'href' => '#',
+                                        'items' => [
+                                            ['label' => 'Cek Kapal Laporan', 'href' => Yii::$app->request->baseUrl . "/report/custom"]
+                                        ]
+
+                                    ],    
+                                    [   
+                                        'label' => 'Transaksi',
+                                        'href' => '#',
+                                        'items' => [
+                                            ['label' => 'Buat Laporan Transaksi', 'href' => Yii::$app->request->baseUrl . "/transaction/custom"],
+                                        ]
+
+                                    ],    
+
+                                    [   
+                                        'label' => 'Penjualan',
+                                        'href' => '#',
+                                        'items' => [
+                                            ['label' => 'Cek Laporan Penjualan', 'href' => Yii::$app->request->baseUrl . "/selling/custom"]
+                                        ]
+
+                                    ],
+                                    [
+                                        'label' => 'Pengaturan',
+                                        'href' => '#',
+                                        'items' => [
+                                            ['label' => 'Ganti Password', 'href' => Yii::$app->request->baseUrl . "/user/change-password"]
+                                        ]
+                                    ]
+                                ]
+                            ]) ?>
                     <?php } ?>
                 </div>
            </div>

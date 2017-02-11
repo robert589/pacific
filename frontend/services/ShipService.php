@@ -98,6 +98,8 @@ class ShipService extends RService
         if(UserLibrary::isAdmin($this->user_id)) {
             return $this->shipDao->searchShips($q);
             
+        } else if(UserLibrary::isOwner($this->user_id)) {
+            return $this->shipDao->searchShipsByOwner($q, $this->user_id);
         }
         
         return [];

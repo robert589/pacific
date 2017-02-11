@@ -61,9 +61,9 @@
 .cs-form{max-width:320px}
 
 .custom-report-form{display:-ms-flexbox;display:flex}.custom-report-form>.input-field,.custom-report-form>.search-field{width:300px;margin-bottom:8px;margin-right:8px}.custom-report-form>.button{width:60px;margin-bottom:8px}
-.custom-report-header{display:-ms-flexbox;display:flex}.custom-report-header>.input-field,.custom-report-header>.search-field{width:300px;margin-bottom:8px;margin-right:8px}
+.custom-report-header{display:-ms-flexbox;display:flex}.custom-report-header>.input-field,.custom-report-header>.search-field{width:100%;margin-bottom:8px;margin-right:8px}
 .custom-selling-form{display:-ms-flexbox;display:flex}.custom-selling-form>.input-field,.custom-selling-form>.search-field{width:300px;margin-bottom:8px;margin-right:8px}.custom-selling-form>.button{width:60px;margin-bottom:8px}
-.custom-selling-header{display:-ms-flexbox;display:flex}.custom-selling-header>.input-field,.custom-selling-header>.search-field{width:300px;margin-bottom:8px;margin-right:8px}
+.custom-selling-header{display:-ms-flexbox;display:flex}.custom-selling-header>.input-field,.custom-selling-header>.search-field{width:100%;margin-bottom:8px;margin-right:8px}
 .custom-transaction-form{display:-ms-flexbox;display:flex}.custom-transaction-form>.input-field,.custom-transaction-form>.search-field{width:100%;margin-bottom:8px;margin-right:8px}.custom-transaction-form>.button{width:40%;margin-bottom:8px}
 .custom-transaction-header{display:-ms-flexbox;display:flex}.custom-transaction-header>.input-field{width:300px;margin-bottom:8px}.custom-transaction-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
 .dr-item-field,.dr-item-remove{padding:8px;border:1px solid #000}.dr-item-view{display:-ms-flexbox;display:flex}.dr-item-field{width:100%}
