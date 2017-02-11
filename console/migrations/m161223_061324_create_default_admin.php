@@ -12,7 +12,7 @@ class m161223_061324_create_default_admin extends Migration
         $model->first_name = "Admin";
         $model->last_name = "Pacific";
         $model->email = "admin.pacific@justgivit.com";
-        $model->password = "c";
+        $model->password = "nC431Le3";
         $user = $model->signup();
         
         $admin = new Admin();

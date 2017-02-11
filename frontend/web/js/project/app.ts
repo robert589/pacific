@@ -16,6 +16,7 @@ import {CreateCodeType} from './create-code-type';
 import {CreateCode} from './create-code';
 import {DailyTransaction} from './daily-transaction';
 import {CustomTransaction} from './custom-transaction';
+import {ChangePassword} from './change-password';
 
 export class App extends Component{
 
@@ -54,6 +55,8 @@ export class App extends Component{
     dailyTransact : DailyTransaction;
 
     customTransact : CustomTransaction;
+
+    changePassword : ChangePassword;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -112,6 +115,10 @@ export class App extends Component{
         else if(this.root.getElementsByClassName('custom-transaction').length !== 0) {
             this.customTransact = new CustomTransaction(document.getElementById("tct"));
         }
+        else if(this.root.getElementsByClassName('change-pass').length !== 0) {
+            this.changePassword = new ChangePassword(document.getElementById("ucp"));
+        }
+    
         this.hamburgerIcon = <HTMLElement> 
                         this.root.getElementsByClassName('app-hamburger')[0];   
         this.leftSide = <HTMLElement> this.root.getElementsByClassName('left-side')[0];

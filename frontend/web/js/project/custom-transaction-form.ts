@@ -56,3 +56,4 @@ export class CustomTransactionForm extends Form{
 export interface CustomTransactionFormSuccessJson {
     views : string
 }
+            

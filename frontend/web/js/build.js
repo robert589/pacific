@@ -2370,7 +2370,85 @@ define("project/custom-transaction", ["require", "exports", "common/component", 
     }(component_31.Component));
     exports.CustomTransaction = CustomTransaction;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction"], function (require, exports, component_32, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_21, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1) {
+define("common/equal-validation", ["require", "exports", "common/validation"], function (require, exports, validation_2) {
+    "use strict";
+    var EqualValidation = (function (_super) {
+        __extends(EqualValidation, _super);
+        function EqualValidation(targetField, sourceField) {
+            var _this = _super.call(this) || this;
+            _this.targetField = targetField;
+            _this.sourceField = sourceField;
+            _this.errorMessage = _this.sourceField.getDisplayName() + " and this field must be the same";
+            _this.validate = _this.validateEquality.bind(_this);
+            return _this;
+        }
+        EqualValidation.prototype.validateEquality = function () {
+            return this.sourceField.getValue() === this.targetField.getValue();
+        };
+        return EqualValidation;
+    }(validation_2.Validation));
+    exports.EqualValidation = EqualValidation;
+});
+define("project/change-password-form", ["require", "exports", "common/form", "common/input-field", "common/equal-validation"], function (require, exports, form_12, input_field_15, equal_validation_1) {
+    "use strict";
+    var ChangePasswordForm = (function (_super) {
+        __extends(ChangePasswordForm, _super);
+        function ChangePasswordForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function () {
+                window.location.reload();
+            };
+            return _this;
+        }
+        ChangePasswordForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.curPasswordField = new input_field_15.InputField(document.getElementById(this.id + "-cur-password-field"));
+            this.newPasswordField = new input_field_15.InputField(document.getElementById(this.id + "-new-password-field"));
+            this.confPasswordField = new input_field_15.InputField(document.getElementById(this.id + "-conf-password-field"));
+        };
+        ChangePasswordForm.prototype.rules = function () {
+            this.registerFields([this.curPasswordField, this.newPasswordField, this.confPasswordField]);
+            this.setRequiredField([this.curPasswordField, this.newPasswordField, this.confPasswordField]);
+            this.setValidations([new equal_validation_1.EqualValidation(this.newPasswordField, this.confPasswordField)]);
+        };
+        ChangePasswordForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ChangePasswordForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ChangePasswordForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ChangePasswordForm;
+    }(form_12.Form));
+    exports.ChangePasswordForm = ChangePasswordForm;
+});
+define("project/change-password", ["require", "exports", "common/component", "project/change-password-form"], function (require, exports, component_32, change_password_form_1) {
+    "use strict";
+    var ChangePassword = (function (_super) {
+        __extends(ChangePassword, _super);
+        function ChangePassword(root) {
+            return _super.call(this, root) || this;
+        }
+        ChangePassword.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new change_password_form_1.ChangePasswordForm(document.getElementById(this.id + "-form"));
+        };
+        ChangePassword.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ChangePassword.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ChangePassword.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ChangePassword;
+    }(component_32.Component));
+    exports.ChangePassword = ChangePassword;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password"], function (require, exports, component_33, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_21, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2431,6 +2509,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('custom-transaction').length !== 0) {
                 this.customTransact = new custom_transaction_1.CustomTransaction(document.getElementById("tct"));
             }
+            else if (this.root.getElementsByClassName('change-pass').length !== 0) {
+                this.changePassword = new change_password_1.ChangePassword(document.getElementById("ucp"));
+            }
             this.hamburgerIcon = this.root.getElementsByClassName('app-hamburger')[0];
             this.leftSide = this.root.getElementsByClassName('left-side')[0];
         };
@@ -2455,7 +2536,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_32.Component));
+    }(component_33.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
