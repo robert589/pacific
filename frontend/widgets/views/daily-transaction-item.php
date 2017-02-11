@@ -2,7 +2,7 @@
     use common\widgets\Button;
 ?>
 
-<div id="<?= $id ?>" class="dt-item" data-report-id="<?= $vo->getid() ?>">
+<div id="<?= $id ?>" class="dt-item" data-transaction-id="<?= $vo->getid() ?>">
     <div id="<?= $id . '-view' ?>" class="dt-item-view">
         <div class="dt-item-field">
             <?= $vo->getEntity()->getName() ?>

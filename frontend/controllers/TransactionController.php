@@ -2,10 +2,12 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\ChangeTransactionStatusForm;
 use frontend\vos\TransactionVo;
 use frontend\widgets\DailyTransactionItem;
 use frontend\widgets\DailyTransactionView;
 use yii\web\Controller;
+use common\models\Transaction;
 use frontend\services\TransactionService;
 use frontend\models\AddTransactionForm;
 /**
@@ -18,6 +20,29 @@ class TransactionController extends Controller
     public function init() {
         $this->service = new TransactionService();  
         $this->service->user_id = Yii::$app->user->getId();
+    }
+    
+    public function actionCancelRemove() {
+        $model = new ChangeTransactionStatusForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->status = Transaction::STATUS_ACTIVE;
+        $model->loadData($_POST);
+        $valid = $model->change();
+        $data['status'] = $valid ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
+    public function actionRemove() {
+        $model = new ChangeTransactionStatusForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->status = Transaction::STATUS_DELETED;
+        $model->loadData($_POST);
+        $valid = $model->change();
+        $data['status'] = $valid ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    
     }
     
     public function actionIndex() {

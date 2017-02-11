@@ -2103,15 +2103,61 @@ define("project/add-transaction-form", ["require", "exports", "common/form", "co
     }(form_10.Form));
     exports.AddTransactionForm = AddTransactionForm;
 });
-define("project/daily-transaction-item", ["require", "exports", "common/component"], function (require, exports, component_27) {
+define("project/daily-transaction-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_27, button_15, system_19) {
     "use strict";
     var DailyTransactionItem = (function (_super) {
         __extends(DailyTransactionItem, _super);
         function DailyTransactionItem(root) {
-            return _super.call(this, root) || this;
+            var _this = _super.call(this, root) || this;
+            _this.transactionId = _this.root.getAttribute('data-transaction-id');
+            return _this;
         }
         DailyTransactionItem.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
+            this.viewArea = document.getElementById(this.id + "-view");
+            this.removeArea = document.getElementById(this.id + "-remove-area");
+            this.removeBtn = new button_15.Button(document.getElementById(this.id + "-remove-btn"), this.removeItem.bind(this));
+            this.cancelRemove = new button_15.Button(document.getElementById(this.id + "-cancel"), this.cancelRemoveItem.bind(this));
+        };
+        DailyTransactionItem.prototype.removeItem = function () {
+            this.removeBtn.disable(true);
+            var data = {};
+            data['transaction_id'] = this.transactionId;
+            $.ajax({
+                url: system_19.System.getBaseUrl() + "/transaction/remove",
+                data: system_19.System.addCsrf(data),
+                dataType: "json",
+                method: "post",
+                context: this,
+                success: function (data) {
+                    this.removeBtn.disable(false);
+                    this.viewArea.classList.add('app-hide');
+                    this.removeArea.classList.remove('app-hide');
+                },
+                error: function (data) {
+                    this.removeBtn.disable(false);
+                }
+            });
+        };
+        DailyTransactionItem.prototype.cancelRemoveItem = function () {
+            this.cancelRemove.disable(true);
+            var data = {};
+            data['transaction_id'] = this.transactionId;
+            $.ajax({
+                url: system_19.System.getBaseUrl() + "/transaction/cancel-remove",
+                data: system_19.System.addCsrf(data),
+                dataType: "json",
+                method: "post",
+                context: this,
+                success: function (data) {
+                    this.cancelRemove.disable(false);
+                    this.viewArea.classList.remove('app-hide');
+                    this.removeArea.classList.add('app-hide');
+                },
+                error: function (data) {
+                    this.removeBtn.disable(false);
+                }
+            });
         };
         DailyTransactionItem.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2166,7 +2212,7 @@ define("project/daily-transaction-view", ["require", "exports", "common/componen
     }(component_28.Component));
     exports.DailyTransactionView = DailyTransactionView;
 });
-define("project/daily-transaction", ["require", "exports", "common/component", "common/input-field", "common/system", "project/daily-transaction-view", "common/button"], function (require, exports, component_29, input_field_13, system_19, daily_transaction_view_1, button_15) {
+define("project/daily-transaction", ["require", "exports", "common/component", "common/input-field", "common/system", "project/daily-transaction-view", "common/button"], function (require, exports, component_29, input_field_13, system_20, daily_transaction_view_1, button_16) {
     "use strict";
     var DailyTransaction = (function (_super) {
         __extends(DailyTransaction, _super);
@@ -2177,7 +2223,7 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
             _super.prototype.decorate.call(this);
             this.date = new input_field_13.InputField(document.getElementById(this.id + "-date"));
             this.area = this.root.getElementsByClassName('daily-transact-area')[0];
-            this.refresh = new button_15.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
+            this.refresh = new button_16.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
         };
         DailyTransaction.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2189,8 +2235,8 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
             this.area.innerHTML = "Loading . . .";
             this.refresh.disable(true);
             $.ajax({
-                url: system_19.System.getBaseUrl() + "/transaction/get-daily-view",
-                data: system_19.System.addCsrf(data),
+                url: system_20.System.getBaseUrl() + "/transaction/get-daily-view",
+                data: system_20.System.addCsrf(data),
                 context: this,
                 dataType: "json",
                 method: "post",
@@ -2206,7 +2252,7 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
         };
         DailyTransaction.prototype.addViewToArea = function (views) {
             this.area.innerHTML = "";
-            if (!system_19.System.isEmptyValue(this.transactView)) {
+            if (!system_20.System.isEmptyValue(this.transactView)) {
                 this.transactView.deconstruct();
             }
             var wrapper = document.createElement("div");
@@ -2225,7 +2271,7 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
     }(component_29.Component));
     exports.DailyTransaction = DailyTransaction;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction"], function (require, exports, component_30, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_20, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction"], function (require, exports, component_30, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_21, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2296,7 +2342,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_20.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_21.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };
