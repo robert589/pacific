@@ -1,0 +1,12 @@
+.custom-transaction-header {
+  display: flex;
+}
+.custom-transaction-header > .input-field {
+  width: 300px;
+  margin-bottom: 8px;
+}
+.custom-transaction-refresh {
+  max-width: 120px;
+  margin-bottom: 8px;
+  margin-left: 8px;
+}

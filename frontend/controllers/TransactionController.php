@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\widgets\TransactionView;
 use frontend\models\ChangeTransactionStatusForm;
 use frontend\vos\TransactionVo;
 use frontend\widgets\DailyTransactionItem;
@@ -65,6 +66,27 @@ class TransactionController extends Controller
         return json_encode($data);
 
     }
+    
+    public function actionGetTransactionView() {
+        $data['status'] = 1;
+        $this->service->loadData($_POST);
+        $vos = $this->service->getView();
+        if (!$vos && !is_array($vos)) {
+            $data['status'] = 0;
+            $data['errors']  = $this->service->hasErrors() ? $this->service->getErrors() : null;
+            return json_encode($data);
+        }
+        
+        $data['views'] = TransactionView::widget(['id' => 'tv' , 
+                            'vos' => $vos, 
+                            'date' => $this->service->date]);
+        return json_encode($data);
+    }
+    
+    public function actionCustom() {
+        return $this->render('custom-transaction', ['id' => 'tct']);
+    }
+    
     
     public function actionPCreate() {
         $model = new AddTransactionForm();

@@ -15,6 +15,7 @@ import {ListCodeType} from './list-code-type';
 import {CreateCodeType} from './create-code-type';
 import {CreateCode} from './create-code';
 import {DailyTransaction} from './daily-transaction';
+import {CustomTransaction} from './custom-transaction';
 
 export class App extends Component{
 
@@ -51,6 +52,8 @@ export class App extends Component{
     createCode : CreateCode;
 
     dailyTransact : DailyTransaction;
+
+    customTransact : CustomTransaction;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -106,7 +109,9 @@ export class App extends Component{
         else if(this.root.getElementsByClassName('create-code').length !== 0) {
             this.createCode = new CreateCode(document.getElementById("ccc"));
         }
-
+        else if(this.root.getElementsByClassName('custom-transaction').length !== 0) {
+            this.customTransact = new CustomTransaction(document.getElementById("tct"));
+        }
         this.hamburgerIcon = <HTMLElement> 
                         this.root.getElementsByClassName('app-hamburger')[0];   
         this.leftSide = <HTMLElement> this.root.getElementsByClassName('left-side')[0];

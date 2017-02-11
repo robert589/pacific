@@ -64,6 +64,8 @@
 .custom-report-header{display:-ms-flexbox;display:flex}.custom-report-header>.input-field,.custom-report-header>.search-field{width:300px;margin-bottom:8px;margin-right:8px}
 .custom-selling-form{display:-ms-flexbox;display:flex}.custom-selling-form>.input-field,.custom-selling-form>.search-field{width:300px;margin-bottom:8px;margin-right:8px}.custom-selling-form>.button{width:60px;margin-bottom:8px}
 .custom-selling-header{display:-ms-flexbox;display:flex}.custom-selling-header>.input-field,.custom-selling-header>.search-field{width:300px;margin-bottom:8px;margin-right:8px}
+.custom-transaction-form{display:-ms-flexbox;display:flex}.custom-transaction-form>.input-field,.custom-transaction-form>.search-field{width:100%;margin-bottom:8px;margin-right:8px}.custom-transaction-form>.button{width:40%;margin-bottom:8px}
+.custom-transaction-header{display:-ms-flexbox;display:flex}.custom-transaction-header>.input-field{width:300px;margin-bottom:8px}.custom-transaction-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
 .dr-item-field,.dr-item-remove{padding:8px;border:1px solid #000}.dr-item-view{display:-ms-flexbox;display:flex}.dr-item-field{width:100%}
 .dr-view-footer,.dr-view-header{display:-ms-flexbox;display:flex}.dr-view-header-field{width:100%;padding:8px;background:#d3d3d3;border:1px solid #000}.dr-view-footer-item2{padding:8px;border:1px solid #000;width:200%}.dr-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:300%}.dr-view-area{margin:16px 0 0}
 .daily-report-header{display:-ms-flexbox;display:flex}.daily-report-header>.input-field{width:300px;margin-bottom:8px}.daily-report-header>.search-field{width:300px;margin-bottom:8px;margin-right:8px}.daily-report-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
@@ -113,5 +115,7 @@
 .selling-view-footer,.selling-view-header{display:-ms-flexbox;display:flex}.selling-view-footer-item2,.selling-view-header-field{padding:8px;width:100%;border:1px solid #000}.selling-view-header-field{background:#d3d3d3}.selling-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:400%}.selling-view-area{margin:16px 0 0}
 .ship-owner-header{display:-ms-flexbox;display:flex}.ship-owner-header>.search-field{width:300px;margin-right:10px;margin-bottom:10px}.ship-owner-header>.button{width:100px;margin-bottom:10px}
 
+.transaction-item-field,.transaction-item-remove{padding:8px;border:1px solid #000}.transaction-item-view{display:-ms-flexbox;display:flex}.transaction-item-field{width:100%}
+.transaction-view-footer,.transaction-view-header{display:-ms-flexbox;display:flex}.transaction-view-footer-item2,.transaction-view-header-field{padding:8px;width:100%;border:1px solid #000}.transaction-view-header-field{background:#d3d3d3}.transaction-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:400%}.transaction-view-area{margin:16px 0 0}
 
 .wholesale-field-field{display:-ms-flexbox;display:flex}.wholesale-field-field-item{width:100%;margin-right:16px}

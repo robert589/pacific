@@ -23,10 +23,12 @@ class TransactionDao implements Dao
                                 and transaction.id = :id";
     
     const GET_ALL_TRANSACTIONS_IN_BETWEEN = "
-        SELECT * FROM `transaction`
+        SELECT transaction.*, entity.name as entity_name
+        FROM `transaction`, entity
         WHERE STR_TO_DATE( date, \"%d/%m/%Y\") >= STR_TO_DATE(:from, \"%d/%m/%Y\")
          AND STR_TO_DATE( date, \"%d/%m/%Y\") <= STR_TO_DATE(:to, \"%d/%m/%Y\")
-         AND ship_id = :ship_id and status = :status
+         AND transaction.entity_id = :entity_id and transaction.status = :status 
+         and transaction.entity_id = entity.id
         ORDER BY STR_TO_DATE(date, '%d/%m/%Y') DESC;";
 
     public function getTransactionInfo($id, $status = Transaction::STATUS_ACTIVE) {
@@ -43,10 +45,10 @@ class TransactionDao implements Dao
         return $builder->build();
     }
     
-    public function getAllTransactionsInBetween($shipId, $from, $to, $status = Transaction::STATUS_ACTIVE) {
+    public function getAllTransactionsInBetween($entityId, $from, $to, $status = Transaction::STATUS_ACTIVE) {
         $results = \Yii::$app->db
             ->createCommand(self::GET_ALL_TRANSACTIONS_IN_BETWEEN)
-            ->bindParam(':ship_id', $shipId)
+            ->bindParam(':entity_id', $entityId)
             ->bindParam(':from', $from)
             ->bindParam(':to', $to)
             ->bindParam(':status', $status)
@@ -55,6 +57,10 @@ class TransactionDao implements Dao
         $vos = [];
         foreach($results as $result) {
             $builder = TransactionVo::createBuilder();
+            $entityBuilder = EntityVo::createBuilder();
+            $entityBuilder->loadData($result, "entity");
+            $builder->setEntity($entityBuilder->build());
+
             $builder->loadData($result);
             $vos[] = $builder->build();
         }

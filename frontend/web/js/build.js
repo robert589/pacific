@@ -2271,7 +2271,106 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
     }(component_29.Component));
     exports.DailyTransaction = DailyTransaction;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction"], function (require, exports, component_30, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_21, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1) {
+define("project/custom-transaction-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_11, search_field_8, input_field_14) {
+    "use strict";
+    var CustomTransactionForm = (function (_super) {
+        __extends(CustomTransactionForm, _super);
+        function CustomTransactionForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = _this.successCallback.bind(_this);
+            return _this;
+        }
+        Object.defineProperty(CustomTransactionForm, "SUCCESS_EVENT", {
+            get: function () { return "CUSTOM_TRANSACTION_FORM_SUCCESS_EVENT"; },
+            enumerable: true,
+            configurable: true
+        });
+        CustomTransactionForm.prototype.rules = function () {
+            this.registerFields([this.code, this.from, this.to]);
+            this.setRequiredField([this.code, this.from, this.to]);
+        };
+        CustomTransactionForm.prototype.successCallback = function (data) {
+            var json = {
+                views: data.views
+            };
+            this.successEvent = new CustomEvent(CustomTransactionForm.SUCCESS_EVENT, { detail: json });
+            this.root.dispatchEvent(this.successEvent);
+        };
+        CustomTransactionForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.code = new search_field_8.SearchField(document.getElementById(this.id + "-code"));
+            this.from = new input_field_14.InputField(document.getElementById(this.id + "-from"));
+            this.to = new input_field_14.InputField(document.getElementById(this.id + "-to"));
+        };
+        CustomTransactionForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        CustomTransactionForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        CustomTransactionForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return CustomTransactionForm;
+    }(form_11.Form));
+    exports.CustomTransactionForm = CustomTransactionForm;
+});
+define("project/transaction-view", ["require", "exports", "common/component"], function (require, exports, component_30) {
+    "use strict";
+    var TransactionView = (function (_super) {
+        __extends(TransactionView, _super);
+        function TransactionView(root) {
+            return _super.call(this, root) || this;
+        }
+        TransactionView.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+        };
+        TransactionView.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        TransactionView.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        TransactionView.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return TransactionView;
+    }(component_30.Component));
+    exports.TransactionView = TransactionView;
+});
+define("project/custom-transaction", ["require", "exports", "common/component", "project/custom-transaction-form", "project/transaction-view"], function (require, exports, component_31, custom_transaction_form_1, transaction_view_1) {
+    "use strict";
+    var CustomTransaction = (function (_super) {
+        __extends(CustomTransaction, _super);
+        function CustomTransaction(root) {
+            return _super.call(this, root) || this;
+        }
+        CustomTransaction.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new custom_transaction_form_1.CustomTransactionForm(document.getElementById(this.id + "-form"));
+            this.area = this.root.getElementsByClassName('custom-transaction-area')[0];
+        };
+        CustomTransaction.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.form.attachEvent(custom_transaction_form_1.CustomTransactionForm.SUCCESS_EVENT, this.addArea.bind(this));
+        };
+        CustomTransaction.prototype.addArea = function (e) {
+            if (this.transactionView) {
+                this.transactionView.deconstruct();
+            }
+            this.area.innerHTML = "";
+            var json = e.detail;
+            var div = document.createElement('div');
+            div.innerHTML = json.views;
+            var transactionViewRaw = div.getElementsByClassName('transaction-view')[0];
+            this.area.appendChild(transactionViewRaw);
+            this.transactionView = new transaction_view_1.TransactionView(transactionViewRaw);
+        };
+        return CustomTransaction;
+    }(component_31.Component));
+    exports.CustomTransaction = CustomTransaction;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction"], function (require, exports, component_32, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_21, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2329,6 +2428,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('create-code').length !== 0) {
                 this.createCode = new create_code_1.CreateCode(document.getElementById("ccc"));
             }
+            else if (this.root.getElementsByClassName('custom-transaction').length !== 0) {
+                this.customTransact = new custom_transaction_1.CustomTransaction(document.getElementById("tct"));
+            }
             this.hamburgerIcon = this.root.getElementsByClassName('app-hamburger')[0];
             this.leftSide = this.root.getElementsByClassName('left-side')[0];
         };
@@ -2353,7 +2455,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_30.Component));
+    }(component_32.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
