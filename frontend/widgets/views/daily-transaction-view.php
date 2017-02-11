@@ -9,10 +9,10 @@
             <div class="dt-view-header-field">
                 Kode
             </div>
-            <div class="dt-view-header-field">
+            <div class="hide600 dt-view-header-field">
                 Debet
             </div>
-            <div class="dt-view-header-field">
+            <div class="hide600 dt-view-header-field">
                 Kredit
             </div>
             <div class="dt-view-header-field">

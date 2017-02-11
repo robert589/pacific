@@ -7,10 +7,10 @@
         <div class="dr-item-field">
             <?= $vo->getRemark() ?>
         </div>
-        <div class="dr-item-field">
+        <div class="hide600 dr-item-field">
             <?= $vo->getDebet() ?>
         </div>
-        <div class="dr-item-field">
+        <div class="hide600 dr-item-field">
             <?= $vo->getCredit() ?>
         </div>
 

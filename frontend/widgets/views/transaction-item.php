@@ -13,10 +13,10 @@
         <div class="transaction-item-field">
             <?= $vo->getRemark() ?>
         </div>
-        <div class="transaction-item-field">
+        <div class="transaction-item-field hide600">
             <?= $vo->getDebet() ?>
         </div>
-        <div class="transaction-item-field">
+        <div class="transaction-item-field hide600">
             <?= $vo->getCredit() ?>
         </div>
 

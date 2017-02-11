@@ -10,10 +10,10 @@
         <div class="report-item-field">
             <?= $vo->getRemark() ?>
         </div>
-        <div class="report-item-field">
+        <div class="hide600 report-item-field">
             <?= $vo->getDebet() ?>
         </div>
-        <div class="report-item-field">
+        <div class="hide600 report-item-field">
             <?= $vo->getCredit() ?>
         </div>
 

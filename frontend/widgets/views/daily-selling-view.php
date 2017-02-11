@@ -9,10 +9,10 @@
             <div class="ds-view-header-field">
                 Keterangan
             </div>
-            <div class="ds-view-header-field">
+            <div class="hide600 ds-view-header-field">
                 Harga
             </div>
-            <div class="ds-view-header-field">
+            <div class="hide600 ds-view-header-field">
                 Tonase
             </div>
             <div class="ds-view-header-field">

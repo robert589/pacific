@@ -7,10 +7,10 @@
         <div class="ds-item-field">
             <?= $vo->getRemark() ?>
         </div>
-        <div class="ds-item-field">
+        <div class="hide600 ds-item-field">
             <?= $vo->getPrice() ?>
         </div>
-        <div class="ds-item-field">
+        <div class="hide600 ds-item-field">
             <?= $vo->getTonase() ?>
         </div>
 

@@ -33,12 +33,13 @@ html {
 	position: relative;
 }
 #sidebar {
-	min-width: 230px; /*should match the above value*/
-	position: absolute;
-	top: 0;
-	padding-top: 0;
-	background: #455160;
-	margin-left: 0;
+    min-width: 230px; /*should match the above value*/
+    position: absolute;
+    top: 0;
+    padding-top: 0;
+    background: #455160;
+    margin-left: 0;
+    height: 100%;
 }
 
 #sidebar {
@@ -1396,9 +1397,11 @@ img {
     }
     
     #sidebar{
-        
-    position: fixed;
-    z-index: 10;
-    margin-top: 63px;
+        position: absolute;
+        z-index: 10;
+    }
+    
+    .hide600 {
+        display: none;
     }
 }

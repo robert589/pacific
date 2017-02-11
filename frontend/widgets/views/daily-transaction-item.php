@@ -7,10 +7,10 @@
         <div class="dt-item-field">
             <?= $vo->getEntity()->getName() ?>
         </div>
-        <div class="dt-item-field">
+        <div class="hide600 dt-item-field">
             <?= $vo->getDebet() ?>
         </div>
-        <div class="dt-item-field">
+        <div class="hide600 dt-item-field">
             <?= $vo->getCredit() ?>
         </div>
 

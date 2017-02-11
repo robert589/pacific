@@ -12,10 +12,10 @@
             <div class="selling-view-header-field">
                 Keterangan
             </div>
-            <div class="selling-view-header-field">
+            <div class="hide600 selling-view-header-field">
                 Harga
             </div>
-            <div class="selling-view-header-field">
+            <div class="hide600 selling-view-header-field">
                 Tonase
             </div>
             <div class="selling-view-header-field">

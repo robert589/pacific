@@ -9,10 +9,10 @@
             <div class="dr-view-header-field">
                 Keterangan
             </div>
-            <div class="dr-view-header-field">
+            <div class="hide600 dr-view-header-field">
                 Debet
             </div>
-            <div class="dr-view-header-field">
+            <div class="hide600 dr-view-header-field">
                 Kredit
             </div>
             <div class="dr-view-header-field">

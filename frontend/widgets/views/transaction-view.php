@@ -16,10 +16,10 @@
             <div class="transaction-view-header-field">
                 Keterangan
             </div>
-            <div class="transaction-view-header-field">
+            <div class="hide600 transaction-view-header-field">
                 Debet
             </div>
-            <div class="transaction-view-header-field">
+            <div class="hide600 transaction-view-header-field">
                 Kredit
             </div>
             <div class="transaction-view-header-field">

@@ -66,13 +66,13 @@
 .custom-selling-header{display:-ms-flexbox;display:flex}.custom-selling-header>.input-field,.custom-selling-header>.search-field{width:100%;margin-bottom:8px;margin-right:8px}
 .custom-transaction-form{display:-ms-flexbox;display:flex}.custom-transaction-form>.input-field,.custom-transaction-form>.search-field{width:100%;margin-bottom:8px;margin-right:8px}.custom-transaction-form>.button{width:40%;margin-bottom:8px}
 .custom-transaction-header{display:-ms-flexbox;display:flex}.custom-transaction-header>.input-field{width:300px;margin-bottom:8px}.custom-transaction-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
-.dr-item-field,.dr-item-remove{padding:8px;border:1px solid #000}.dr-item-view{display:-ms-flexbox;display:flex}.dr-item-field{width:100%}
+.dr-item-field,.dr-item-remove{padding:8px;border:1px solid #000}.dr-item-view{display:-ms-flexbox;display:flex}.dr-item-field{width:100%;word-break:break-all}
 .dr-view-footer,.dr-view-header{display:-ms-flexbox;display:flex}.dr-view-header-field{width:100%;padding:8px;background:#d3d3d3;border:1px solid #000}.dr-view-footer-item2{padding:8px;border:1px solid #000;width:200%}.dr-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:300%}.dr-view-area{margin:16px 0 0}
 .daily-report-header{display:-ms-flexbox;display:flex}.daily-report-header>.input-field{width:300px;margin-bottom:8px}.daily-report-header>.search-field{width:300px;margin-bottom:8px;margin-right:8px}.daily-report-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
-.ds-item-field,.ds-item-remove{padding:8px;border:1px solid #000}.ds-item-view{display:-ms-flexbox;display:flex}.ds-item-field{width:100%}
+.ds-item-field,.ds-item-remove{padding:8px;border:1px solid #000}.ds-item-view{display:-ms-flexbox;display:flex}.ds-item-field{width:100%;word-break:break-all}
 .ds-view-footer,.ds-view-header{display:-ms-flexbox;display:flex}.ds-view-header-field{width:100%;padding:8px;background:#d3d3d3;border:1px solid #000}.ds-view-footer-item2{padding:8px;border:1px solid #000;width:200%}.ds-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:300%}.ds-view-area{margin:16px 0 0}
 .daily-selling-header{display:-ms-flexbox;display:flex}.daily-selling-header>.input-field{width:300px;margin-bottom:8px}.daily-selling-header>.search-field{width:300px;margin-bottom:8px;margin-right:8px}.daily-selling-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
-.dt-item-field,.dt-item-remove{padding:8px;border:1px solid #000}.dt-item-view{display:-ms-flexbox;display:flex}.dt-item-field{width:100%}
+.dt-item-field,.dt-item-remove{padding:8px;border:1px solid #000}.dt-item-view{display:-ms-flexbox;display:flex}.dt-item-field{width:100%;word-break:break-all}
 .dt-view-footer,.dt-view-header{display:-ms-flexbox;display:flex}.dt-view-header-field{width:100%;padding:8px;background:#d3d3d3;border:1px solid #000}.dt-view-footer-item2{padding:8px;border:1px solid #000;width:200%}.dt-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:300%}.dt-view-area{margin:16px 0 0}
 .daily-transact-header{display:-ms-flexbox;display:flex}.daily-transact-header>.input-field{width:300px;margin-bottom:8px}.daily-transact-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
 
@@ -103,7 +103,7 @@
 
 .pof-item-id,.pof-item-name,.pof-item-qty{text-align:center;padding:4px;border:1px solid #d3d3d3}.pof-item,.pof-item-qty-view{display:-ms-flexbox;display:flex}.pof-item-id{width:15%}.pof-item-name{width:45%}.pof-item-qty{width:40%}.pof-item-qty-value{width:100%}.pof-item-qty-view>.button{background:0 0;border:0;padding:0;color:#000}
 .po-field-table-id,.po-field-table-name,.po-field-table-qty{text-align:center;padding:4px;border:1px solid #d3d3d3}.po-field-table-header{display:-ms-flexbox;display:flex;margin-top:4px}.po-field-table-id{width:15%}.po-field-table-name{width:45%}.po-field-table-qty{width:40%}.po-field-header{display:-ms-flexbox;display:flex}.po-field-header>.search-field{display:inline-block;width:100%}.po-field-header>.input-field{display:inline-block;width:60px;margin:0 4px}.po-field-header>.input-field>.input-field-input{height:auto}.po-field-header>.button{width:32px;padding:6px 10px}
-.report-item-field,.report-item-remove{padding:8px;border:1px solid #000}.report-item-view{display:-ms-flexbox;display:flex}.report-item-field{width:100%}
+.report-item-field,.report-item-remove{padding:8px;border:1px solid #000}.report-item-view{display:-ms-flexbox;display:flex}.report-item-field{width:100%;word-break:break-all}
 .report-view-footer,.report-view-header{display:-ms-flexbox;display:flex}.report-view-footer-item2,.report-view-header-field{padding:8px;width:100%;border:1px solid #000}.report-view-header-field{background:#d3d3d3}.report-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:400%}.report-view-area{margin:16px 0 0}
 .restock-form{max-width:500px}.restock-form>.po-field{margin-bottom:16px}
 
@@ -111,11 +111,11 @@
 
 
 
-.selling-item-field,.selling-item-remove{padding:8px;border:1px solid #000}.selling-item-view{display:-ms-flexbox;display:flex}.selling-item-field{width:100%}
+.selling-item-field,.selling-item-remove{padding:8px;border:1px solid #000}.selling-item-view{display:-ms-flexbox;display:flex}.selling-item-field{word-break:break-all;width:100%}
 .selling-view-footer,.selling-view-header{display:-ms-flexbox;display:flex}.selling-view-footer-item2,.selling-view-header-field{padding:8px;width:100%;border:1px solid #000}.selling-view-header-field{background:#d3d3d3}.selling-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:400%}.selling-view-area{margin:16px 0 0}
 .ship-owner-header{display:-ms-flexbox;display:flex}.ship-owner-header>.search-field{width:300px;margin-right:10px;margin-bottom:10px}.ship-owner-header>.button{width:100px;margin-bottom:10px}
 
-.transaction-item-field,.transaction-item-remove{padding:8px;border:1px solid #000}.transaction-item-view{display:-ms-flexbox;display:flex}.transaction-item-field{width:100%}
+.transaction-item-field,.transaction-item-remove{padding:8px;border:1px solid #000}.transaction-item-view{display:-ms-flexbox;display:flex}.transaction-item-field{word-break:break-all;width:100%}
 .transaction-view-footer,.transaction-view-header{display:-ms-flexbox;display:flex}.transaction-view-footer-item2,.transaction-view-header-field{padding:8px;width:100%;border:1px solid #000}.transaction-view-header-field{background:#d3d3d3}.transaction-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:400%}.transaction-view-area{margin:16px 0 0}
 
 .wholesale-field-field{display:-ms-flexbox;display:flex}.wholesale-field-field-item{width:100%;margin-right:16px}

@@ -10,10 +10,10 @@
         <div class="selling-item-field">
             <?= $vo->getRemark() ?>
         </div>
-        <div class="selling-item-field">
+        <div class="hide600 selling-item-field">
             <?= $vo->getPrice() ?>
         </div>
-        <div class="selling-item-field">
+        <div class="hide600 selling-item-field">
             <?= $vo->getTonase() ?>
         </div>
 
