@@ -20,11 +20,14 @@ class ShipVo implements RVo
 
     private $owners;
 
+    private $status;
+
     public function __construct(ShipVoBuilder $builder) { 
         $this->id = $builder->getId(); 
         $this->name = $builder->getName(); 
         $this->description = $builder->getDescription(); 
         $this->owners = $builder->getOwners(); 
+        $this->status = $builder->getStatus(); 
     }
 
     //getters
@@ -43,5 +46,9 @@ class ShipVo implements RVo
 
     public function getOwners() { 
         return $this->owners; 
+    }
+
+    public function getStatus() { 
+        return $this->status; 
     }
 }

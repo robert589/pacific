@@ -32,6 +32,8 @@ class InputField extends Widget {
     
     public $datepicker = false;
     
+    public $monthpicker = false;
+    
     public $newClass;
     
     public $disabled = null;
@@ -52,6 +54,7 @@ class InputField extends Widget {
                                         'datepicker' => $this->datepicker,
                                         'disabled' => $this->disabled,
                                         'timepicker'=> $this->timepicker,
+                                        'monthpicker' => $this->monthpicker,
                                         'placeholder' => $this->placeholder]);
     }
 }

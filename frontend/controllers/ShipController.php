@@ -2,16 +2,16 @@
 namespace frontend\controllers;
 
 use Yii;
-use frontend\models\ChangeShipOwnerStatusForm;
-use common\models\Ship;
-use common\models\ShipOwner;
+use common\models\EntityOwner;
+use common\models\Entity;
 use frontend\widgets\OwnershipGridview;
-use frontend\models\AssignShipToOwnerForm;
+use frontend\models\AssignEntityToOwnerForm;
 use common\widgets\SearchFieldDropdownItem;
 use frontend\models\CreateShipForm;
 use frontend\services\ShipService;
+use frontend\models\ChangeEntityOwnerStatusForm;
 use yii\web\Controller;
-use frontend\models\ChangeShipStatusForm;
+use frontend\models\ChangeEntityStatusForm;
 /**
  * Ship controller
  */
@@ -33,10 +33,11 @@ class ShipController extends Controller
     }
     
     public function actionRemove() {
-        $model = new ChangeShipStatusForm();
+        $model = new ChangeEntityStatusForm();
+        $model->entity_id = filter_input(INPUT_POST, "ship_id");
         $model->user_id = \Yii::$app->user->getId();
         $model->loadData($_POST);
-        $model->status = Ship::STATUS_DELETED;
+        $model->status = Entity::STATUS_DELETED;
         $data['status'] = $model->change() ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
         return json_encode($data);
@@ -64,9 +65,10 @@ class ShipController extends Controller
     }
     
     public function actionRemoveOwner() {
-        $model = new ChangeShipOwnerStatusForm();
+        $model = new ChangeEntityOwnerStatusForm();
         $model->user_id = \Yii::$app->user->getId();
-        $model->status = ShipOwner::STATUS_DELETED;
+        $model->entity_id = filter_input(INPUT_POST, "ship_id");
+        $model->status = EntityOwner::STATUS_DELETED;
         $model->loadData($_POST);
         $data['status'] = $model->change() ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
@@ -90,7 +92,8 @@ class ShipController extends Controller
     
     
     public function actionAssign() {
-        $model = new AssignShipToOwnerForm();
+        $model = new AssignEntityToOwnerForm();
+        $model->entity_id = filter_input(INPUT_POST, "ship_id");
         $model->user_id = \Yii::$app->user->getId();
         $model->loadData($_POST);
         $data['status'] = $model->assign() ? 1 : 0;
@@ -113,9 +116,10 @@ class ShipController extends Controller
         return json_encode($data);
     }
     
-    public function actionAssignCode() {
-        
-    }
+//    
+//    public function actionAssignCode() {
+//        return $this->render('assign-code-to-ship', ['id' => 'sacts']);
+//    }
     
     
 }

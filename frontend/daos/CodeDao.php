@@ -8,6 +8,7 @@ use common\models\EntityType;
 use frontend\vos\EntityVo;
 use frontend\vos\EntityTypeVo;
 /**
+ * Code and Entity are actually the same
  * CodeDao class
  */
 class CodeDao implements Dao

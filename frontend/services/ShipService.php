@@ -4,8 +4,11 @@ namespace frontend\services;
 use yii\data\ArrayDataProvider;
 use common\libraries\UserLibrary;
 use common\validators\IsAdminValidator;
+use common\models\EntityType;
 use common\components\RService;
+use frontend\vos\EntityVo;
 use frontend\daos\ShipDao;
+use frontend\daos\EntityDao;
 /**
  * ShipService service
  *
@@ -23,8 +26,22 @@ class ShipService extends RService
     
     public $ship_id;
     
+    /**
+     *
+     * @var /frontend/daos/EntityDao
+     */
+    private $entityDao;
+    
+    /**
+     *
+     * @var int
+     */
+    private $entityTypeId;
+    
     public function init() {
         $this->shipDao = new ShipDao();
+        $this->entityDao = new EntityDao();
+        $this->entityTypeId = EntityType::getTypeId(EntityType::SHIP);
     }
     
     public function rules() {
@@ -43,7 +60,7 @@ class ShipService extends RService
             return false;
         }
         
-        $vos =  $this->shipDao->getShipOwnership($this->ship_id);
+        $vos =  $this->entityDao->getEntityOwnership($this->ship_id);
         
         $models = [];
         $model = [];
@@ -63,13 +80,17 @@ class ShipService extends RService
         ]);
     }
     
+    /**
+     * 
+     * @return boolean|ArrayDataProvider
+     */
     public function getAllShips() {
         if(!$this->validate()) {
             return false;
         }
         
         if(UserLibrary::isAdmin($this->user_id)) {
-            $vos = $this->shipDao->getAllShips();   
+            $vos = $this->entityDao->getAllEntitiesByType($this->entityTypeId);   
         } else {
             $vos = [];
         }
@@ -90,16 +111,21 @@ class ShipService extends RService
         ]);
     }
 
+    /**
+     * 
+     * @param string $q
+     * @return boolean|EntityVo[]
+     */
     public function searchShips($q) {
         if(!$this->validate()) {
             return false;
         }
         
         if(UserLibrary::isAdmin($this->user_id)) {
-            return $this->shipDao->searchShips($q);
+            return $this->entityDao->searchEntitiesByType($q, $this->entityTypeId);
             
         } else if(UserLibrary::isOwner($this->user_id)) {
-            return $this->shipDao->searchShipsByOwner($q, $this->user_id);
+            return $this->entityDao->searchEntitiesByOwnerAndType($q, $this->user_id, $this->entityTypeId);
         }
         
         return [];

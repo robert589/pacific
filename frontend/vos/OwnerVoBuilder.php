@@ -14,15 +14,15 @@ class OwnerVoBuilder extends RVoBuilder
 
     public $user;
 
-    public $totalShips;
+    public $totalEntities;
 
-    public $ships;
+    public $entities;
 
     public function rules() { 
         return [
            ['user','string'],
-           ['totalShips','string'],
-           ['ships','string'],
+           ['totalEntities','string'],
+           ['entities','string'],
         ];
     }
 
@@ -32,12 +32,12 @@ class OwnerVoBuilder extends RVoBuilder
         return $this->user; 
     }
 
-    public function getTotalShips() { 
-        return $this->totalShips; 
+    public function getTotalEntities() { 
+        return $this->totalEntities; 
     }
 
-    public function getShips() { 
-        return $this->ships; 
+    public function getEntities() { 
+        return $this->entities; 
     }
 
     //setters
@@ -46,11 +46,11 @@ class OwnerVoBuilder extends RVoBuilder
         $this->user = $user; 
     }
 
-    public function setTotalShips($totalShips) { 
-        $this->totalShips = $totalShips; 
+    public function setTotalEntities($totalEntities) { 
+        $this->totalEntities = $totalEntities; 
     }
 
-    public function setShips($ships) { 
-        $this->ships = $ships; 
+    public function setEntities($entities) { 
+        $this->entities = $entities; 
     }
 }

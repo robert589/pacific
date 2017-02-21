@@ -20,12 +20,15 @@ class ShipVoBuilder extends RVoBuilder
 
     public $owners;
 
+    public $status;
+
     public function rules() { 
         return [
            ['id','string'],
            ['name','string'],
            ['description','string'],
            ['owners','string'],
+           ['status','string'],
         ];
     }
 
@@ -47,6 +50,10 @@ class ShipVoBuilder extends RVoBuilder
         return $this->owners; 
     }
 
+    public function getStatus() { 
+        return $this->status; 
+    }
+
     //setters
 
     public function setId($id) { 
@@ -63,5 +70,9 @@ class ShipVoBuilder extends RVoBuilder
 
     public function setOwners($owners) { 
         $this->owners = $owners; 
+    }
+
+    public function setStatus($status) { 
+        $this->status = $status; 
     }
 }

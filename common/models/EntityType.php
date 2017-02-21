@@ -11,7 +11,12 @@ class EntityType extends ActiveRecord
 {
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
-
+    
+    /**
+     * Has to be the same with db
+     */
+    const SHIP = "Kapal";
+    
     public static function tableName()
     {
         return '{{%entity_type}}';
@@ -28,5 +33,13 @@ class EntityType extends ActiveRecord
         ];
     }
 
+    /**
+     * 
+     * @param string $text
+     * @return int
+     */
+    public static function getTypeId($text) {
+        return self::find()->where(['name' => $text])->one()['id'];
+    }
 
 }

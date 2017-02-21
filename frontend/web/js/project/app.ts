@@ -17,6 +17,7 @@ import {CreateCode} from './create-code';
 import {DailyTransaction} from './daily-transaction';
 import {CustomTransaction} from './custom-transaction';
 import {ChangePassword} from './change-password';
+import {AssignCodeToShip} from './assign-code-to-ship';
 
 export class App extends Component{
 
@@ -57,6 +58,8 @@ export class App extends Component{
     customTransact : CustomTransaction;
 
     changePassword : ChangePassword;
+
+    actShip : AssignCodeToShip;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -117,6 +120,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('change-pass').length !== 0) {
             this.changePassword = new ChangePassword(document.getElementById("ucp"));
+        }
+        else if(this.root.getElementsByClassName('act-ship').length !== 0) {
+            this.actShip = new AssignCodeToShip(document.getElementById("sacts"));
         }
     
         this.hamburgerIcon = <HTMLElement> 

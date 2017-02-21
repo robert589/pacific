@@ -32,6 +32,23 @@ class ShipDao implements Dao
                                 where ship_owner.ship_id = :ship_id and ship_owner.owner_id = owner.id
                                     and owner.id = user.id and ship_owner.status = :status";
     
+    const GET_HIGHEST_CODE = "SELECT max(id) as max_id from entity";
+    
+    
+    public function getHighestCode() {
+        $result =  \Yii::$app->db
+            ->createCommand(self::GET_HIGHEST_CODE)
+            ->queryScalar();
+        
+        return intval($result);
+    }
+    
+    /**
+     * 
+     * @param int $shipId
+     * @param string $status
+     * @return frontend\vos\ShipVo[]
+     */
     public function getShipOwnership($shipId, $status = ShipOwner::STATUS_ACTIVE) {
         $results =  \Yii::$app->db
             ->createCommand(self::GET_SHIP_OWNERSHIP)
@@ -54,7 +71,12 @@ class ShipDao implements Dao
     
     }
     
-    public function searchShips($q) {
+    /**
+     * 
+     * @param string $q
+     * @return \frontend\vos\ShipVo[]
+     */
+    public function searchShips(string $q) {
         $q = '%' . $q . '%';
         $status = Ship::STATUS_ACTIVE;
         $results =  \Yii::$app->db
@@ -72,6 +94,10 @@ class ShipDao implements Dao
         return $vos;
     }
 
+    /**
+     * 
+     * @return \frontend\vos\ShipVo[] get all active ships
+     */
     public function getAllShips() {
         $status = Ship::STATUS_ACTIVE;
         $results =  \Yii::$app->db
@@ -84,6 +110,7 @@ class ShipDao implements Dao
         foreach($results as $result) {
             $builder = ShipVo::createBuilder();
             $builder->loadData($result);
+            $builder->setOwners($this->getShipOwnership($builder->getId()));
             $vos[] = $builder->build();
         }
         return $vos;

@@ -14,6 +14,8 @@ class TextAreaField extends Widget {
     
     public $placeholder;
     
+    public $newClass;
+    
     public $value = null;
     
     public function init() {
@@ -23,6 +25,7 @@ class TextAreaField extends Widget {
     public function run() {
         return $this->render('text-area-field', ['id' => $this->id, 
                                                 'rows' => $this->rows, 
+                                                'newClass' => $this->newClass,
                                                 'value' =>$this->value, 'name' => $this->name,
                                                 'placeholder' => $this->placeholder]);
     }

@@ -4,6 +4,8 @@
 <div id="<?= $id ?>" class="input-field <?= $newClass ?>" data-name="<?= $name ?>" 
      <?php if($datepicker) { ?> data-datepicker="<?= $datepicker ?>" <?php } ?>
      <?php if($timepicker) { ?> data-timepicker="<?= $timepicker ?>" <?php } ?>
+     
+     <?php if($monthpicker) { ?> data-monthpicker="<?= $monthpicker ?>" <?php } ?>
      data-type="<?= $type ?>"
      >
     <input name="<?= $name ?>" class="input-field-input"
