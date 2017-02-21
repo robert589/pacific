@@ -68,19 +68,9 @@ AppAsset::register($this);
                                         'href' => '#',
                                         'items' => [
                                             ['label' => 'Kapal', 'href' => Yii::$app->request->baseUrl . "/ship/index"],
-                                            ['label' => 'Kepemilikan', 'href' => Yii::$app->request->baseUrl . "/ship/ownership"],
-                                            ['label' => 'Kasih Kode Kapal', 'href' => Yii::$app->request->baseUrl . "/ship/assign-code"]
+                                            ['label' => 'Kepemilikan', 'href' => Yii::$app->request->baseUrl . "/ship/ownership"]
                                         ]
-                                    ],
-                                    [   
-                                        'label' => 'Laporan',
-                                        'href' => '#',
-                                        'items' => [
-                                            ['label' => 'Buat Laporan', 'href' => Yii::$app->request->baseUrl . "/report/index"],
-                                            ['label' => 'Cek Kapal Laporan', 'href' => Yii::$app->request->baseUrl . "/report/custom"]
-                                        ]
-
-                                    ],    
+                                    ],  
                                     [   
                                         'label' => 'Transaksi',
                                         'href' => '#',

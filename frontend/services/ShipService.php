@@ -19,6 +19,9 @@ class ShipService extends RService
     
     const GET_SHIP_OWNERSHIP = "getshipownership";
     
+    const GET_SHIP_INFO = "getshipinfo";
+    
+    
     //attributes
     public $user_id;
     
@@ -50,10 +53,28 @@ class ShipService extends RService
             ['user_id', 'required'],
             
             ['ship_id', 'integer'],
-            ['ship_id', 'required', 'on' => self::GET_SHIP_OWNERSHIP]
+            ['ship_id', 'required', 'on' => [self::GET_SHIP_OWNERSHIP, self::GET_SHIP_INFO] ]
         ];
     }
     
+    /**
+     * 
+     * @return null|EntityVo
+     */
+    public function getShipInfo() {
+        $this->setScenario(self::GET_SHIP_INFO);
+        if(!$this->validate()) {
+            return null;
+        }
+        
+        return $this->entityDao->getEntityInfoWithType($this->ship_id, 
+                    $this->entityTypeId);
+    }
+    
+    /**
+     * 
+     * @return boolean|ArrayDataProvider
+     */
     public function getShipOwnership() {
         $this->setScenario(self::GET_SHIP_OWNERSHIP);
         if(!$this->validate()) {
@@ -127,11 +148,7 @@ class ShipService extends RService
         } else if(UserLibrary::isOwner($this->user_id)) {
             return $this->entityDao->searchEntitiesByOwnerAndType($q, $this->user_id, $this->entityTypeId);
         }
-        
         return [];
-
-        
-        
     }
 
 }

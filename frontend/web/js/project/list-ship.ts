@@ -8,6 +8,8 @@ export class ListShip extends Component{
 
     deletes : Button[];
 
+    edits : Button[];
+
     constructor(root: HTMLElement) {
         super(root);
     }
@@ -21,8 +23,20 @@ export class ListShip extends Component{
             this.deletes.push(new Button(<HTMLElement>deleteRaws.item(i), 
                         this.showDeleteDialog.bind(this, deleteRaws.item(i))));
         }
+
+        this.edits = [];
+        let editRaws : NodeListOf<Element> = this.root.getElementsByClassName('list-ship-edit');
+        for(let i = 0; i < editRaws.length; i++) {
+            this.edits.push(new Button(<HTMLElement> editRaws.item(i), 
+                        this.redirectToEditShip.bind(this, editRaws.item(i) )));
+        }
     
     }
+
+    redirectToEditShip(raw : HTMLElement) {
+        window.location.href = System.getBaseUrl() + "/ship/edit?id=" + raw.getAttribute('data-ship-id'); 
+    }
+
 
     showDeleteDialog(raw : HTMLElement) {
         System.showConfirmDialog(this.deleteShip.bind(null, raw)

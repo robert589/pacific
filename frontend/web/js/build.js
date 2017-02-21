@@ -743,13 +743,14 @@ define("project/create-ship-form", ["require", "exports", "common/form", "common
             return _this;
         }
         CreateShipForm.prototype.rules = function () {
-            this.setRequiredField([this.nameField]);
-            this.registerFields([this.nameField, this.descField]);
+            this.setRequiredField([this.nameField, this.codeField]);
+            this.registerFields([this.nameField, this.descField, this.codeField]);
         };
         CreateShipForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.nameField = new input_field_3.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_2.TextAreaField(document.getElementById(this.id + "-desc"));
+            this.codeField = new input_field_3.InputField(document.getElementById(this.id + "-code"));
         };
         CreateShipForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -803,6 +804,14 @@ define("project/list-ship", ["require", "exports", "common/component", "common/b
             for (var i = 0; i < deleteRaws.length; i++) {
                 this.deletes.push(new button_5.Button(deleteRaws.item(i), this.showDeleteDialog.bind(this, deleteRaws.item(i))));
             }
+            this.edits = [];
+            var editRaws = this.root.getElementsByClassName('list-ship-edit');
+            for (var i = 0; i < editRaws.length; i++) {
+                this.edits.push(new button_5.Button(editRaws.item(i), this.redirectToEditShip.bind(this, editRaws.item(i))));
+            }
+        };
+        ListShip.prototype.redirectToEditShip = function (raw) {
+            window.location.href = system_7.System.getBaseUrl() + "/ship/edit?id=" + raw.getAttribute('data-ship-id');
         };
         ListShip.prototype.showDeleteDialog = function (raw) {
             system_7.System.showConfirmDialog(this.deleteShip.bind(null, raw), "Are you sure", "Once it is deleted, you have to ask admin to retrieve it");
@@ -2448,7 +2457,30 @@ define("project/change-password", ["require", "exports", "common/component", "pr
     }(component_32.Component));
     exports.ChangePassword = ChangePassword;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password"], function (require, exports, component_33, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_21, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1) {
+define("project/assign-code-to-ship", ["require", "exports", "common/component"], function (require, exports, component_33) {
+    "use strict";
+    var AssignCodeToShip = (function (_super) {
+        __extends(AssignCodeToShip, _super);
+        function AssignCodeToShip(root) {
+            return _super.call(this, root) || this;
+        }
+        AssignCodeToShip.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+        };
+        AssignCodeToShip.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AssignCodeToShip.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AssignCodeToShip.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AssignCodeToShip;
+    }(component_33.Component));
+    exports.AssignCodeToShip = AssignCodeToShip;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship"], function (require, exports, component_34, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_21, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2512,6 +2544,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('change-pass').length !== 0) {
                 this.changePassword = new change_password_1.ChangePassword(document.getElementById("ucp"));
             }
+            else if (this.root.getElementsByClassName('act-ship').length !== 0) {
+                this.actShip = new assign_code_to_ship_1.AssignCodeToShip(document.getElementById("sacts"));
+            }
             this.hamburgerIcon = this.root.getElementsByClassName('app-hamburger')[0];
             this.leftSide = this.root.getElementsByClassName('left-side')[0];
         };
@@ -2536,7 +2571,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_33.Component));
+    }(component_34.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

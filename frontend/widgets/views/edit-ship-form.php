@@ -10,20 +10,20 @@
         ['id' => $id, 
          'method' => 'post', 
          'url' => \Yii::$app->request->baseUrl 
-                    . '/ship/p-create', 
-        'widget_class' => 'form co-form' , 'enable_button' => false
+                    . '/ship/p-edit', 
+        'widget_class' => 'form es-form' , 'enable_button' => false
         ]) ?>   
         
     <?= InputField::widget(['id' => $id . '-name', 'placeholder' => 'Nama Kapal', 
-        'newClass' => 'form-field',
+        'newClass' => 'form-field', 'value' => $vo->getName(),
         'name' => 'name']) ?>
     
     <?= TextAreaField::widget(['id' => $id . '-desc', 'placeholder' => 'Keterangan', 
-        'newClass' => 'form-field',
+        'newClass' => 'form-field', 'value' => $vo->getDescription(),
         'rows' => 3, 'name' => 'description']) ?>
 
     <?= InputField::widget(['id' => $id . '-code', 'placeholder' => 'Kode Kapal',
-        'name' => 'id', 'newClass' => 'form-field']) ?>
+        'name' => 'id', 'value' => $vo->getId(), 'newClass' => 'form-field']) ?>
 
     <?= Button::widget(['id' => $id . '-submit-btn' , 
         'text' => 'Add', 'newClass' => 'form-submit']) ?>

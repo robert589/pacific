@@ -40,6 +40,35 @@ class EntityDao implements Dao
                                       entity_owner.status = :status and
                                       user.id = entity_owner.owner_id";
     
+    const GET_ENTITY_INFO_WITH_TYPE = "select entity.*
+                                        from entity
+                                        where entity.id = :entity_id and entity.type_id = :type_id
+                                            and entity.status = :status";
+    
+    /**
+     * 
+     * @param int $entityId
+     * @param int $entityTypeId
+     * @param int $status
+     * @return EntityVo|null
+     */
+    public function getEntityInfoWithType($entityId, $entityTypeId, $status = Entity::STATUS_ACTIVE) {
+        $result =  \Yii::$app->db
+            ->createCommand(self::GET_ENTITY_INFO_WITH_TYPE)
+            ->bindParam(":entity_id", $entityId)
+            ->bindParam(':type_id', $entityTypeId)
+            ->bindParam(':status', $status)
+            ->queryOne();
+        
+        if(!$result) {
+            return null;
+        }
+        
+        $builder = EntityVo::createBuilder();
+        $builder->loadData($result);
+        return $builder->build();
+    }
+    
     public function getEntityOwnership($entityId, $status = Entity::STATUS_ACTIVE) {
         $results =  \Yii::$app->db
             ->createCommand(self::GET_ENTITY_OWNERSHIP)

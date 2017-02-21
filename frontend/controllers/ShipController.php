@@ -4,7 +4,9 @@ namespace frontend\controllers;
 use Yii;
 use common\models\EntityOwner;
 use common\models\Entity;
+use common\models\EntityType;
 use frontend\widgets\OwnershipGridview;
+use frontend\models\CreateCodeForm;
 use frontend\models\AssignEntityToOwnerForm;
 use common\widgets\SearchFieldDropdownItem;
 use frontend\models\CreateShipForm;
@@ -32,6 +34,18 @@ class ShipController extends Controller
         return $this->render('create-ship', ['id' => 'scs']);
     }
     
+    public function actionEdit() {
+        $this->service->ship_id = filter_var($_GET['id']);
+        
+        $vo = $this->service->getShipInfo();
+        if(!$vo) {
+            return $this->redirect(['site/error']);
+        }
+        
+        
+        return $this->render('edit-ship', ['id' => 'ses', 'vo' => $vo]);
+    }
+    
     public function actionRemove() {
         $model = new ChangeEntityStatusForm();
         $model->entity_id = filter_input(INPUT_POST, "ship_id");
@@ -45,8 +59,10 @@ class ShipController extends Controller
     }
     
     public function actionPCreate() {
-        $model = new CreateShipForm();
+        $model = new CreateCodeForm();
         $model->user_id = \Yii::$app->user->getId();
+        $model->type_id = EntityType::getTypeId(EntityType::SHIP);
+        $model->id = filter_input(INPUT_POST, "code");
         $model->loadData($_POST);
         $data['status'] = $model->create() ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;

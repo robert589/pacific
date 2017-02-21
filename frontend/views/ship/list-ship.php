@@ -11,13 +11,16 @@
     <?=  GridView::widget(
             ['dataProvider' => $provider,
              'columns' => [
-                'id',
+                 [
+                    'header' => 'Id/Kode',
+                     'attribute' => 'id'
+                 ],
                 'name',
                 'description',
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'header'=>'Actions',    
-                    'template' => '{delete}',
+                    'template' => '{delete}{edit}',
                     'urlCreator' => function ($action, $model, $key, $index) {
                         
                     },
@@ -28,6 +31,15 @@
                             return Button::widget(['id' => 'lsd-del-' . $model['id'],
                                 'widgetClass' => 'button-link list-ship-delete',
                                 'text' => '<span class="glyphicon glyphicon-remove"></span>',
+                                'options' => [
+                                    'data-ship-id' => $model['id']
+                                ],
+                                'color' => Button::NONE_COLOR]);
+                        },
+                        'edit' => function($url, $model) {
+                            return Button::widget(['id' => 'lsd-edit-' . $model['id'],
+                                'widgetClass' => 'button-link list-ship-edit',
+                                'text' => '<span class="glyphicon glyphicon-edit"></span>',
                                 'options' => [
                                     'data-ship-id' => $model['id']
                                 ],
