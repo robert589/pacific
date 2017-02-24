@@ -12,8 +12,8 @@ use yii\behaviors\TimestampBehavior;
  */
 class EntityOwner extends ActiveRecord
 {
-    const STATUS_DELETED = 0;
-    const STATUS_ACTIVE = 10;
+    const STATUS_DELETED = '0';
+    const STATUS_ACTIVE = '10';
     
     public static function tableName()
     {

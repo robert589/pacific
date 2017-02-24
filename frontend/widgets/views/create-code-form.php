@@ -15,16 +15,21 @@
         'widget_class' => 'form ccode-form' , 'enable_button' => false
         ]) ?>   
         
+    <div class="form-field">
 
-    <?= InputField::widget(['id' => $id . '-id', 'placeholder' => 'Id', 'name' => 'id']) ?>
-    
+        <?= InputField::widget(['id' => $id . '-code', 'placeholder' => 'Kode', 'name' => 'code']) ?>
+    </div>
+    <div class="form-field">
     <?= InputField::widget(['id' => $id . '-name', 'placeholder' => 'Nama', 'name' => 'name']) ?>
-    
-    <?= TextAreaField::widget(['id' => $id . '-desc', 'placeholder' => 'Keterangan', 'rows' => 3, 'name' => 'description']) ?>
+    </div>
 
+    <div class="form-field">
+    <?= TextAreaField::widget(['id' => $id . '-desc', 'placeholder' => 'Keterangan', 'rows' => 3, 'name' => 'description']) ?>
+    </div>
+    <div class="form-field">
     <?= SearchField::widget(['id' => $id . '-type-id', 'placeholder' => 'Cari Tipe', 
                 'url' => \Yii::$app->request->baseUrl . "/code/search-type", 'name' => 'type_id']) ?>
-
+    </div>
     <?= Button::widget(['id' => $id . '-submit-btn' , 
         'text' => 'Add', 'newClass' => 'form-submit']) ?>
 <?php Form::end() ?>

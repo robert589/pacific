@@ -2078,12 +2078,12 @@ define("project/create-code-form", ["require", "exports", "common/form", "common
             return _this;
         }
         CreateCodeForm.prototype.rules = function () {
-            this.setRequiredField([this.nameField, this.typeIdField, this.idField]);
-            this.registerFields([this.nameField, this.descField, this.typeIdField, this.idField]);
+            this.setRequiredField([this.nameField, this.typeIdField, this.codeField]);
+            this.registerFields([this.nameField, this.descField, this.typeIdField, this.codeField]);
         };
         CreateCodeForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.idField = new input_field_11.InputField(document.getElementById(this.id + "-id"));
+            this.codeField = new input_field_11.InputField(document.getElementById(this.id + "-code"));
             this.typeIdField = new search_field_6.SearchField(document.getElementById(this.id + "-type-id"));
             this.nameField = new input_field_11.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_4.TextAreaField(document.getElementById(this.id + "-desc"));
@@ -2612,6 +2612,9 @@ define("project/add-entity-relation-form", ["require", "exports", "common/form",
         function AddEntityRelationForm(root) {
             var _this = _super.call(this, root) || this;
             _this.subcode.disableItem(_this.codeField.getValue());
+            _this.successCb = function (data) {
+                window.location.reload();
+            };
             return _this;
         }
         AddEntityRelationForm.prototype.rules = function () {
@@ -2636,15 +2639,32 @@ define("project/add-entity-relation-form", ["require", "exports", "common/form",
     }(form_14.Form));
     exports.AddEntityRelationForm = AddEntityRelationForm;
 });
-define("project/add-entity-relation-range-form", ["require", "exports", "common/component"], function (require, exports, component_35) {
+define("project/add-entity-relation-range-form", ["require", "exports", "common/form", "common/input-field", "common/range-validation"], function (require, exports, form_15, input_field_18, range_validation_1) {
     "use strict";
     var AddEntityRelationRangeForm = (function (_super) {
         __extends(AddEntityRelationRangeForm, _super);
         function AddEntityRelationRangeForm(root) {
             return _super.call(this, root) || this;
         }
+        AddEntityRelationRangeForm.prototype.rules = function () {
+            this.setRequiredField([this.fromField, this.toField, this.code]);
+            this.registerFields([this.fromField, this.toField, this.code]);
+            var validation1 = new range_validation_1.RangeValidation(this.fromField, 1, null);
+            var validation2 = new range_validation_1.RangeValidation(this.toField, 1, null);
+            this.setRangeValidations([validation1, validation2]);
+            var validation = {
+                "errorMessage": "Field 'Dari' harus tidak lebih besar dari Field 'Sampai' ",
+                "targetField": this.toField,
+                "validate": function () {
+                    return this.fromField.getValue() >= this.toField.getValue();
+                }.bind(this)
+            };
+        };
         AddEntityRelationRangeForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
+            this.fromField = new input_field_18.InputField(document.getElementById(this.id + "-from"));
+            this.toField = new input_field_18.InputField(document.getElementById(this.id + "-to"));
+            this.code = new input_field_18.InputField(document.getElementById(this.id + "-code"));
         };
         AddEntityRelationRangeForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2656,10 +2676,10 @@ define("project/add-entity-relation-range-form", ["require", "exports", "common/
             // no event to unbind
         };
         return AddEntityRelationRangeForm;
-    }(component_35.Component));
+    }(form_15.Form));
     exports.AddEntityRelationRangeForm = AddEntityRelationRangeForm;
 });
-define("project/add-entity-relation", ["require", "exports", "common/component", "project/add-entity-relation-form", "project/add-entity-relation-range-form"], function (require, exports, component_36, add_entity_relation_form_1, add_entity_relation_range_form_1) {
+define("project/add-entity-relation", ["require", "exports", "common/component", "project/add-entity-relation-form", "project/add-entity-relation-range-form"], function (require, exports, component_35, add_entity_relation_form_1, add_entity_relation_range_form_1) {
     "use strict";
     var AddEntityRelation = (function (_super) {
         __extends(AddEntityRelation, _super);
@@ -2681,10 +2701,10 @@ define("project/add-entity-relation", ["require", "exports", "common/component",
             // no event to unbind
         };
         return AddEntityRelation;
-    }(component_36.Component));
+    }(component_35.Component));
     exports.AddEntityRelation = AddEntityRelation;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation"], function (require, exports, component_37, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_22, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation"], function (require, exports, component_36, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_22, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2781,7 +2801,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_37.Component));
+    }(component_36.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

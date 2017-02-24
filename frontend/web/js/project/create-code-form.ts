@@ -6,7 +6,7 @@ import {System} from './../common/system';
 
 export class CreateCodeForm extends Form{
 
-    idField : InputField;
+    codeField : InputField;
 
     nameField : InputField;
 
@@ -22,13 +22,13 @@ export class CreateCodeForm extends Form{
     }
     
     rules() {
-        this.setRequiredField([this.nameField, this.typeIdField, this.idField]);
-        this.registerFields([this.nameField, this.descField, this.typeIdField, this.idField]);
+        this.setRequiredField([this.nameField, this.typeIdField, this.codeField]);
+        this.registerFields([this.nameField, this.descField, this.typeIdField, this.codeField]);
     }
 
     decorate() {
         super.decorate();
-        this.idField = new InputField(document.getElementById(this.id + "-id"));
+        this.codeField = new InputField(document.getElementById(this.id + "-code"));
         this.typeIdField = new SearchField(document.getElementById(this.id + "-type-id"));
         this.nameField = new InputField(document.getElementById(this.id + "-name"));
         this.descField = new TextAreaField(document.getElementById(this.id + "-desc"));

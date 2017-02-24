@@ -9,6 +9,10 @@ use yii\behaviors\TimestampBehavior;
  */
 class EntityRelation extends ActiveRecord
 {
+    
+    const STATUS_DELETED = '0';
+    const STATUS_ACTIVE = '10';
+    
     public static function tableName()
     {
         return '{{%entity_relation}}';

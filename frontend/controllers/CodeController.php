@@ -62,7 +62,7 @@ class CodeController extends Controller
         $vos = $this->service->search($query);
         foreach($vos as $vo) {
             $views .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vo->getId(),
-                'itemId' => $vo->getId(), 'text' => $vo->getId() . '. ' . $vo->getName()]);
+                'itemId' => $vo->getId(), 'text' => $vo->getCode() . '. ' . $vo->getName()]);
         }
         $data['views'] = $views;
         return json_encode($data);
@@ -84,10 +84,12 @@ class CodeController extends Controller
     public function actionAddRelation() {
         $this->service->entity_id = filter_var($_GET['id']);
         $vo = $this->service->getEntityInfoWithChild();
+        $provider = $this->service->getSubCode();
         if(!$vo) {
             return $this->redirect(['site/error']);
         }
-        return $this->render('add-entity-relation', ['id' => 'caer', 'vo' => $vo]);
+        return $this->render('add-entity-relation', 
+                ['id' => 'caer', 'vo' => $vo, 'provider' => $provider]);
     }
     
     public function actionPCreate() {

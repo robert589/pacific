@@ -11,12 +11,17 @@
         ['id' => $id, 
          'method' => 'post', 
          'url' => \Yii::$app->request->baseUrl 
-                    . '/code/add-entity-range', 
+                    . '/code/add-relation-range', 
         'widget_class' => 'form aerr-form' , 'enable_button' => false
         ]) ?>   
     <div class="form-field">
         <div class="form-field-left">
             Tambah Banyak Kode
+        </div>
+        <div class="form-flex">
+            <?= InputField::widget(['id' => $id . '-from', 'name' =>  'from', 'placeholder' => 'Dari', 'type' => InputField::NUMBER]) ?>
+            <?= InputField::widget(['id' => $id . '-to', 'name' =>  'to', 'placeholder' => 'Sampai', 'type' => InputField::NUMBER]) ?>
+
         </div>
     </div>
     

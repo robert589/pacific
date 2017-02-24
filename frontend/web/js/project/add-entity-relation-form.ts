@@ -16,7 +16,9 @@ export class AddEntityRelationForm extends Form{
     constructor(root: HTMLElement) {
         super(root);
         this.subcode.disableItem(<string>this.codeField.getValue());
-    
+        this.successCb = function(data) {
+            window.location.reload();
+        }
     }
     
     decorate() {

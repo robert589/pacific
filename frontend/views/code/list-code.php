@@ -30,7 +30,7 @@
                                 'widgetClass' => 'button-link list-code-add',
                                 'text' => '<span class="glyphicon glyphicon-plus"></span>',
                                 'options' => [
-                                    'data-entity-id' => $model['code']
+                                    'data-entity-id' => $model['id']
                                 ],
                                 'color' => Button::NONE_COLOR]);
                         }

@@ -20,6 +20,8 @@ class CodeService extends RService
     
     const GET_CODE_TYPE_LIST = "getcodetypelist";
     
+    const GET_SUB_CODE = "getsubcode";
+    
     //attributes
     public $user_id;
     
@@ -38,12 +40,40 @@ class CodeService extends RService
         return [
             ['user_id', 'integer'],
             ['user_id', 'required'],
-            ['user_id', 'checkAC', 'on' => self::GET_ENTITY_INFO_WITH_CHILD],
+            ['user_id', 'checkAC', 'on' => [self::GET_ENTITY_INFO_WITH_CHILD, self::GET_SUB_CODE]],
             
             ['entity_id', 'integer'],
-            ['entity_id', 'required', 'on' => self::GET_ENTITY_INFO_WITH_CHILD]
+            ['entity_id', 'required', 'on' => [self::GET_ENTITY_INFO_WITH_CHILD, self::GET_SUB_CODE]]
         ];
     }
+    
+    
+    public function getSubCode() {
+        $this->setScenario(self::GET_SUB_CODE);
+        if(!$this->validate()) {
+            return false;
+        }
+        
+        $vos = $this->codeDao->getSubcode($this->entity_id);
+        foreach($vos  as $vo) {
+            $model['code'] = $vo->getCode();
+            $model['name'] = $vo->getName();
+            $model['id'] = $vo->getId();
+            $model['type'] = $vo->getEntityType()->getName();
+            $model['description'] = $vo->getDescription();
+            $models[] = $model;
+        }
+        
+        return new ArrayDataProvider([
+            'allModels' => $models,
+            'pagination' => [
+                'pageSize' => 10
+            ] 
+        ]);
+    
+        
+    }
+    
     
     public function checkAC() {
         $allowed = EntityOwner::checkAccessControl($this->user_id, $this->entity_id);
@@ -89,11 +119,11 @@ class CodeService extends RService
         $model = [];
         $vos = $this->entityDao->getAllEntities(); 
        foreach($vos  as $vo) {
-            $model['code'] = $vo->getId();
+            $model['code'] = $vo->getCode();
             $model['name'] = $vo->getName();
+            $model['id'] = $vo->getId();
             $model['type'] = $vo->getEntityType()->getName();
             $model['description'] = $vo->getDescription();
-            $model['type'] = $vo->getEntityType()->getName();
             $models[] = $model;
         }
         return new ArrayDataProvider([
