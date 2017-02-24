@@ -23,7 +23,7 @@ class EditEntityForm extends RModel
 
     public $type_id;
 
-    public $new_id;
+    public $code;
 
     public $id;
     
@@ -48,21 +48,20 @@ class EditEntityForm extends RModel
             ['type_id', 'integer'],
             ['type_id', 'required'],
             
-            ['new_id', 'integer'],
-            ['new_id', 'required'],
-            ['new_id', 'isNewIdDuplicate']
+            ['code', 'integer'],
+            ['code', 'required'],
+            ['code', 'isNewCodeDuplicate']
 
         ];
     }
     
-    public function isNewIdDuplicate() {
-        if($this->id === $this->new_id) {
-            return true;
+    public function isNewCodeDuplicate() {
+        if($this->entity->code === $this->code) {
+            return;
         }
-        
-        $exist = Entity::find()->where(['id' => $this->new_id])->one();
-        if($exist) {
-            return $this->addError('new_id', 'This id has been used somewhere');
+        $entity = Entity::find()->where(['code' => $this->code])->one();
+        if($entity) {
+            return $this->addError('code', 'This code has been used by: ' . $entity->name);
         }
     }
     
@@ -90,7 +89,7 @@ class EditEntityForm extends RModel
             return false;
         }
         
-        $this->entity->id = $this->id;
+        $this->entity->code = $this->code;
         $this->entity->type_id = $this->type_id;
         $this->entity->name = $this->name;
         $this->entity->status = Entity::STATUS_ACTIVE;

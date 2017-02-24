@@ -11,18 +11,18 @@ export class EditShipForm extends Form{
 
     idField : InputField;
 
-    newIdField : InputField;
+    codeField : InputField;
 
     constructor(root: HTMLElement) {
         super(root);
         this.successCb = function(data) {
-            window.location.href = System.getBaseUrl() + "/ship/edit?id=" + this.newIdField.getValue();            
+            window.location.href = System.getBaseUrl() + "/ship/index";            
         }.bind(this);
     }
     
     rules() {
-        this.setRequiredField([this.nameField, this.idField, this.newIdField]);
-        this.registerFields([this.nameField, this.descField, this.idField, this.newIdField]);
+        this.setRequiredField([this.nameField, this.idField, this.codeField]);
+        this.registerFields([this.nameField, this.descField, this.idField, this.codeField]);
     }
 
     decorate() {
@@ -30,7 +30,7 @@ export class EditShipForm extends Form{
         this.nameField = new InputField(document.getElementById(this.id + "-name"));
         this.descField = new TextAreaField(document.getElementById(this.id + "-desc"));
         this.idField = new InputField(document.getElementById(this.id + "-id"));
-        this.newIdField = new InputField(document.getElementById(this.id + "-new-id"));
+        this.codeField = new InputField(document.getElementById(this.id + "-code"));
     }
     
     bindEvent() {

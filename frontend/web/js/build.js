@@ -2553,20 +2553,20 @@ define("project/edit-ship-form", ["require", "exports", "common/form", "common/i
         function EditShipForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_21.System.getBaseUrl() + "/ship/edit?id=" + this.newIdField.getValue();
+                window.location.href = system_21.System.getBaseUrl() + "/ship/index";
             }.bind(_this);
             return _this;
         }
         EditShipForm.prototype.rules = function () {
-            this.setRequiredField([this.nameField, this.idField, this.newIdField]);
-            this.registerFields([this.nameField, this.descField, this.idField, this.newIdField]);
+            this.setRequiredField([this.nameField, this.idField, this.codeField]);
+            this.registerFields([this.nameField, this.descField, this.idField, this.codeField]);
         };
         EditShipForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.nameField = new input_field_16.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_5.TextAreaField(document.getElementById(this.id + "-desc"));
             this.idField = new input_field_16.InputField(document.getElementById(this.id + "-id"));
-            this.newIdField = new input_field_16.InputField(document.getElementById(this.id + "-new-id"));
+            this.codeField = new input_field_16.InputField(document.getElementById(this.id + "-code"));
         };
         EditShipForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);

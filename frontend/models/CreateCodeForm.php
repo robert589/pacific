@@ -14,7 +14,7 @@ class CreateCodeForm extends RModel
     //attributes
     public $user_id;
 
-    public $id;
+    public $code;
 
     public $name;
 
@@ -36,9 +36,9 @@ class CreateCodeForm extends RModel
             ['type_id', 'integer'],
             ['type_id', 'required'],
             
-            ['id', 'integer'],
-            ['id', 'required'],
-            ['id', 'unique', 'targetClass' => '\common\models\Entity', 'message' => 'This id has already been taken.'],
+            ['code', 'integer'],
+            ['code', 'required'],
+            ['code', 'unique', 'targetClass' => '\common\models\Entity', 'message' => 'This id has already been taken.'],
 
         ];
     }
@@ -49,7 +49,7 @@ class CreateCodeForm extends RModel
         }
         
         $entity = new Entity();
-        $entity->id = $this->id;
+        $entity->code = $this->code;
         $entity->type_id = $this->type_id;
         $entity->name = $this->name;
         $entity->status = Entity::STATUS_ACTIVE;

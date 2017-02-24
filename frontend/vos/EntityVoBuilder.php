@@ -25,7 +25,9 @@ class EntityVoBuilder extends RVoBuilder
     public $entityType;
 
     public $createdAt;
-
+    
+    public $code;
+    
     public $updatedAt;
 
     public function rules() { 
@@ -34,6 +36,7 @@ class EntityVoBuilder extends RVoBuilder
            ['name','string'],
            ['description','string'],
            ['status','string'],
+            ['code', 'string'],
            ['entityType','string'],
            ['createdAt','string'],
            ['updatedAt','string'],
@@ -107,6 +110,16 @@ class EntityVoBuilder extends RVoBuilder
     function setChildEntities($childEntities) {
         $this->childEntities = $childEntities;
     }
+    
+    function getCode() {
+        return $this->code;
+    }
+
+    function setCode($code) {
+        $this->code = $code;
+    }
+
+
 
 
 }

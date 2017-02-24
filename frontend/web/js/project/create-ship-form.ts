@@ -24,7 +24,7 @@ export class CreateShipForm extends Form{
     }
 
     decorate() {
-        super.decorate();
+        super.decorate( );
         this.nameField = new InputField(document.getElementById(this.id + "-name"));
         this.descField = new TextAreaField(document.getElementById(this.id + "-desc"));
         this.codeField = new InputField(document.getElementById(this.id + "-code"));

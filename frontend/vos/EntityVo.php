@@ -18,6 +18,8 @@ class EntityVo implements RVo
     private $name;
 
     private $description;
+    
+    private $code;
 
     private $status;
 
@@ -46,6 +48,7 @@ class EntityVo implements RVo
         $this->entityType = $builder->getEntityType(); 
         $this->createdAt = $builder->getCreatedAt(); 
         $this->updatedAt = $builder->getUpdatedAt(); 
+        $this->code = $builder->getCode();
     }
 
     //getters
@@ -92,5 +95,9 @@ class EntityVo implements RVo
 
     public function getUpdatedAt() { 
         return $this->updatedAt; 
+    }
+    
+    public function getCode() {
+        return $this->code;
     }
 }

@@ -73,7 +73,6 @@ class ShipController extends Controller
         $model = new CreateCodeForm();
         $model->user_id = \Yii::$app->user->getId();
         $model->type_id = EntityType::getTypeId(EntityType::SHIP);
-        $model->id = filter_input(INPUT_POST, "code");
         $model->loadData($_POST);
         $data['status'] = $model->create() ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;

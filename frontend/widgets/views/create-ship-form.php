@@ -23,7 +23,7 @@
         'rows' => 3, 'name' => 'description']) ?>
 
     <?= InputField::widget(['id' => $id . '-code', 'placeholder' => 'Kode Kapal',
-        'name' => 'id', 'newClass' => 'form-field']) ?>
+        'name' => 'code', 'newClass' => 'form-field']) ?>
 
     <?= Button::widget(['id' => $id . '-submit-btn' , 
         'text' => 'Add', 'newClass' => 'form-submit']) ?>
