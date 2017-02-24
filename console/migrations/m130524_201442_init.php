@@ -4,7 +4,9 @@ use yii\db\Migration;
 class m130524_201442_init extends Migration
 {
     public function up()
-    {
+    {   
+        $this->execute("  SET FOREIGN_KEY_CHECKS = 1;");
+        $this->execute("SET default_storage_engine=InnoDB;");
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
@@ -42,6 +44,7 @@ class m130524_201442_init extends Migration
               `validated` tinyint(1) NOT NULL DEFAULT '0',
               `created_at` int(11) NOT NULL,
               `updated_at` int(11) NOT NULL,
+              foreign key(user_id) references user(id),
               PRIMARY KEY (`user_id`)
             ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 ");

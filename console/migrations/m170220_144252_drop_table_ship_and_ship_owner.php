@@ -6,7 +6,7 @@ class m170220_144252_drop_table_ship_and_ship_owner extends Migration
 {
     public function up()
     {
-        $this->execute("DROP TABLE ship, ship_owner");
+        $this->execute("DROP TABLE IF EXISTS ship; DROP TABLE IF EXISTS ship_owner");
     }
 
     public function down()

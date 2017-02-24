@@ -2,16 +2,17 @@
 
 use yii\db\Migration;
 
-class m170224_061207_drop_foreign_key_entity_id_in_entity_owner extends Migration
+class m170220_093025_drop_table_report extends Migration
 {
     public function up()
     {
-        $this->execute("ALTER TABLE entity_owner_temp drop foreign key entity_owner_temp_ibfk_1");
+        $this->execute("DROP TABLE report");
+
     }
 
     public function down()
     {
-        echo "m170224_061207_drop_foreign_key_entity_id_in_entity_owner cannot be reverted.\n";
+        echo "m170224_080818_drop_table_report cannot be reverted.\n";
 
         return false;
     }
