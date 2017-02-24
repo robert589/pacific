@@ -13,4 +13,6 @@ class Admin extends ActiveRecord
     {
         return '{{%admin}}';
     }
+
+    const GET_ROLE = "admin";
 }

@@ -1,9 +1,7 @@
 import {Component} from '../common/component';
-import {EditShipForm} from './edit-ship-form';
 
-export class EditShip extends Component{
 
-    form : EditShipForm;
+export class AddEntityRelationRangeForm extends Component{
 
     constructor(root: HTMLElement) {
         super(root);
@@ -11,7 +9,7 @@ export class EditShip extends Component{
     
     decorate() {
         super.decorate();
-        this.form = new EditShipForm(document.getElementById(this.id + "-form"));
+        
     }
     
     bindEvent() {

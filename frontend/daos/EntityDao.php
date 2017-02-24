@@ -3,6 +3,7 @@ namespace frontend\daos;
 
 use Yii;
 use frontend\vos\EntityVo;
+use frontend\vos\EntityTypeVo;
 use common\models\Entity;
 use frontend\vos\OwnerVo;
 use frontend\vos\UserVo;
@@ -12,6 +13,12 @@ use common\components\Dao;
  */
 class EntityDao implements Dao
 {
+    
+    const GET_ALL_ENTITIES = "SELECT entity.*, 
+                                    entity_type.id as entity_type_id, 
+                                    entity_type.name as entity_type_name
+                            from entity, entity_type
+                            where entity.type_id = entity_type.id";
     
     const GET_ALL_ENTITIES_BY_TYPE = "SELECT entity.*
                                         FROM entity, entity_type
@@ -44,6 +51,71 @@ class EntityDao implements Dao
                                         from entity
                                         where entity.id = :entity_id and entity.type_id = :type_id
                                             and entity.status = :status";
+    
+    const GET_ENTITY_INFO = "select entity.*
+                            from entity
+                            where entity.id = :entity_id 
+                                and entity.status = :status";
+    
+    const GET_CHILD_RELATIONS = "select entity.*
+                                from entity, entity_relation
+                                where entity.id = entity_relation.child_entity_id and
+                                    entity.status = :status and
+                                    entity_relation.parent_entity_id = :entity_id";
+    
+    public function getEntityInfoWithRelations($entityId, $status = Entity::STATUS_ACTIVE) {
+        $result =  \Yii::$app->db
+            ->createCommand(self::GET_ENTITY_INFO)
+            ->bindParam(":entity_id", $entityId)
+            ->bindParam(':status', $status)
+            ->queryOne();
+        
+        if(!$result) {
+            return null;
+        }
+        
+        $builder = EntityVo::createBuilder();
+        $builder->loadData($result);
+        $builder->setChildEntities($this->getChildEntities($entityId));
+        return $builder->build();
+        
+    }
+    
+    public function getChildEntities($entityId, $status = Entity::STATUS_ACTIVE) {
+        $results =  \Yii::$app->db
+            ->createCommand(self::GET_CHILD_RELATIONS)
+            ->bindParam(':status', $status)
+            ->bindParam(':entity_id', $entityId)
+            ->queryAll();
+        
+        $vos = [];
+        foreach($results as $result) {
+            $builder = EntityVo::createBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        
+        return $vos;
+    }
+    
+    public function getAllEntities() {
+        $results =  \Yii::$app->db
+            ->createCommand(self::GET_ALL_ENTITIES)
+            ->queryAll();
+        
+        $vos = [];
+        foreach($results as $result) {
+            $builder = EntityVo::createBuilder();
+            $typeBuilder = EntityTypeVo::createBuilder();
+            $typeBuilder->loadData($result, "entity_type");
+            $builder->setEntityType($typeBuilder->build());
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        
+        return $vos;
+        
+    }
     
     /**
      * 

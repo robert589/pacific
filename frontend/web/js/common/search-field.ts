@@ -28,9 +28,12 @@ export class SearchField extends Field {
 
     loseValueEvent : CustomEvent;
 
+    private disabledItems : string[];
+
     constructor(root : HTMLElement) {
         super(root);
         this.additionalData = [];
+        this.disabledItems = [];
         this.initValue();
     }
 
@@ -146,6 +149,9 @@ export class SearchField extends Field {
         let  i : number;
         for( i = 0 ; i < results.length; i++) {
             this.items.push(new SearchFieldDropdownItem(<HTMLElement> results.item(i)));
+            if(this.disabledItems.indexOf( this.items[i].getItemId() + "") !== -1) {
+                this.items[i].disabled(true);
+            }
             this.items[i].attachEvent(SearchFieldDropdownItem.CLICK_SFDI_EVENT,function(e) {
                 this.setValue(e.detail.itemId, e.detail.text);
                 this.emptyDropdown();
@@ -174,10 +180,29 @@ export class SearchField extends Field {
         return this.valueId;
     }
 
+    getCurText() : string {
+        return this.curText;
+    }
+
     disable() {
         this.input.setAttribute('disabled', "true");
     }
     enable() {
         this.input.removeAttribute('disabled');
+    }
+
+    disableItem(id : string) {
+        this.disabledItems.push(id);
+    }
+
+    enableItem(id : string) {
+        let index : number = this.disabledItems.indexOf(id);    
+        if(index > -1) {
+            this.disabledItems.splice(index, 1);
+        }
+    }
+
+    clearDisabledItems() {
+        this.disabledItems = [];
     }
 }

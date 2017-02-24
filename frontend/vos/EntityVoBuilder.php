@@ -16,6 +16,8 @@ class EntityVoBuilder extends RVoBuilder
 
     public $name;
 
+    public $childEntities;
+    
     public $description;
 
     public $status;
@@ -97,4 +99,14 @@ class EntityVoBuilder extends RVoBuilder
     public function setUpdatedAt($updatedAt) { 
         $this->updatedAt = $updatedAt; 
     }
+    
+    function getChildEntities() {
+        return $this->childEntities;
+    }
+
+    function setChildEntities($childEntities) {
+        $this->childEntities = $childEntities;
+    }
+
+
 }

@@ -150,6 +150,31 @@ define("common/confirm-dialog", ["require", "exports", "common/modal", "common/b
     }(modal_1.Modal));
     exports.ConfirmDialog = ConfirmDialog;
 });
+define("common/empty-modal", ["require", "exports", "common/modal"], function (require, exports, modal_2) {
+    "use strict";
+    var EmptyModal = (function (_super) {
+        __extends(EmptyModal, _super);
+        function EmptyModal(root) {
+            var _this = _super.call(this, root) || this;
+            _this.setContent("Loading...");
+            return _this;
+        }
+        EmptyModal.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.contentEl = this.root.getElementsByClassName('emodal-content')[0];
+        };
+        EmptyModal.prototype.setContent = function (text) {
+            this.contentEl.innerHTML = text;
+        };
+        EmptyModal.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        EmptyModal.prototype.detach = function () {
+        };
+        return EmptyModal;
+    }(modal_2.Modal));
+    exports.EmptyModal = EmptyModal;
+});
 define("common/system", ["require", "exports", "common/confirm-dialog"], function (require, exports, confirm_dialog_1) {
     "use strict";
     var System = (function () {
@@ -864,6 +889,12 @@ define("common/search-field-dropdown-item", ["require", "exports", "common/compo
             configurable: true
         });
         ;
+        SearchFieldDropdownItem.prototype.getItemId = function () {
+            return this.itemId;
+        };
+        SearchFieldDropdownItem.prototype.getText = function () {
+            return this.text;
+        };
         SearchFieldDropdownItem.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.text = this.root.getAttribute("data-text");
@@ -884,6 +915,14 @@ define("common/search-field-dropdown-item", ["require", "exports", "common/compo
             this.root.addEventListener(SearchFieldDropdownItem.CLICK_SFDI_EVENT, null);
             this.root.addEventListener("click", null);
         };
+        SearchFieldDropdownItem.prototype.disabled = function (on) {
+            if (on) {
+                this.root.classList.add('disabled');
+            }
+            else {
+                this.root.classList.remove('disabled');
+            }
+        };
         return SearchFieldDropdownItem;
     }(component_10.Component));
     exports.SearchFieldDropdownItem = SearchFieldDropdownItem;
@@ -895,6 +934,7 @@ define("common/search-field", ["require", "exports", "common/Field", "common/sys
         function SearchField(root) {
             var _this = _super.call(this, root) || this;
             _this.additionalData = [];
+            _this.disabledItems = [];
             _this.initValue();
             return _this;
         }
@@ -1007,6 +1047,9 @@ define("common/search-field", ["require", "exports", "common/Field", "common/sys
             var i;
             for (i = 0; i < results.length; i++) {
                 this.items.push(new search_field_dropdown_item_1.SearchFieldDropdownItem(results.item(i)));
+                if (this.disabledItems.indexOf(this.items[i].getItemId() + "") !== -1) {
+                    this.items[i].disabled(true);
+                }
                 this.items[i].attachEvent(search_field_dropdown_item_1.SearchFieldDropdownItem.CLICK_SFDI_EVENT, function (e) {
                     this.setValue(e.detail.itemId, e.detail.text);
                     this.emptyDropdown();
@@ -1030,11 +1073,26 @@ define("common/search-field", ["require", "exports", "common/Field", "common/sys
         SearchField.prototype.getValue = function () {
             return this.valueId;
         };
+        SearchField.prototype.getCurText = function () {
+            return this.curText;
+        };
         SearchField.prototype.disable = function () {
             this.input.setAttribute('disabled', "true");
         };
         SearchField.prototype.enable = function () {
             this.input.removeAttribute('disabled');
+        };
+        SearchField.prototype.disableItem = function (id) {
+            this.disabledItems.push(id);
+        };
+        SearchField.prototype.enableItem = function (id) {
+            var index = this.disabledItems.indexOf(id);
+            if (index > -1) {
+                this.disabledItems.splice(index, 1);
+            }
+        };
+        SearchField.prototype.clearDisabledItems = function () {
+            this.disabledItems = [];
         };
         return SearchField;
     }(field_1.Field));
@@ -1902,6 +1960,14 @@ define("project/list-code", ["require", "exports", "common/component", "common/b
             _super.prototype.decorate.call(this);
             this.addBtn = new button_13.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
             this.codeType = new button_13.Button(document.getElementById(this.id + "-codetype"), this.redirectToCodeType.bind(this));
+            this.addRelations = [];
+            var relationRaws = this.root.getElementsByClassName('list-code-add');
+            for (var i = 0; i < relationRaws.length; i++) {
+                this.addRelations.push(new button_13.Button(relationRaws.item(i), this.redirectToAddRelation.bind(this, relationRaws.item(i))));
+            }
+        };
+        ListCode.prototype.redirectToAddRelation = function (raw) {
+            window.location.href = system_15.System.getBaseUrl() + "/code/add-relation?id=" + raw.getAttribute('data-entity-id');
         };
         ListCode.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2480,7 +2546,145 @@ define("project/assign-code-to-ship", ["require", "exports", "common/component"]
     }(component_33.Component));
     exports.AssignCodeToShip = AssignCodeToShip;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship"], function (require, exports, component_34, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_21, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1) {
+define("project/edit-ship-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_13, input_field_16, text_area_field_5, system_21) {
+    "use strict";
+    var EditShipForm = (function (_super) {
+        __extends(EditShipForm, _super);
+        function EditShipForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_21.System.getBaseUrl() + "/ship/edit?id=" + this.newIdField.getValue();
+            }.bind(_this);
+            return _this;
+        }
+        EditShipForm.prototype.rules = function () {
+            this.setRequiredField([this.nameField, this.idField, this.newIdField]);
+            this.registerFields([this.nameField, this.descField, this.idField, this.newIdField]);
+        };
+        EditShipForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.nameField = new input_field_16.InputField(document.getElementById(this.id + "-name"));
+            this.descField = new text_area_field_5.TextAreaField(document.getElementById(this.id + "-desc"));
+            this.idField = new input_field_16.InputField(document.getElementById(this.id + "-id"));
+            this.newIdField = new input_field_16.InputField(document.getElementById(this.id + "-new-id"));
+        };
+        EditShipForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        EditShipForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        EditShipForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return EditShipForm;
+    }(form_13.Form));
+    exports.EditShipForm = EditShipForm;
+});
+define("project/edit-ship", ["require", "exports", "common/component", "project/edit-ship-form"], function (require, exports, component_34, edit_ship_form_1) {
+    "use strict";
+    var EditShip = (function (_super) {
+        __extends(EditShip, _super);
+        function EditShip(root) {
+            return _super.call(this, root) || this;
+        }
+        EditShip.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new edit_ship_form_1.EditShipForm(document.getElementById(this.id + "-form"));
+        };
+        EditShip.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        EditShip.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        EditShip.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return EditShip;
+    }(component_34.Component));
+    exports.EditShip = EditShip;
+});
+define("project/add-entity-relation-form", ["require", "exports", "common/form", "common/input-field", "common/search-field"], function (require, exports, form_14, input_field_17, search_field_9) {
+    "use strict";
+    var AddEntityRelationForm = (function (_super) {
+        __extends(AddEntityRelationForm, _super);
+        function AddEntityRelationForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.subcode.disableItem(_this.codeField.getValue());
+            return _this;
+        }
+        AddEntityRelationForm.prototype.rules = function () {
+            this.registerFields([this.codeField, this.subcode]);
+            this.setRequiredField([this.codeField, this.subcode]);
+        };
+        AddEntityRelationForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.codeField = new input_field_17.InputField(document.getElementById(this.id + "-code"));
+            this.subcode = new search_field_9.SearchField(document.getElementById(this.id + "-subcode"));
+        };
+        AddEntityRelationForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddEntityRelationForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddEntityRelationForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddEntityRelationForm;
+    }(form_14.Form));
+    exports.AddEntityRelationForm = AddEntityRelationForm;
+});
+define("project/add-entity-relation-range-form", ["require", "exports", "common/component"], function (require, exports, component_35) {
+    "use strict";
+    var AddEntityRelationRangeForm = (function (_super) {
+        __extends(AddEntityRelationRangeForm, _super);
+        function AddEntityRelationRangeForm(root) {
+            return _super.call(this, root) || this;
+        }
+        AddEntityRelationRangeForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+        };
+        AddEntityRelationRangeForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddEntityRelationRangeForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddEntityRelationRangeForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddEntityRelationRangeForm;
+    }(component_35.Component));
+    exports.AddEntityRelationRangeForm = AddEntityRelationRangeForm;
+});
+define("project/add-entity-relation", ["require", "exports", "common/component", "project/add-entity-relation-form", "project/add-entity-relation-range-form"], function (require, exports, component_36, add_entity_relation_form_1, add_entity_relation_range_form_1) {
+    "use strict";
+    var AddEntityRelation = (function (_super) {
+        __extends(AddEntityRelation, _super);
+        function AddEntityRelation(root) {
+            return _super.call(this, root) || this;
+        }
+        AddEntityRelation.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.aerForm = new add_entity_relation_form_1.AddEntityRelationForm(document.getElementById(this.id + "-form"));
+            this.aerRangeForm = new add_entity_relation_range_form_1.AddEntityRelationRangeForm(document.getElementById(this.id + "-rform"));
+        };
+        AddEntityRelation.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddEntityRelation.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddEntityRelation.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddEntityRelation;
+    }(component_36.Component));
+    exports.AddEntityRelation = AddEntityRelation;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation"], function (require, exports, component_37, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_22, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2547,6 +2751,12 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('act-ship').length !== 0) {
                 this.actShip = new assign_code_to_ship_1.AssignCodeToShip(document.getElementById("sacts"));
             }
+            else if (this.root.getElementsByClassName('edit-ship').length !== 0) {
+                this.editShip = new edit_ship_1.EditShip(document.getElementById("ses"));
+            }
+            else if (this.root.getElementsByClassName('aer').length !== 0) {
+                this.addEntityRelation = new add_entity_relation_1.AddEntityRelation(document.getElementById("caer"));
+            }
             this.hamburgerIcon = this.root.getElementsByClassName('app-hamburger')[0];
             this.leftSide = this.root.getElementsByClassName('left-side')[0];
         };
@@ -2560,7 +2770,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_21.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_22.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };
@@ -2571,7 +2781,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_34.Component));
+    }(component_37.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

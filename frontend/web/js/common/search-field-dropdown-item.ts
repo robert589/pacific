@@ -14,6 +14,14 @@ export class SearchFieldDropdownItem extends Component {
         super(root);
     }
 
+    getItemId() : string {
+        return this.itemId;
+    }
+
+    getText() : string {
+        return this.text;
+    }
+    
     decorate() {
         super.decorate();
         this.text = this.root.getAttribute("data-text");
@@ -36,6 +44,14 @@ export class SearchFieldDropdownItem extends Component {
     unbindEvent() {
         this.root.addEventListener(SearchFieldDropdownItem.CLICK_SFDI_EVENT, null);
         this.root.addEventListener("click", null);
+    }
+
+    disabled(on : boolean) {
+        if(on) {
+            this.root.classList.add('disabled');
+        } else {
+            this.root.classList.remove('disabled');
+        }
     }
 }
 

@@ -18,6 +18,8 @@ import {DailyTransaction} from './daily-transaction';
 import {CustomTransaction} from './custom-transaction';
 import {ChangePassword} from './change-password';
 import {AssignCodeToShip} from './assign-code-to-ship';
+import {EditShip} from './edit-ship';
+import {AddEntityRelation} from './add-entity-relation';
 
 export class App extends Component{
 
@@ -60,6 +62,10 @@ export class App extends Component{
     changePassword : ChangePassword;
 
     actShip : AssignCodeToShip;
+
+    editShip  :EditShip;
+
+    addEntityRelation : AddEntityRelation;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -123,6 +129,12 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('act-ship').length !== 0) {
             this.actShip = new AssignCodeToShip(document.getElementById("sacts"));
+        }
+        else if(this.root.getElementsByClassName('edit-ship').length !== 0) {
+            this.editShip = new EditShip(document.getElementById("ses"));
+        }
+        else if(this.root.getElementsByClassName('aer').length !== 0) {
+            this.addEntityRelation = new AddEntityRelation(document.getElementById("caer"));
         }
     
         this.hamburgerIcon = <HTMLElement> 

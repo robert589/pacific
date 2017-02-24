@@ -6,3 +6,11 @@
   cursor: pointer;
   background: lightblue;
 }
+.sfdi.disabled {
+  pointer-events: none;
+  cursor: no-drop;
+  color: darkgray;
+}
+.sfdi.disabled:hover {
+  cursor: not-allowed;
+}

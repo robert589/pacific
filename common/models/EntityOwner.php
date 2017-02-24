@@ -1,6 +1,9 @@
 <?php
 namespace common\models;
 
+use common\libraries\UserLibrary;
+use common\models\Admin;
+use common\models\Owner;
 use yii\db\ActiveRecord;
 use yii\behaviors\TimestampBehavior;
 /**
@@ -28,5 +31,17 @@ class EntityOwner extends ActiveRecord
         ];
     }
 
+    
+    public static function checkAccessControl($userId, $entityId) {
+        $role = UserLibrary::getRole();
+        if($role === Admin::GET_ROLE) {
+            return true;
+        } 
+        else if($role === Owner::GET_ROLE) {
+            return EntityOwner::find()->where(['owner_id' => $userId, 'entity_id' => $entityId])->exists();
+        }
+        
+        return false;
 
+    }
 }

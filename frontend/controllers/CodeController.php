@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\AddEntityRelationForm;
 use common\widgets\SearchFieldDropdownItem;
 use frontend\models\CreateCodeTypeForm;
 use frontend\services\CodeService;
@@ -21,7 +22,11 @@ class CodeController extends Controller
     }
     
     public function actionIndex() {
+        
         $provider = $this->service->getCodeList();
+        if(!$provider) {
+            return $this->redirect(['site/error']);
+        }
         return $this->render('list-code', ['id' => 'clc', 'provider' => $provider]);
     }
     
@@ -76,11 +81,31 @@ class CodeController extends Controller
         return $this->render('create-code', ['id' => 'ccc']);
     }
     
+    public function actionAddRelation() {
+        $this->service->entity_id = filter_var($_GET['id']);
+        $vo = $this->service->getEntityInfoWithChild();
+        if(!$vo) {
+            return $this->redirect(['site/error']);
+        }
+        return $this->render('add-entity-relation', ['id' => 'caer', 'vo' => $vo]);
+    }
+    
     public function actionPCreate() {
         $model = new CreateCodeForm();
         $model->user_id = \Yii::$app->user->getId();
         $model->loadData($_POST);
         $data['status'] = $model->create() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
+    public function actionAddEntity() {
+        $model = new AddEntityRelationForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        
+        $data = [];
+        $data['status'] = $model->add() ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
         return json_encode($data);
     }

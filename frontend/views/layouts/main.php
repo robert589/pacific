@@ -2,7 +2,7 @@
 
 /* @var $this \yii\web\View */
 /* @var $content string */
-
+use common\widgets\EmptyModal;
 use yii\helpers\Html;
 use frontend\assets\AppAsset;
 use frontend\widgets\Sidebar;

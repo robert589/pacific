@@ -1,8 +1,10 @@
 <?php
 namespace frontend\services;
 
+use common\models\EntityOwner;
 use yii\data\ArrayDataProvider;
 use frontend\daos\CodeDao;
+use frontend\daos\EntityDao;
 use common\components\RService;
 /**
  * CodeService service
@@ -11,6 +13,9 @@ use common\components\RService;
 class CodeService extends RService
 {
     
+    const GET_ENTITY_INFO_WITH_CHILD = "getentityinfowithchild";
+    
+    
     const GET_CODE_LIST = "getcodelist";
     
     const GET_CODE_TYPE_LIST = "getcodetypelist";
@@ -18,17 +23,33 @@ class CodeService extends RService
     //attributes
     public $user_id;
     
+    public $entity_id;
+    
     private $codeDao;
+    
+    private $entityDao;
     
     public function init() {
         $this->codeDao = new CodeDao();
+        $this->entityDao = new EntityDao();
     }
     
     public function rules() {
         return [
             ['user_id', 'integer'],
-            ['user_id', 'required']
+            ['user_id', 'required'],
+            ['user_id', 'checkAC', 'on' => self::GET_ENTITY_INFO_WITH_CHILD],
+            
+            ['entity_id', 'integer'],
+            ['entity_id', 'required', 'on' => self::GET_ENTITY_INFO_WITH_CHILD]
         ];
+    }
+    
+    public function checkAC() {
+        $allowed = EntityOwner::checkAccessControl($this->user_id, $this->entity_id);
+        if(!$allowed) {
+            return $this->addError('user_id', 'Not allowed');
+        }
     }
     
     public function searchType($query) {
@@ -47,16 +68,30 @@ class CodeService extends RService
         return $this->codeDao->searchCode($query);
     }
     
+    /**
+     * 
+     * @return EntityVo[]
+     */
+    public function getEntityInfoWithChild() {
+        $this->setScenario(self::GET_ENTITY_INFO_WITH_CHILD);
+        if(!$this->validate()) {
+            return false;
+        }
+        
+        return $this->entityDao->getEntityInfoWithRelations($this->entity_id);
+    }
+    
     public function getCodeList() {
         if(!$this->validate()) {
             return false;
         }
         $models = [];
         $model = [];
-        $vos = $this->codeDao->getCodeList();
-        foreach($vos  as $vo) {
+        $vos = $this->entityDao->getAllEntities(); 
+       foreach($vos  as $vo) {
             $model['code'] = $vo->getId();
             $model['name'] = $vo->getName();
+            $model['type'] = $vo->getEntityType()->getName();
             $model['description'] = $vo->getDescription();
             $model['type'] = $vo->getEntityType()->getName();
             $models[] = $model;

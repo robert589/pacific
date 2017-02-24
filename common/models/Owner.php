@@ -13,4 +13,6 @@ class Owner extends ActiveRecord
     {
         return '{{%owner}}';
     }
+    
+    const GET_ROLE = "owner";
 }

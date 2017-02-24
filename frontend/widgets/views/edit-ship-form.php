@@ -22,9 +22,14 @@
         'newClass' => 'form-field', 'value' => $vo->getDescription(),
         'rows' => 3, 'name' => 'description']) ?>
 
-    <?= InputField::widget(['id' => $id . '-code', 'placeholder' => 'Kode Kapal',
-        'name' => 'id', 'value' => $vo->getId(), 'newClass' => 'form-field']) ?>
 
+        
+    <?= InputField::widget(['id' => $id . '-new-id', 'placeholder' => 'Kode Kapal',
+        'name' => 'new_id', 'value' => $vo->getId(), 'newClass' => 'form-field']) ?>
+        
+    <?= InputField::widget(['id' => $id . '-id', 'placeholder' => 'Kode Kapal',
+        'name' => 'id', 'value' => $vo->getId(), 'type' => InputField::HIDDEN]) ?>
+        
     <?= Button::widget(['id' => $id . '-submit-btn' , 
         'text' => 'Add', 'newClass' => 'form-submit']) ?>
 <?php Form::end() ?>

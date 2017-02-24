@@ -10,12 +10,34 @@
     </div>
 
     <?=  GridView::widget(
-            ['dataProvider' => $provider,
-             'columns' => [
+        [   'dataProvider' => $provider,
+            'columns' => [
                 'code',
                 'name',
-                'description'
-            ]
-        ]) ?>
+                'type',
+                'description',
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'header'=>'Actions',    
+                    'template' => '{add}',
+                    'urlCreator' => function ($action, $model, $key, $index) {
+                        
+                    },
+                    'buttons' => [
+                        //view button
+                        'add' => function ($url, $model) {
+                            return Button::widget(['id' => 'ls-add-' . $model['code'],
+                                'widgetClass' => 'button-link list-code-add',
+                                'text' => '<span class="glyphicon glyphicon-plus"></span>',
+                                'options' => [
+                                    'data-entity-id' => $model['code']
+                                ],
+                                'color' => Button::NONE_COLOR]);
+                        }
+                    ],
 
+                ]
+            ]
+        ]); ?>
+    
 </div>

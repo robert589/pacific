@@ -12,7 +12,6 @@
     </div>
     <div class="cdialog-footer">
         <?= Button::widget(['id' => $id . '-ok', 'text' => 'Ok', 'newClass' => 'cdialog-ok']) ?>
-        
         <?= Button::widget(['id' => $id . '-cancel', 'text' => 'Cancel', 'newClass' => 'cdialog-cancel']) ?>
     </div>
 

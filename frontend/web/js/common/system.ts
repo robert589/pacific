@@ -1,4 +1,5 @@
 import {ConfirmDialog} from './confirm-dialog';
+import {EmptyModal} from './empty-modal';
 
 export class System  {
     public static getUserId() {
@@ -54,4 +55,6 @@ export class System  {
         dialog.setTitle(title);
         dialog.run(cb);
     }
+
+
 }

@@ -2,6 +2,7 @@
 namespace frontend\vos;
 
 use yii\db\ActiveRecord;
+use common\models\EntityType;
 use common\components\RVo;
 /**
  * EntityVo vo
@@ -20,8 +21,18 @@ class EntityVo implements RVo
 
     private $status;
 
+    /**
+     *
+     * @var EntityType
+     */
     private $entityType;
-
+    
+    /**
+     *
+     * @var EntityVo[]|null
+     */
+    private $childEntities;
+    
     private $createdAt;
 
     private $updatedAt;
@@ -29,6 +40,7 @@ class EntityVo implements RVo
     public function __construct(EntityVoBuilder $builder) { 
         $this->id = $builder->getId(); 
         $this->name = $builder->getName(); 
+        $this->childEntities = $builder->getChildEntities(); 
         $this->description = $builder->getDescription(); 
         $this->status = $builder->getStatus(); 
         $this->entityType = $builder->getEntityType(); 
@@ -38,6 +50,18 @@ class EntityVo implements RVo
 
     //getters
 
+    /**
+     * 
+     * @return EntityVo[]
+     */
+    public function getChildEntities() {
+        return $this->childEntities;
+    }
+    
+    public function getChildEntitiesProvider() {
+        return;
+    }
+    
     public function getId() { 
         return $this->id; 
     }
@@ -54,6 +78,10 @@ class EntityVo implements RVo
         return $this->status; 
     }
 
+    /**
+     * 
+     * @return EntityType
+     */
     public function getEntityType() { 
         return $this->entityType; 
     }

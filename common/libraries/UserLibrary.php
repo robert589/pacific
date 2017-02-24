@@ -3,12 +3,19 @@ namespace common\libraries;
 
 use common\models\User;
 use common\models\Admin;
-use common\models\Parentt;
-use common\models\Teacher;
-use common\models\Principal;
+use frontend\daos\UserDao;
 use common\models\Owner;
 
 class UserLibrary {
+    
+    
+    public static function getRole($id = null) {
+        $dao = new UserDao();
+        if(!$id) {
+            $id = \Yii::$app->user->getId();    
+        }
+        return $dao->getRole($id);
+    }
     
     public static function isAdmin($id) {
         return Admin::find()->where(['id' => $id])->exists();

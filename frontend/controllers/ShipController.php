@@ -12,6 +12,7 @@ use common\widgets\SearchFieldDropdownItem;
 use frontend\models\CreateShipForm;
 use frontend\services\ShipService;
 use frontend\models\ChangeEntityOwnerStatusForm;
+use frontend\models\EditEntityForm;
 use yii\web\Controller;
 use frontend\models\ChangeEntityStatusForm;
 /**
@@ -44,6 +45,16 @@ class ShipController extends Controller
         
         
         return $this->render('edit-ship', ['id' => 'ses', 'vo' => $vo]);
+    }
+    
+    public function actionPEdit() {
+        $model = new EditEntityForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->type_id = EntityType::getTypeId(EntityType::SHIP);
+        $model->loadData($_POST);
+        $data['status'] = $model->edit() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
     }
     
     public function actionRemove() {
