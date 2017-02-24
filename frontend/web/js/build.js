@@ -2644,7 +2644,11 @@ define("project/add-entity-relation-range-form", ["require", "exports", "common/
     var AddEntityRelationRangeForm = (function (_super) {
         __extends(AddEntityRelationRangeForm, _super);
         function AddEntityRelationRangeForm(root) {
-            return _super.call(this, root) || this;
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.reload();
+            };
+            return _this;
         }
         AddEntityRelationRangeForm.prototype.rules = function () {
             this.setRequiredField([this.fromField, this.toField, this.code]);
@@ -2656,9 +2660,10 @@ define("project/add-entity-relation-range-form", ["require", "exports", "common/
                 "errorMessage": "Field 'Dari' harus tidak lebih besar dari Field 'Sampai' ",
                 "targetField": this.toField,
                 "validate": function () {
-                    return this.fromField.getValue() >= this.toField.getValue();
+                    return this.fromField.getValue() < this.toField.getValue();
                 }.bind(this)
             };
+            this.setValidations([validation]);
         };
         AddEntityRelationRangeForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
@@ -2679,17 +2684,65 @@ define("project/add-entity-relation-range-form", ["require", "exports", "common/
     }(form_15.Form));
     exports.AddEntityRelationRangeForm = AddEntityRelationRangeForm;
 });
-define("project/add-entity-relation", ["require", "exports", "common/component", "project/add-entity-relation-form", "project/add-entity-relation-range-form"], function (require, exports, component_35, add_entity_relation_form_1, add_entity_relation_range_form_1) {
+define("project/add-entity-relation", ["require", "exports", "common/component", "project/add-entity-relation-form", "project/add-entity-relation-range-form", "common/button", "common/system"], function (require, exports, component_35, add_entity_relation_form_1, add_entity_relation_range_form_1, button_17, system_22) {
     "use strict";
     var AddEntityRelation = (function (_super) {
         __extends(AddEntityRelation, _super);
         function AddEntityRelation(root) {
-            return _super.call(this, root) || this;
+            var _this = _super.call(this, root) || this;
+            _this.codeId = _this.root.getAttribute('data-code-id');
+            return _this;
         }
         AddEntityRelation.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.aerForm = new add_entity_relation_form_1.AddEntityRelationForm(document.getElementById(this.id + "-form"));
             this.aerRangeForm = new add_entity_relation_range_form_1.AddEntityRelationRangeForm(document.getElementById(this.id + "-rform"));
+            var removeRelationsRaw = this.root.getElementsByClassName('aer-remove');
+            this.removeRelationBtns = [];
+            for (var i = 0; i < removeRelationsRaw.length; i++) {
+                this.removeRelationBtns.push(new button_17.Button(removeRelationsRaw.item(i), this.showRemoveRelationDialog.bind(this, removeRelationsRaw.item(i))));
+            }
+            this.removeAllRelationBtn = new button_17.Button(document.getElementById(this.id + "-remove-all"), this.showRemoveAllRelationDialog.bind(this));
+        };
+        AddEntityRelation.prototype.showRemoveAllRelationDialog = function () {
+            system_22.System.showConfirmDialog(this.removeAllRelation.bind(this), "Hapus Semua Subkode", "Apakah anda yakin?");
+        };
+        AddEntityRelation.prototype.showRemoveRelationDialog = function (raw) {
+            system_22.System.showConfirmDialog(this.removeRelation.bind(this, raw), "Hapus Subkode", "Apakah anda yakin?");
+        };
+        AddEntityRelation.prototype.removeAllRelation = function () {
+            var data = {};
+            data['code'] = this.codeId;
+            $.ajax({
+                url: system_22.System.getBaseUrl() + "/code/remove-all-relation",
+                data: system_22.System.addCsrf(data),
+                dataType: "json",
+                context: this,
+                method: "post",
+                success: function (data) {
+                    window.location.reload();
+                },
+                error: function (data) {
+                }
+            });
+        };
+        AddEntityRelation.prototype.removeRelation = function (removeRelationRaw) {
+            var subcodeId = removeRelationRaw.getAttribute('data-entity-id');
+            var data = {};
+            data['subcode'] = subcodeId;
+            data['code'] = this.codeId;
+            $.ajax({
+                url: system_22.System.getBaseUrl() + "/code/remove-relation",
+                data: system_22.System.addCsrf(data),
+                dataType: "json",
+                context: this,
+                method: "post",
+                success: function (data) {
+                    window.location.reload();
+                },
+                error: function (data) {
+                }
+            });
         };
         AddEntityRelation.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2704,7 +2757,7 @@ define("project/add-entity-relation", ["require", "exports", "common/component",
     }(component_35.Component));
     exports.AddEntityRelation = AddEntityRelation;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation"], function (require, exports, component_36, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_22, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation"], function (require, exports, component_36, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_23, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2790,7 +2843,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_22.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_23.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };

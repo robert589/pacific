@@ -5,9 +5,9 @@
     use frontend\widgets\AddEntityRelationRangeForm;
 ?>
 
-<div id="<?= $id ?>" class="aer view">
+<div id="<?= $id ?>" class="aer view" data-code-id="<?= $vo->getId() ?>">
     <div class="view-header">
-        Tambah Sub Kode untuk Kode: <?= $vo->getId() ?> <?= $vo->getName() ?> 
+        Tambah Sub Kode untuk Kode: <?= $vo->getCode() ?> <?= $vo->getName() ?> 
     </div>
     
     <div class="aer-form">
@@ -35,7 +35,7 @@
                     'buttons' => [
                         //view button
                         'remove' => function ($url, $model) {
-                            return Button::widget(['id' => 'ls-add-' . $model['code'],
+                            return Button::widget(['id' => 'aer-remove-' . $model['code'],
                                 'widgetClass' => 'button-link aer-remove',
                                 'text' => 'Remove',
                                 'options' => [
@@ -48,5 +48,7 @@
                 ]
             ]
         ]); ?>
-
+    
+    <?= Button::widget(['id' => $id . '-remove-all', 'text' => 'Hapus Semua Relasi',
+        'newClass' => 'button-link aer-remove-all', 'color' => Button::NONE_COLOR]) ?>
 </div>

@@ -1,15 +1,14 @@
 <?php
 namespace frontend\models;
 
-use common\models\EntityOwner;
-use common\libraries\UserLibrary;
-use common\models\EntityRelation;
 use common\components\RModel;
+use common\models\EntityOwner;
+use common\models\EntityRelation;
 /**
- * AddEntityRelationForm model
+ * RemoveRelationForm model
  *
  */
-class AddEntityRelationForm extends RModel
+class RemoveEntityRelationForm extends RModel
 {
 
     //attributes
@@ -18,7 +17,7 @@ class AddEntityRelationForm extends RModel
     public $code;
 
     public $subcode;
-    
+
     public function rules() {
         return [
             ['user_id', 'integer'],
@@ -49,25 +48,21 @@ class AddEntityRelationForm extends RModel
         }
     }
     
-    public function add() {
+    public function remove() {
         if(!$this->validate()) {
             return false;
         }
         
         $entityRelation = $this->getEntityRelation();
         if(!$entityRelation) {
-            $entityRelation = new EntityRelation();
-            $entityRelation->parent_entity_id = $this->code;
-            $entityRelation->child_entity_id = $this->subcode;
-            $entityRelation->status  = EntityRelation::STATUS_ACTIVE;
-            return $entityRelation->save();
-        }
-        
-        if($entityRelation->status === EntityRelation::STATUS_ACTIVE) {
             return true;
         }
         
-        $entityRelation->status = EntityRelation::STATUS_ACTIVE;
+        if($entityRelation->status === EntityRelation::STATUS_DELETED) {
+            return true;
+        }
+        
+        $entityRelation->status = EntityRelation::STATUS_DELETED;
         return $entityRelation->update();
     }
     
@@ -75,5 +70,4 @@ class AddEntityRelationForm extends RModel
         return EntityRelation::find()->where(['parent_entity_id' => $this->code, 
                                             'child_entity_id' => $this->subcode])->one();
     }
-
 }

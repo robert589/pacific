@@ -54,6 +54,8 @@ class CodeService extends RService
             return false;
         }
         
+        $models = [];
+        
         $vos = $this->codeDao->getSubcode($this->entity_id);
         foreach($vos  as $vo) {
             $model['code'] = $vo->getCode();

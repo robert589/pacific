@@ -2,9 +2,12 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\RemoveAllEntityRelationsForm;
+use frontend\models\RemoveEntityRelationForm;
 use frontend\models\AddEntityRelationForm;
 use common\widgets\SearchFieldDropdownItem;
 use frontend\models\CreateCodeTypeForm;
+use frontend\models\AddEntityRelationRangeForm;
 use frontend\services\CodeService;
 use yii\web\Controller;
 use frontend\models\CreateCodeForm;
@@ -92,6 +95,28 @@ class CodeController extends Controller
                 ['id' => 'caer', 'vo' => $vo, 'provider' => $provider]);
     }
     
+    public function actionRemoveRelation() {
+        $model = new RemoveEntityRelationForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        
+        $data = [];
+        $data['status'] = $model->remove() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
+    public function actionRemoveAllRelation() {
+        $model = new RemoveAllEntityRelationsForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        
+        $data = [];
+        $data['status'] = $model->removeAll() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
     public function actionPCreate() {
         $model = new CreateCodeForm();
         $model->user_id = \Yii::$app->user->getId();
@@ -103,6 +128,18 @@ class CodeController extends Controller
     
     public function actionAddEntity() {
         $model = new AddEntityRelationForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        
+        $data = [];
+        $data['status'] = $model->add() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
+    
+    public function actionAddRelationRange() {
+        $model = new AddEntityRelationRangeForm();
         $model->user_id = \Yii::$app->user->getId();
         $model->loadData($_POST);
         

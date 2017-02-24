@@ -23,12 +23,16 @@ export class AddEntityRelationRangeForm extends Form{
             "errorMessage" : "Field 'Dari' harus tidak lebih besar dari Field 'Sampai' ",
             "targetField" : this.toField,
             "validate" : function() {
-                return this.fromField.getValue() >= this.toField.getValue();
+                return this.fromField.getValue() < this.toField.getValue();
             }.bind(this)
         }
+        this.setValidations([validation]);
     }
     constructor(root: HTMLElement) {
         super(root);
+        this.successCb = function(data) {
+            window.location.reload();
+        }
     }
     
     decorate() {

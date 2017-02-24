@@ -1,15 +1,15 @@
 <?php
 namespace frontend\models;
 
-use common\models\EntityOwner;
-use common\libraries\UserLibrary;
-use common\models\EntityRelation;
 use common\components\RModel;
+use common\models\Entity;
+use common\models\EntityOwner;
+use common\models\EntityRelation;
 /**
- * AddEntityRelationForm model
+ * AddEntityRelationRangeForm model
  *
  */
-class AddEntityRelationForm extends RModel
+class AddEntityRelationRangeForm extends RModel
 {
 
     //attributes
@@ -17,7 +17,9 @@ class AddEntityRelationForm extends RModel
 
     public $code;
 
-    public $subcode;
+    public $from;
+
+    public $to;
     
     public function rules() {
         return [
@@ -28,17 +30,19 @@ class AddEntityRelationForm extends RModel
             ['code', 'integer'],
             ['code', 'required'],
             
-            ['subcode', 'integer'],
-            ['subcode', 'required'],
+            ['from', 'integer'],
+            ['from', 'required'],
             
-            ['subcode', 'isNotEqual']
+            ['to', 'integer'],
+            ['to', 'required'],
             
+            ['to', 'isToLargerThanFrom']
         ];
     }
     
-    public function isNotEqual() {
-        if($this->code === $this->subcode) {
-            return $this->addError('subcode', 'Kode cannot be equal with Subcode');
+    public function isToLargerThanFrom() {
+        if(intval($this->from) >= intval($this->to)) {
+            return $this->addError("to", "From cannot be larger than to");
         }
     }
     
@@ -54,11 +58,31 @@ class AddEntityRelationForm extends RModel
             return false;
         }
         
-        $entityRelation = $this->getEntityRelation();
+        for($code = $this->from; $code <= $this->to; $code++)  {
+            $id = $this->getEntityId($code);
+            
+            if($id && intval($id) !== intval($this->code)) {
+                if(!$this->createRelation($id)) {
+                    return false;
+                }    
+            }
+            
+        }
+        
+        return true;
+    }
+    
+    public function getEntityId($code) {
+        return Entity::find()->where(['code' => $code])->one()['id'];
+    }
+    
+    public function createRelation($id) {
+        
+        $entityRelation = $this->getEntityRelation($id);
         if(!$entityRelation) {
             $entityRelation = new EntityRelation();
             $entityRelation->parent_entity_id = $this->code;
-            $entityRelation->child_entity_id = $this->subcode;
+            $entityRelation->child_entity_id = $id;
             $entityRelation->status  = EntityRelation::STATUS_ACTIVE;
             return $entityRelation->save();
         }
@@ -71,9 +95,9 @@ class AddEntityRelationForm extends RModel
         return $entityRelation->update();
     }
     
-    public function getEntityRelation() {
+    public function getEntityRelation($id) {
         return EntityRelation::find()->where(['parent_entity_id' => $this->code, 
-                                            'child_entity_id' => $this->subcode])->one();
+                                            'child_entity_id' => $id])->one();
     }
 
 }
