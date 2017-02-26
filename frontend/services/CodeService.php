@@ -15,6 +15,7 @@ class CodeService extends RService
     
     const GET_ENTITY_INFO_WITH_CHILD = "getentityinfowithchild";
     
+    const GET_ENTITY_INFO = "getentityinfo";
     
     const GET_CODE_LIST = "getcodelist";
     
@@ -44,11 +45,23 @@ class CodeService extends RService
             ['user_id', 'required'],
             ['user_id', 'checkAC', 'on' => [self::GET_ENTITY_INFO_WITH_CHILD, 
                                             self::GET_SUB_CODE, 
+                                            self::GET_ENTITY_INFO,
                                             self::GET_CODE_INFO_FOR_EDIT]],
             
             ['entity_id', 'integer'],
-            ['entity_id', 'required', 'on' => [self::GET_ENTITY_INFO_WITH_CHILD, self::GET_SUB_CODE]]
+            ['entity_id', 'required', 'on' => [self::GET_ENTITY_INFO_WITH_CHILD, 
+                                                self::GET_ENTITY_INFO,
+                                                self::GET_SUB_CODE]]
         ];
+    }
+    
+    public function getEntityInfo() {
+        $this->setScenario(self::GET_ENTITY_INFO);
+        if(!$this->validate()) {
+            return null;
+        }
+        
+        return $this->entityDao->getEntityInfoWithRelations($this->entity_id);
     }
     
     public function getEntityInfoForEdit() {

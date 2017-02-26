@@ -24,7 +24,7 @@ class TransactionService extends RService
     //attributes
     public $user_id;
     
-    public $code_id;
+    public $entity_id;
     
     public $date;
     
@@ -62,8 +62,8 @@ class TransactionService extends RService
             ['to', 'required', 'on' => self::GET_TRANSACTION_VIEW],
             ['to', DateValidator::className()],
             
-            ['code_id', 'integer'],
-            ['code_id', 'required', 'on' => self::GET_TRANSACTION_VIEW]
+            ['entity_id', 'integer'],
+            ['entity_id', 'required', 'on' => self::GET_TRANSACTION_VIEW]
                 
                 
         ];
@@ -84,9 +84,9 @@ class TransactionService extends RService
             return false;
         }
         
-        $vos = $this->transactDao->getAllTransactionsInBetween($this->code_id, $this->from, $this->to);
+        $vos = $this->transactDao->getAllTransactionsInBetween($this->entity_id, $this->from, $this->to);
         
-        $subcodeVos = $this->codeDao->getSubcode($this->code_id);
+        $subcodeVos = $this->codeDao->getSubcode($this->entity_id);
         foreach($subcodeVos as $vo) {
             $vos[] = $this->getSubcodeTransactVo($vo->getId());
         }
@@ -97,12 +97,13 @@ class TransactionService extends RService
     private function getSubcodeTransactVo($subcodeId) {
         $builder = TransactionVo::createBuilder();
         $builder->setDate($this->from . ' - ' . $this->to);
-        $builder->setRemark("Subkode");
         
         $vo = $this->transactDao->getTotalTransactionsInBetween($subcodeId, $this->from, $this->to);
         $builder->setDebet($vo->getDebet());
         $builder->setCredit($vo->getCredit());
         $builder->setEntity($vo->getEntity());
+        $builder->setRemark($vo->getEntity()->getEntityType()->getName());
+
         $subcodeVos = $this->codeDao->getSubcode($subcodeId);
         if(count($subcodeVos) === 0 ) {
             return $builder->build();

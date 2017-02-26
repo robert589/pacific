@@ -8,6 +8,23 @@
   background: lightgray;
   border: 1px solid black;
 }
+.transaction-view-date {
+  text-align: center;
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+.transaction-view-title {
+  text-align: center;
+  font-weight: bold;
+  font-size: 24px;
+}
+.transaction-view-action {
+  display: flex;
+}
+.transaction-view-action > .button {
+  width: 160px;
+}
 .transaction-view-footer {
   display: flex;
 }
@@ -21,7 +38,7 @@
   font-weight: bold;
   padding: 8px 13px;
   border: 1px solid black;
-  width: 400%;
+  width: 100%;
 }
 .transaction-view-area {
   margin: 16px 0 0 0;

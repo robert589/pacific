@@ -10,7 +10,13 @@ class TransactionView extends Widget {
     
     public $vos;
     
+    public $entityVo;
+    
     public $date;
+    
+    public $from;
+    
+    public $to;
     
     public function init() {
         
@@ -19,6 +25,9 @@ class TransactionView extends Widget {
     public function run() {
         return $this->render('transaction-view', 
                 ['id' => $this->id, 'totalSaldo' => $this->countSaldo(),
+                    'entityVo' => $this->entityVo,
+                    'from' => $this->from,
+                    'to' => $this->to,
                     'vos' => $this->vos, 'date' => $this->date ]);
     }
     

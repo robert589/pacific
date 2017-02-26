@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\services\CodeService;
 use frontend\widgets\TransactionView;
 use frontend\models\ChangeTransactionStatusForm;
 use frontend\vos\TransactionVo;
@@ -18,7 +19,12 @@ class TransactionController extends Controller
 {
     private $service;
     
+    private $codeService;
+    
     public function init() {
+        $this->codeService = new CodeService();
+        $this->codeService->user_id = Yii::$app->user->getId();
+        
         $this->service = new TransactionService();  
         $this->service->user_id = Yii::$app->user->getId();
     }
@@ -70,6 +76,8 @@ class TransactionController extends Controller
     public function actionGetTransactionView() {
         $data['status'] = 1;
         $this->service->loadData($_POST);
+        $this->codeService->loadData($_POST);
+        $entityVo = $this->codeService->getEntityInfo();
         $vos = $this->service->getView();
         if (!$vos && !is_array($vos)) {
             $data['status'] = 0;
@@ -79,6 +87,9 @@ class TransactionController extends Controller
         
         $data['views'] = TransactionView::widget(['id' => 'tv' , 
                             'vos' => $vos, 
+                            'entityVo' => $entityVo,
+                            'from' => $this->service->from,
+                            'to' => $this->service->to,
                             'date' => $this->service->date]);
         return json_encode($data);
     }

@@ -15,7 +15,7 @@
     <?= SearchField::widget(['id' => $id . '-code', 
                             'url' => \Yii::$app->request->baseUrl . '/code/search',
                             'placeholder' => 'Cari Kode',
-                            'name' => 'code_id']) ?>
+                            'name' => 'entity_id']) ?>
 
     <?= InputField::widget(['id' => $id . '-from',
                             'datepicker' => true, 

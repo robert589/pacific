@@ -56,5 +56,15 @@ export class System  {
         dialog.run(cb);
     }
 
+    public static printToPrinter(html : string) {
+        let originalContents : string = document.body.innerHTML;
+
+        document.body.innerHTML = html;
+
+        window.print();
+
+        document.body.innerHTML = originalContents;
+    }
+
 
 }

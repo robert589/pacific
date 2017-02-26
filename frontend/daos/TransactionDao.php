@@ -2,6 +2,7 @@
 namespace frontend\daos;
 
 use Yii;
+use frontend\vos\EntityTypeVo;
 use frontend\vos\TransactionVo;
 use common\models\Transaction;
 use common\components\Dao;
@@ -33,14 +34,19 @@ class TransactionDao implements Dao
     
     const GET_TOTAL_TRANSACTIONS_IN_BETWEEN = "
         SELECT
-            sum(transaction.debet) as debet, sum(transaction.credit) as credit, entity.name as entity_name
-                    FROM `transaction`, entity
-                    WHERE STR_TO_DATE( date, \"%d/%m/%Y\") >= STR_TO_DATE(:from, \"%d/%m/%Y\")
-                     AND STR_TO_DATE( date, \"%d/%m/%Y\") <= STR_TO_DATE(:to, \"%d/%m/%Y\")
-                     AND transaction.entity_id = :entity_id and transaction.status = :status 
-                     and transaction.entity_id = entity.id
-                    ORDER BY STR_TO_DATE(date, '%d/%m/%Y') DESC
-                    limit 1;";
+            sum(transaction.debet) as debet, 
+            sum(transaction.credit) as credit, 
+            entity.name as entity_name,
+            entity_type.id as entity_type_id,
+            entity_type.name as entity_type_name
+        FROM `transaction`, entity, entity_type
+        WHERE STR_TO_DATE( date, \"%d/%m/%Y\") >= STR_TO_DATE(:from, \"%d/%m/%Y\")
+         AND STR_TO_DATE( date, \"%d/%m/%Y\") <= STR_TO_DATE(:to, \"%d/%m/%Y\")
+         AND transaction.entity_id = :entity_id and transaction.status = :status 
+         and transaction.entity_id = entity.id 
+         and entity.type_id = entity_type.id
+        ORDER BY STR_TO_DATE(date, '%d/%m/%Y') DESC
+        limit 1;";
 
     public function getTransactionInfo($id, $status = Transaction::STATUS_ACTIVE) {
         $result = \Yii::$app->db
@@ -66,8 +72,13 @@ class TransactionDao implements Dao
             ->queryOne();
         
         $builder = TransactionVo::createBuilder();
+        
         $entityBuilder = EntityVo::createBuilder();
         $entityBuilder->loadData($result, "entity");
+        $entityTypeBuilder = EntityTypeVo::createBuilder();
+        $entityTypeBuilder->loadData($result, "entity_type");
+        $entityBuilder->setEntityType($entityTypeBuilder->build());
+        
         $builder->setEntity($entityBuilder->build());
 
         $builder->loadData($result);

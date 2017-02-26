@@ -1,6 +1,7 @@
 import {Field} from './../common/field';
 import {System} from './../common/system';
 import {SearchFieldDropdownItem} from './search-field-dropdown-item';
+import {Button} from './button';
 
 export class SearchField extends Field {
 
@@ -26,6 +27,8 @@ export class SearchField extends Field {
 
     getValueEvent: CustomEvent;
 
+    resetBtn : Button;
+
     loseValueEvent : CustomEvent;
 
     private disabledItems : string[];
@@ -45,6 +48,12 @@ export class SearchField extends Field {
         this.input = <HTMLInputElement> this.root.getElementsByClassName('search-field-input')[0];
         this.dropdown = <HTMLElement> this.root.getElementsByClassName('search-field-dropdown')[0];
         this.loading = <HTMLElement> this.root.getElementsByClassName('search-field-loading')[0];
+        this.resetBtn = new Button(document.getElementById(this.id + "-reset"), this.reset.bind(this));
+    }
+
+    reset() {
+        this.resetValue();
+        this.emptyText();
     }
 
     bindEvent() {
