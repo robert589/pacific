@@ -13,7 +13,7 @@
              'columns' => [
                  [
                     'header' => 'Id/Kode',
-                     'attribute' => 'id'
+                     'attribute' => 'code'
                  ],
                 'name',
                 'description',

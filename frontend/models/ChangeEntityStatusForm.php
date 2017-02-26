@@ -41,15 +41,23 @@ class ChangeEntityStatusForm extends RModel
         }
     }
     
-    public function change() {
+    public function change($removeCode = false) {
         if(!$this->validate()) {
             return false;
         }
-        if($this->entity->status != $this->status) {
-            $this->entity->status = $this->status;
-            return $this->entity->update();
+        if($this->entity->status == $this->status) {
+            return false;
         }
-        return true;
+        
+        
+        $this->entity->status = $this->status;
+        if($removeCode) {
+            $this->entity->code = null;
+        }
+        
+        
+        return $this->entity->update();
+        
     }
 
 }

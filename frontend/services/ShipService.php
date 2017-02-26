@@ -119,7 +119,7 @@ class ShipService extends RService
         $model = [];
         foreach($vos as $vo) {
             $model['id'] = $vo->getId();
-            $model['code'] => $vo->getCode();
+            $model['code'] = $vo->getCode();
             $model['name'] = $vo->getName();
             $model['description'] = $vo->getDescription();
             $models[] = $model;

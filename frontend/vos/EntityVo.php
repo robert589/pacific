@@ -1,6 +1,7 @@
 <?php
 namespace frontend\vos;
 
+use common\models\Entity;
 use yii\db\ActiveRecord;
 use common\models\EntityType;
 use common\components\RVo;
@@ -79,6 +80,14 @@ class EntityVo implements RVo
 
     public function getStatus() { 
         return $this->status; 
+    }
+    
+    public function getStatusText() {
+        return Entity::getStatus()[$this->status];
+    }
+    
+    public function isActive() {
+        return ($this->status) == Entity::STATUS_ACTIVE ? 1 : 0;
     }
 
     /**

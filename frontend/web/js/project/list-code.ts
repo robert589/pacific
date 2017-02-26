@@ -6,6 +6,10 @@ export class ListCode extends Component{
 
     addBtn  : Button;
 
+    redirectEditBtns : Button[];
+
+    removeBtns : Button[];
+
     codeType : Button;
 
     addRelations : Button[];
@@ -34,6 +38,52 @@ export class ListCode extends Component{
                                 this.redirectToAddRelation.bind(this, relationRaws.item(i))));
         }
 
+        this.redirectEditBtns = [];
+        let redirectEditBtnsRaw : NodeListOf<Element> = this.root.getElementsByClassName('list-code-edit');
+        for(let i = 0 ; i < redirectEditBtnsRaw.length; i++) {
+            this.redirectEditBtns.push(new Button(<HTMLElement> redirectEditBtnsRaw.item(i),
+                                this.redirectToEdit.bind(this, redirectEditBtnsRaw.item(i))));
+        }
+
+        this.removeBtns = [];
+        let removeBtnsRaw : NodeListOf<Element> = this.root.getElementsByClassName('list-code-remove');
+        for(let i = 0; i < removeBtnsRaw.length; i++) {
+            this.removeBtns.push(new Button(<HTMLElement> removeBtnsRaw.item(i),
+                                this.showRemoveDialog.bind(this, removeBtnsRaw.item(i))));
+        }
+
+    }
+
+    showRemoveDialog(raw : HTMLElement) {
+        System.showConfirmDialog(this.removeCode.bind(null, raw)
+        , "Are you sure", "Once it is deleted, you will lose the code");        
+    }
+
+    removeCode(raw : HTMLElement) {
+        let entity_id = raw.getAttribute('data-entity-id');
+        let data : Object = {};
+        data['entity_id'] = entity_id;
+
+        $.ajax({
+            url : System.getBaseUrl() + "/code/remove",
+            data : System.addCsrf(data),
+            context : this,
+            dataType : "json",
+            method  : "post",
+            success : function(data) {
+                if(data.status) {
+                    window.location.reload();
+                }
+            },
+            error : function(data) {
+            }
+        });
+        
+    }
+
+
+    redirectToEdit(raw : HTMLElement) {
+        window.location.href = System.getBaseUrl() + "/code/edit?id=" + raw.getAttribute('data-entity-id');
     }
 
     redirectToAddRelation(raw : HTMLElement) {

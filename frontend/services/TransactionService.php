@@ -1,9 +1,12 @@
 <?php
 namespace frontend\services;
 
+use frontend\daos\CodeDao;
 use common\validators\DateValidator;
 use frontend\daos\TransactionDao;
+use frontend\vos\TransactionVoBuilder;
 use common\components\RService;
+use frontend\vos\TransactionVo;
 use common\validators\IsAdminValidator;
 /**
  * TransactionService service
@@ -33,9 +36,11 @@ class TransactionService extends RService
     
     private $transactDao;
     
+    private $codeDao;
     
     public function init() {
         $this->transactDao = new TransactionDao();
+        $this->codeDao = new CodeDao();
     }
     
     public function rules() {
@@ -79,10 +84,40 @@ class TransactionService extends RService
             return false;
         }
         
-        return $this->transactDao->getAllTransactionsInBetween($this->code_id, $this->from, $this->to);
-
+        $vos = $this->transactDao->getAllTransactionsInBetween($this->code_id, $this->from, $this->to);
         
+        $subcodeVos = $this->codeDao->getSubcode($this->code_id);
+        foreach($subcodeVos as $vo) {
+            $vos[] = $this->getSubcodeTransactVo($vo->getId());
+        }
+        
+        return $vos;
     }
+    
+    private function getSubcodeTransactVo($subcodeId) {
+        $builder = TransactionVo::createBuilder();
+        $builder->setDate($this->from . ' - ' . $this->to);
+        $builder->setRemark("Subkode");
+        
+        $vo = $this->transactDao->getTotalTransactionsInBetween($subcodeId, $this->from, $this->to);
+        $builder->setDebet($vo->getDebet());
+        $builder->setCredit($vo->getCredit());
+        $builder->setEntity($vo->getEntity());
+        $subcodeVos = $this->codeDao->getSubcode($subcodeId);
+        if(count($subcodeVos) === 0 ) {
+            return $builder->build();
+        }
+        
+        foreach($subcodeVos as $vo) {
+            $transactSubcodeVo = $this->getSubcodeTransactVo($vo->getId());
+            
+            $builder->setDebet(floatval($transactSubcodeVo->getDebet()) + floatval($builder->getDebet()));
+            $builder->setCredit(floatval($transactSubcodeVo->getCredit()) + floatval($builder->getCredit()));
+        }
+    
+        return $builder->build();
+    }
+    
     
     public function getTransactionInfo() {
         $this->setScenario(self::GET_TRANSACTION_INFO);

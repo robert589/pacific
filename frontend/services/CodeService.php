@@ -22,6 +22,8 @@ class CodeService extends RService
     
     const GET_SUB_CODE = "getsubcode";
     
+    const GET_CODE_INFO_FOR_EDIT = "getcodeinfoforedit";
+    
     //attributes
     public $user_id;
     
@@ -40,13 +42,23 @@ class CodeService extends RService
         return [
             ['user_id', 'integer'],
             ['user_id', 'required'],
-            ['user_id', 'checkAC', 'on' => [self::GET_ENTITY_INFO_WITH_CHILD, self::GET_SUB_CODE]],
+            ['user_id', 'checkAC', 'on' => [self::GET_ENTITY_INFO_WITH_CHILD, 
+                                            self::GET_SUB_CODE, 
+                                            self::GET_CODE_INFO_FOR_EDIT]],
             
             ['entity_id', 'integer'],
             ['entity_id', 'required', 'on' => [self::GET_ENTITY_INFO_WITH_CHILD, self::GET_SUB_CODE]]
         ];
     }
     
+    public function getEntityInfoForEdit() {
+        $this->setScenario(self::GET_CODE_INFO_FOR_EDIT);
+        if(!$this->validate()) {
+            return null;
+        }
+        
+        return $this->entityDao->getEntityInfoWithRelations($this->entity_id);
+    }
     
     public function getSubCode() {
         $this->setScenario(self::GET_SUB_CODE);
@@ -124,6 +136,9 @@ class CodeService extends RService
             $model['code'] = $vo->getCode();
             $model['name'] = $vo->getName();
             $model['id'] = $vo->getId();
+            $model['current_status'] = $vo->getStatusText();
+            $model['status'] = $vo->getStatus();
+            $model['active'] = $vo->isActive();
             $model['type'] = $vo->getEntityType()->getName();
             $model['description'] = $vo->getDescription();
             $models[] = $model;

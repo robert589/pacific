@@ -2,6 +2,8 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\ChangeEntityStatusForm;
+use common\models\Entity;
 use frontend\models\RemoveAllEntityRelationsForm;
 use frontend\models\RemoveEntityRelationForm;
 use frontend\models\AddEntityRelationForm;
@@ -11,6 +13,7 @@ use frontend\models\AddEntityRelationRangeForm;
 use frontend\services\CodeService;
 use yii\web\Controller;
 use frontend\models\CreateCodeForm;
+
 /**
  * Code controller
  */
@@ -145,6 +148,25 @@ class CodeController extends Controller
         
         $data = [];
         $data['status'] = $model->add() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
+    public function actionEdit() {
+        $this->service->entity_id = filter_input(INPUT_GET, "id");
+        $vo = $this->service->getEntityInfoForEdit();
+        return $this->render('edit-code', ['id' => 'cec', 'vo' => $vo]);
+        
+    }
+                                                                                                                                                        
+    public function actionRemove() {
+        $model = new ChangeEntityStatusForm();
+        $model->status = Entity::STATUS_DELETED;
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        
+        $data = [];
+        $data['status'] = $model->change(true) ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
         return json_encode($data);
     }

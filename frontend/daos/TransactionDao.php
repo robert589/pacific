@@ -30,6 +30,17 @@ class TransactionDao implements Dao
          AND transaction.entity_id = :entity_id and transaction.status = :status 
          and transaction.entity_id = entity.id
         ORDER BY STR_TO_DATE(date, '%d/%m/%Y') DESC;";
+    
+    const GET_TOTAL_TRANSACTIONS_IN_BETWEEN = "
+        SELECT
+            sum(transaction.debet) as debet, sum(transaction.credit) as credit, entity.name as entity_name
+                    FROM `transaction`, entity
+                    WHERE STR_TO_DATE( date, \"%d/%m/%Y\") >= STR_TO_DATE(:from, \"%d/%m/%Y\")
+                     AND STR_TO_DATE( date, \"%d/%m/%Y\") <= STR_TO_DATE(:to, \"%d/%m/%Y\")
+                     AND transaction.entity_id = :entity_id and transaction.status = :status 
+                     and transaction.entity_id = entity.id
+                    ORDER BY STR_TO_DATE(date, '%d/%m/%Y') DESC
+                    limit 1;";
 
     public function getTransactionInfo($id, $status = Transaction::STATUS_ACTIVE) {
         $result = \Yii::$app->db
@@ -41,6 +52,24 @@ class TransactionDao implements Dao
         $entityBuilder = EntityVo::createBuilder();
         $entityBuilder->loadData($result, "entity");
         $builder->setEntity($entityBuilder->build());
+        $builder->loadData($result);
+        return $builder->build();
+    }
+    
+    public function getTotalTransactionsInBetween($entityId, $from, $to, $status = Transaction::STATUS_ACTIVE) {
+        $result = \Yii::$app->db
+            ->createCommand(self::GET_TOTAL_TRANSACTIONS_IN_BETWEEN)
+            ->bindParam(':entity_id', $entityId)
+            ->bindParam(':from', $from)
+            ->bindParam(':to', $to)
+            ->bindParam(':status', $status)
+            ->queryOne();
+        
+        $builder = TransactionVo::createBuilder();
+        $entityBuilder = EntityVo::createBuilder();
+        $entityBuilder->loadData($result, "entity");
+        $builder->setEntity($entityBuilder->build());
+
         $builder->loadData($result);
         return $builder->build();
     }

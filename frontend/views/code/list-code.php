@@ -14,25 +14,53 @@
             'columns' => [
                 'code',
                 'name',
+                'current_status',
                 'type',
                 'description',
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'header'=>'Actions',    
-                    'template' => '{add}',
+                    'template' => '{add}{edit}{remove}',
                     'urlCreator' => function ($action, $model, $key, $index) {
                         
                     },
                     'buttons' => [
                         //view button
                         'add' => function ($url, $model) {
-                            return Button::widget(['id' => 'ls-add-' . $model['code'],
-                                'widgetClass' => 'button-link list-code-add',
-                                'text' => '<span class="glyphicon glyphicon-plus"></span>',
-                                'options' => [
-                                    'data-entity-id' => $model['id']
-                                ],
-                                'color' => Button::NONE_COLOR]);
+                            if($model['active']) {
+                                return Button::widget(['id' => 'lc-add-' . $model['code'],
+                                    'widgetClass' => 'button-link list-code-add',
+                                    'text' => '<span class="glyphicon glyphicon-plus"></span>',
+                                    'options' => [
+                                        'data-entity-id' => $model['id']
+                                    ],
+                                    'color' => Button::NONE_COLOR]);
+                            }
+                        },
+                        'edit' => function ($url, $model) {
+                            if($model['active']) { 
+                                return Button::widget(['id' => 'lc-edit-' . $model['code'], 
+                                    'widgetClass' => 'button-link list-code-edit',
+                                    'text' => 'Edit',
+                                    'options' => [
+                                        'data-entity-id' => $model['id']
+                                    ],
+                                    'color' => Button::NONE_COLOR
+                                ]);
+                        
+                            }      
+                        }, 
+                        'remove' => function($url, $model) {
+                            if($model['active']) { 
+                                return Button::widget(['id' => 'lc-remove-' . $model['code'], 
+                                    'widgetClass' => 'button-link list-code-remove',
+                                    'text' => 'Remove',
+                                    'options' => [
+                                        'data-entity-id' => $model['id']
+                                    ],
+                                    'color' => Button::NONE_COLOR
+                                ]);
+                            }
                         }
                     ],
 
