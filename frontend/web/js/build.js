@@ -40,6 +40,12 @@ define("common/component", ["require", "exports"], function (require, exports) {
         Component.prototype.addClass = function (className) {
             this.root.classList.add(className);
         };
+        Component.prototype.hasClass = function (className) {
+            return this.root.classList.contains(className);
+        };
+        Component.prototype.releaseEvent = function (eventName) {
+            this.root.dispatchEvent(new CustomEvent(eventName));
+        };
         Component.prototype.attachEvent = function (eventName, callback) {
             this.root.addEventListener(eventName, callback);
         };
@@ -895,6 +901,12 @@ define("common/search-field-dropdown-item", ["require", "exports", "common/compo
             configurable: true
         });
         ;
+        Object.defineProperty(SearchFieldDropdownItem, "HOVER_SFDI_EVENT", {
+            get: function () { return "HOVER_SFDI_EVENT"; },
+            enumerable: true,
+            configurable: true
+        });
+        ;
         SearchFieldDropdownItem.prototype.getItemId = function () {
             return this.itemId;
         };
@@ -913,13 +925,25 @@ define("common/search-field-dropdown-item", ["require", "exports", "common/compo
                 itemId: this.itemId
             };
             this.clickSfdiEvent = new CustomEvent(SearchFieldDropdownItem.CLICK_SFDI_EVENT, { detail: sfdiJson });
-            this.root.addEventListener("click", function (e) {
-                this.root.dispatchEvent(this.clickSfdiEvent);
-            }.bind(this));
+            this.hoverSfdiEvent = new CustomEvent(SearchFieldDropdownItem.HOVER_SFDI_EVENT, { detail: sfdiJson });
+            this.root.addEventListener("click", this.dispatchClickSfdiEvent.bind(this));
+            this.root.addEventListener("mouseover", this.addHoverClass.bind(this));
+            this.root.addEventListener("mouseout", this.removeHoverClass.bind(this));
+        };
+        SearchFieldDropdownItem.prototype.dispatchClickSfdiEvent = function () {
+            this.root.dispatchEvent(this.clickSfdiEvent);
+        };
+        SearchFieldDropdownItem.prototype.addHoverClass = function () {
+            this.root.dispatchEvent(this.hoverSfdiEvent);
+            this.addClass("sfdi-hover");
+        };
+        SearchFieldDropdownItem.prototype.removeHoverClass = function () {
+            this.removeClass("sfdi-hover");
         };
         SearchFieldDropdownItem.prototype.unbindEvent = function () {
-            this.root.addEventListener(SearchFieldDropdownItem.CLICK_SFDI_EVENT, null);
-            this.root.addEventListener("click", null);
+            this.root.addEventListener("mouseover", this.addHoverClass.bind(this));
+            this.root.addEventListener("mouseout", this.removeHoverClass.bind(this));
+            this.root.addEventListener("click", this.dispatchClickSfdiEvent.bind(this));
         };
         SearchFieldDropdownItem.prototype.disabled = function (on) {
             if (on) {
@@ -933,7 +957,49 @@ define("common/search-field-dropdown-item", ["require", "exports", "common/compo
     }(component_10.Component));
     exports.SearchFieldDropdownItem = SearchFieldDropdownItem;
 });
-define("common/search-field", ["require", "exports", "common/Field", "common/system", "common/search-field-dropdown-item", "common/button"], function (require, exports, field_1, system_8, search_field_dropdown_item_1, button_6) {
+define("common/key-code", ["require", "exports"], function (require, exports) {
+    "use strict";
+    var KeyCode = (function () {
+        function KeyCode() {
+        }
+        Object.defineProperty(KeyCode, "DOWN_KEY", {
+            get: function () {
+                return 40;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(KeyCode, "UP_KEY", {
+            get: function () {
+                return 38;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(KeyCode, "ENTER_KEY", {
+            get: function () {
+                return 13;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return KeyCode;
+    }());
+    exports.KeyCode = KeyCode;
+});
+define("common/math", ["require", "exports"], function (require, exports) {
+    "use strict";
+    var Math = (function () {
+        function Math() {
+        }
+        Math.modulo = function (value, base) {
+            return ((value % base) + base) % base;
+        };
+        return Math;
+    }());
+    exports.Math = Math;
+});
+define("common/search-field", ["require", "exports", "common/Field", "common/system", "common/search-field-dropdown-item", "common/button", "common/key-code", "common/math"], function (require, exports, field_1, system_8, search_field_dropdown_item_1, button_6, key_code_1, math_1) {
     "use strict";
     var SearchField = (function (_super) {
         __extends(SearchField, _super);
@@ -981,11 +1047,68 @@ define("common/search-field", ["require", "exports", "common/Field", "common/sys
             }.bind(this));
             this.getValueEvent = new CustomEvent(SearchField.GET_VALUE_EVENT);
             this.loseValueEvent = new CustomEvent(SearchField.LOSE_VALUE_EVENT);
+            this.root.addEventListener('keydown', this.controlEvent.bind(this));
             document.addEventListener('click', function (e) {
                 if (e.target && !e.target.closest('.search-field-dropdown')) {
                     this.emptyDropdown();
                 }
+                if (e.target && e.target.closest('.search-field-input')) {
+                }
+                else if (e.target && !e.target.closest('.search-field-input')) {
+                }
             }.bind(this));
+        };
+        SearchField.prototype.registerControlEvent = function () {
+            this.root.addEventListener('keydown', this.controlEvent.bind(this));
+        };
+        SearchField.prototype.controlEvent = function (e) {
+            if (e.which === key_code_1.KeyCode.DOWN_KEY) {
+                this.searchDownDropdown();
+            }
+            else if (e.which === key_code_1.KeyCode.UP_KEY) {
+                this.searchUpDropdown();
+            }
+            else if (e.which === key_code_1.KeyCode.ENTER_KEY) {
+                e.preventDefault();
+                this.selectHoverDropdown();
+            }
+        };
+        SearchField.prototype.deregisterControlEvent = function () {
+            this.root.removeEventListener('keydown', this.controlEvent.bind(this));
+        };
+        SearchField.prototype.searchDownDropdown = function () {
+            if (this.items.length === 0) {
+                return;
+            }
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].hasClass("sfdi-hover")) {
+                    this.items[i].removeClass("sfdi-hover");
+                    this.items[math_1.Math.modulo((i + 1), this.items.length)].addClass("sfdi-hover");
+                    return;
+                }
+            }
+            this.items[0].addClass("sfdi-hover");
+        };
+        SearchField.prototype.searchUpDropdown = function () {
+            if (this.items.length === 0) {
+                return;
+            }
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].hasClass("sfdi-hover")) {
+                    this.items[i].removeClass("sfdi-hover");
+                    this.items[math_1.Math.modulo((i - 1), this.items.length)].addClass("sfdi-hover");
+                    return;
+                }
+            }
+            this.items[this.items.length - 1].addClass("sfdi-hover");
+        };
+        SearchField.prototype.selectHoverDropdown = function () {
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].hasClass("sfdi-hover")) {
+                    this.items[i].releaseEvent("click");
+                }
+            }
+            this.emptyDropdown();
         };
         SearchField.prototype.resetValue = function () {
             this.curText = null;
@@ -1065,8 +1188,18 @@ define("common/search-field", ["require", "exports", "common/Field", "common/sys
                     this.setValue(e.detail.itemId, e.detail.text);
                     this.emptyDropdown();
                 }.bind(this));
+                this.items[i].attachEvent(search_field_dropdown_item_1.SearchFieldDropdownItem.HOVER_SFDI_EVENT, this.removeHoverExcept.bind(this));
             }
             this.showDropdown();
+        };
+        SearchField.prototype.removeHoverExcept = function (e) {
+            var itemId = e.detail.itemId;
+            for (var i = 0; i < this.items.length; i++) {
+                if (this.items[i].hasClass("sfdi-hover") &&
+                    this.items[i].getItemId() !== itemId) {
+                    this.items[i].removeClass("sfdi-hover");
+                }
+            }
         };
         SearchField.prototype.hideDropdown = function () {
             this.dropdown.classList.add('app-hide');

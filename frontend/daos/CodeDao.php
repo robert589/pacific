@@ -31,12 +31,15 @@ class CodeDao implements Dao
     const SEARCH_CODE_TYPE = "SELECT entity_type.id, entity_type.name
                             from entity_type
                             where (entity_type.name LIKE :query or entity_type.id LIKE :query) and
-                                        entity_type.status = :status";
+                                        entity_type.status = :status
+                                        
+                            limit 4";
 
     const SEARCH_CODE = "SELECT entity.id, entity.name, entity.code
                             from entity
                             where (entity.name LIKE :query or entity.code LIKE :query) and
-                                        entity.status = :status";
+                                        entity.status = :status
+                            limit 4";
                                         
     public function getSubcode($entityId, $status = Entity::STATUS_ACTIVE) {
         

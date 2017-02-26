@@ -4,7 +4,11 @@ export class SearchFieldDropdownItem extends Component {
     
     public static get CLICK_SFDI_EVENT() : string {return  "CLICK_SFDI_EVENT"};
 
+    public static get HOVER_SFDI_EVENT() : string {return "HOVER_SFDI_EVENT"};
+
     clickSfdiEvent : CustomEvent;
+
+    hoverSfdiEvent : CustomEvent;
 
     itemId: string;
 
@@ -36,14 +40,32 @@ export class SearchFieldDropdownItem extends Component {
         }
         this.clickSfdiEvent = new CustomEvent(SearchFieldDropdownItem.CLICK_SFDI_EVENT, 
                                    {detail : sfdiJson});    
-        this.root.addEventListener("click", function(e : Event) {
-            this.root.dispatchEvent(this.clickSfdiEvent);
-        }.bind(this));
+
+        this.hoverSfdiEvent = new CustomEvent(SearchFieldDropdownItem.HOVER_SFDI_EVENT,
+                                    {detail : sfdiJson});
+        this.root.addEventListener("click", this.dispatchClickSfdiEvent.bind(this));
+
+        this.root.addEventListener("mouseover", this.addHoverClass.bind(this));
+        this.root.addEventListener("mouseout", this.removeHoverClass.bind(this));
+    }
+
+    dispatchClickSfdiEvent() {
+        this.root.dispatchEvent(this.clickSfdiEvent);
+    }
+
+    addHoverClass() {
+        this.root.dispatchEvent(this.hoverSfdiEvent);
+        this.addClass("sfdi-hover");
+    }
+
+    removeHoverClass() {
+        this.removeClass("sfdi-hover");
     }
 
     unbindEvent() {
-        this.root.addEventListener(SearchFieldDropdownItem.CLICK_SFDI_EVENT, null);
-        this.root.addEventListener("click", null);
+        this.root.addEventListener("mouseover", this.addHoverClass.bind(this));
+        this.root.addEventListener("mouseout", this.removeHoverClass.bind(this));
+        this.root.addEventListener("click", this.dispatchClickSfdiEvent.bind(this));
     }
 
     disabled(on : boolean) {

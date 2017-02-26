@@ -2,7 +2,7 @@
   padding: 6px 6px;
   color: black;
 }
-.sfdi:hover {
+.sfdi-hover {
   cursor: pointer;
   background: lightblue;
 }
@@ -11,6 +11,6 @@
   cursor: no-drop;
   color: darkgray;
 }
-.sfdi.disabled:hover {
+.sfdi.disabled-hover {
   cursor: not-allowed;
 }

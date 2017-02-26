@@ -48,6 +48,14 @@ export abstract class Component {
         this.root.classList.add(className);
     }
 
+    hasClass(className : string) : boolean {
+        return this.root.classList.contains(className);
+    }
+
+    releaseEvent(eventName : string) {
+        this.root.dispatchEvent(new CustomEvent(eventName)); 
+    }
+
     attachEvent(eventName : string, callback: EventListener) {
         this.root.addEventListener(eventName, callback);
     }

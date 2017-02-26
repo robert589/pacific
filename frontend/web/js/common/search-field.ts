@@ -2,6 +2,8 @@ import {Field} from './../common/field';
 import {System} from './../common/system';
 import {SearchFieldDropdownItem} from './search-field-dropdown-item';
 import {Button} from './button';
+import {KeyCode} from './key-code';
+import {Math} from './math';
 
 export class SearchField extends Field {
 
@@ -64,18 +66,90 @@ export class SearchField extends Field {
             }
         }.bind(this));
 
+
         this.input.addEventListener('click', function(e) {
             this.sendAjax();
         }.bind(this));
         
         this.getValueEvent = new CustomEvent(SearchField.GET_VALUE_EVENT);
         this.loseValueEvent = new CustomEvent(SearchField.LOSE_VALUE_EVENT);
+        
+        this.root.addEventListener('keydown', this.controlEvent.bind(this));
 
         document.addEventListener('click', function(e) {
             if(e.target && !(<HTMLElement> e.target).closest('.search-field-dropdown')) {
                 this.emptyDropdown();
             }
+
+            if(e.target && (<HTMLElement> e.target).closest('.search-field-input')) {
+            }
+            else if(e.target && !(<HTMLElement> e.target).closest('.search-field-input')) {
+            }
+
         }.bind(this));
+
+    }
+
+    registerControlEvent() {
+        this.root.addEventListener('keydown', this.controlEvent.bind(this));
+    }
+
+    controlEvent(e : KeyboardEvent) {
+        if(e.which === KeyCode.DOWN_KEY) {
+                this.searchDownDropdown();
+            }
+        else if(e.which === KeyCode.UP_KEY) {
+            this.searchUpDropdown();
+        }
+        else if(e.which === KeyCode.ENTER_KEY) {
+            e.preventDefault();
+            this.selectHoverDropdown();
+        }
+    }
+
+    deregisterControlEvent() {
+        this.root.removeEventListener('keydown', this.controlEvent.bind(this));
+    }
+
+    searchDownDropdown() {
+        if(this.items.length === 0) {
+            return;
+        }
+        
+        for(let i = 0; i < this.items.length; i++) {
+            if(this.items[i].hasClass("sfdi-hover")) {
+                this.items[i].removeClass("sfdi-hover");
+                this.items[Math.modulo((i + 1) , this.items.length)].addClass("sfdi-hover");
+                return;
+            }
+        }
+
+        this.items[0].addClass("sfdi-hover");
+    }
+
+    searchUpDropdown() {
+        if(this.items.length === 0 ) {
+            return;
+        }
+
+        for(let i = 0; i < this.items.length; i++) {
+            if(this.items[i].hasClass("sfdi-hover")) {
+                this.items[i].removeClass("sfdi-hover");
+                this.items[Math.modulo((i - 1) , this.items.length)].addClass("sfdi-hover");
+                return;
+            }
+        }
+
+        this.items[this.items.length - 1].addClass("sfdi-hover");
+    }
+
+    selectHoverDropdown() {
+        for(let i = 0; i < this.items.length; i++) {
+            if(this.items[i].hasClass("sfdi-hover")) {
+                this.items[i].releaseEvent("click");
+            }
+        }
+        this.emptyDropdown();
     }
 
     resetValue() {
@@ -165,8 +239,21 @@ export class SearchField extends Field {
                 this.setValue(e.detail.itemId, e.detail.text);
                 this.emptyDropdown();
             }.bind(this));
-        }
+            this.items[i].attachEvent(SearchFieldDropdownItem.HOVER_SFDI_EVENT, 
+                            this.removeHoverExcept.bind(this));
+            }
         this.showDropdown();
+    }
+
+    removeHoverExcept(e) {
+        let itemId : string = <string> e.detail.itemId;
+
+        for(let i = 0; i < this.items.length; i++) {
+            if(this.items[i].hasClass("sfdi-hover") && 
+                this.items[i].getItemId() !== itemId) {
+                this.items[i].removeClass("sfdi-hover");
+            }
+        }
     }
 
     hideDropdown() {
