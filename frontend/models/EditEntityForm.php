@@ -56,7 +56,7 @@ class EditEntityForm extends RModel
     }
     
     public function isNewCodeDuplicate() {
-        if($this->entity->code === $this->code) {
+        if(intval($this->entity->code) === intval($this->code)) {
             return;
         }
         $entity = Entity::find()->where(['code' => $this->code])->one();

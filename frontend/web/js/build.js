@@ -2792,15 +2792,30 @@ define("project/add-entity-relation", ["require", "exports", "common/component",
     }(component_35.Component));
     exports.AddEntityRelation = AddEntityRelation;
 });
-define("project/edit-code-form", ["require", "exports", "common/component"], function (require, exports, component_36) {
+define("project/edit-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system"], function (require, exports, form_16, input_field_19, text_area_field_6, search_field_10, system_23) {
     "use strict";
     var EditCodeForm = (function (_super) {
         __extends(EditCodeForm, _super);
         function EditCodeForm(root) {
-            return _super.call(this, root) || this;
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_23.System.getBaseUrl() + "/code/index";
+            };
+            return _this;
         }
+        EditCodeForm.prototype.rules = function () {
+            this.setRequiredField([this.nameField, this.typeIdField,
+                this.idField, this.codeField]);
+            this.registerFields([this.nameField, this.descField, this.idField,
+                this.typeIdField, this.codeField]);
+        };
         EditCodeForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
+            this.idField = new input_field_19.InputField(document.getElementById(this.id + "-id"));
+            this.codeField = new input_field_19.InputField(document.getElementById(this.id + "-code"));
+            this.typeIdField = new search_field_10.SearchField(document.getElementById(this.id + "-type-id"));
+            this.nameField = new input_field_19.InputField(document.getElementById(this.id + "-name"));
+            this.descField = new text_area_field_6.TextAreaField(document.getElementById(this.id + "-desc"));
         };
         EditCodeForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2812,10 +2827,10 @@ define("project/edit-code-form", ["require", "exports", "common/component"], fun
             // no event to unbind
         };
         return EditCodeForm;
-    }(component_36.Component));
+    }(form_16.Form));
     exports.EditCodeForm = EditCodeForm;
 });
-define("project/edit-code", ["require", "exports", "common/component", "project/edit-code-form"], function (require, exports, component_37, edit_code_form_1) {
+define("project/edit-code", ["require", "exports", "common/component", "project/edit-code-form"], function (require, exports, component_36, edit_code_form_1) {
     "use strict";
     var EditCode = (function (_super) {
         __extends(EditCode, _super);
@@ -2836,10 +2851,10 @@ define("project/edit-code", ["require", "exports", "common/component", "project/
             // no event to unbind
         };
         return EditCode;
-    }(component_37.Component));
+    }(component_36.Component));
     exports.EditCode = EditCode;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/edit-code"], function (require, exports, component_38, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_23, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, edit_code_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/edit-code"], function (require, exports, component_37, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_24, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, edit_code_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -2928,7 +2943,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_23.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_24.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };
@@ -2939,7 +2954,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_38.Component));
+    }(component_37.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\EditEntityForm;
 use frontend\models\ChangeEntityStatusForm;
 use common\models\Entity;
 use frontend\models\RemoveAllEntityRelationsForm;
@@ -158,7 +159,17 @@ class CodeController extends Controller
         return $this->render('edit-code', ['id' => 'cec', 'vo' => $vo]);
         
     }
-                                                                                                                                                        
+               
+    public function actionPEdit() {
+        $model = new EditEntityForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $data['status'] = $model->edit() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
+    
     public function actionRemove() {
         $model = new ChangeEntityStatusForm();
         $model->status = Entity::STATUS_DELETED;

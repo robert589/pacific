@@ -52,9 +52,12 @@ class EntityDao implements Dao
                                         where entity.id = :entity_id and entity.type_id = :type_id
                                             and entity.status = :status";
     
-    const GET_ENTITY_INFO = "select entity.*
-                            from entity
+    const GET_ENTITY_INFO = "select entity.*,
+                                    entity_type.id as entity_type_id, 
+                                    entity_type.name as entity_type_name
+                            from entity, entity_type
                             where entity.id = :entity_id 
+                                and entity_type.id = entity.type_id
                                 and entity.status = :status";
     
     const GET_CHILD_RELATIONS = "select entity.*
@@ -75,6 +78,9 @@ class EntityDao implements Dao
         }
         
         $builder = EntityVo::createBuilder();
+        $typeBuilder = EntityTypeVo::createBuilder();
+        $typeBuilder->loadData($result, "entity_type");
+        $builder->setEntityType($typeBuilder->build());
         $builder->loadData($result);
         $builder->setChildEntities($this->getChildEntities($entityId));
         return $builder->build();

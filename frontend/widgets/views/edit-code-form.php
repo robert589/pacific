@@ -31,9 +31,13 @@
     </div>
     <div class="form-field">
     <?= SearchField::widget(['id' => $id . '-type-id', 'placeholder' => 'Cari Tipe', 
-                'vo' => $vo->getEntityType()->getId(),
+                'index' => $vo->getEntityType()->getId(),
+                'value' => $vo->getEntityType()->getName(),
                 'url' => \Yii::$app->request->baseUrl . "/code/search-type", 'name' => 'type_id']) ?>
     </div>
+    <?= InputField::widget(['id' => $id . '-id', 'placeholder' => 'Kode',     
+            'value' => $vo->getId(), 'type' => InputField::HIDDEN,
+            'name' => 'id']) ?>
     <?= Button::widget(['id' => $id . '-submit-btn' , 
         'text' => 'Add', 'newClass' => 'form-submit']) ?>
 <?php Form::end() ?>
