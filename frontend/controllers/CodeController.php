@@ -6,12 +6,14 @@ use Yii;
 use frontend\models\EditEntityForm;
 use frontend\models\ChangeEntityStatusForm;
 use common\models\Entity;
+use common\models\EntityType;
 use frontend\models\RemoveAllEntityRelationsForm;
 use frontend\models\RemoveEntityRelationForm;
 use frontend\models\AddEntityRelationForm;
 use common\widgets\SearchFieldDropdownItem;
 use frontend\models\CreateCodeTypeForm;
 use frontend\models\AddEntityRelationRangeForm;
+use frontend\models\ChangeEntityTypeStatusForm;
 use frontend\services\CodeService;
 use yii\web\Controller;
 use frontend\models\CreateCodeForm;
@@ -55,6 +57,17 @@ class CodeController extends Controller
         $model->user_id = \Yii::$app->user->getId();
         $model->loadData($_POST);
         $data['status'] = $model->edit() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
+    public function actionRemoveType() {
+        $model = new ChangeEntityTypeStatusForm();
+        $model->status = EntityType::STATUS_DELETED;
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $data = [];
+        $data['status'] = $model->change() ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
         return json_encode($data);
     }

@@ -47,9 +47,9 @@ export class ListCodeType extends Component{
     }
 
     removeCode(raw : HTMLElement) {
-        let entity_id = raw.getAttribute('data-entity-id');
+        let entity_id = raw.getAttribute('data-entity-type-id');
         let data : Object = {};
-        data['entity_id'] = entity_id;
+        data['entity_type_id'] = entity_id;
 
         $.ajax({
             url : System.getBaseUrl() + "/code/remove-type",

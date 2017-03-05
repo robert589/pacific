@@ -2220,12 +2220,12 @@ define("project/list-code-type", ["require", "exports", "common/component", "com
             _super.prototype.bindEvent.call(this);
         };
         ListCodeType.prototype.showRemoveDialog = function (raw) {
-            system_16.System.showConfirmDialog(this.removeCode.bind(null, raw), "Are you sure", "Once it is deleted, you will lose the code");
+            system_16.System.showConfirmDialog(this.removeCode.bind(null, raw), "Are you sure", "Once it is deleted, you will have to ask the developer to retrieve it");
         };
         ListCodeType.prototype.removeCode = function (raw) {
-            var entity_id = raw.getAttribute('data-entity-id');
+            var entity_id = raw.getAttribute('data-entity-type-id');
             var data = {};
-            data['entity_id'] = entity_id;
+            data['entity_type_id'] = entity_id;
             $.ajax({
                 url: system_16.System.getBaseUrl() + "/code/remove-type",
                 data: system_16.System.addCsrf(data),
