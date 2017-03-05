@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\EditCodeTypeForm;
 use Yii;
 use frontend\models\EditEntityForm;
 use frontend\models\ChangeEntityStatusForm;
@@ -40,6 +41,22 @@ class CodeController extends Controller
     public function actionType() {
         $provider = $this->service->getCodeTypeList();
         return $this->render('list-code-type', ['id' => 'clct', 'provider' => $provider]);
+    }
+    
+    public function actionEditType() {
+        $this->service->entity_type_id = filter_input(INPUT_GET, "id");
+        $vo = $this->service->getEntityTypeInfo();
+        return $this->render('edit-code-type', ['id' => 'cect', 'vo' => $vo]);
+        
+    }
+    
+    public function actionPEditType() {
+        $model = new EditCodeTypeForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $data['status'] = $model->edit() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
     }
     
     public function actionCreateType() {

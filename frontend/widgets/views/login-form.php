@@ -11,11 +11,11 @@
          'url' => \Yii::$app->request->baseUrl . '/site/login', 
         'widget_class' => 'form-horizontal login-form' , 'enable_button' => false
         ]) ?>
-    <div class="login-form-field">
+    <div class="form-field">
         <?= InputField::widget(['id' => $id . '-email-field', 
                         'type' => InputField::EMAIL, 'name' => 'email', 'value' => null, 'placeholder' => 'Enter Email' ]) ?>
     </div>
-    <div class="login-form-field">
+    <div class="form-field">
         <?= InputField::widget(['id' => $id .'-password-field' , 
                                 'type' => InputField::PASSWORD, 
                                 'name' => 'password', 'value' => null, 

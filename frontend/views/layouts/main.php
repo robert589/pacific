@@ -96,6 +96,7 @@ AppAsset::register($this);
                                         'href' => '#',
                                         'items' => [
                                             ['label' => 'Pemilik Kapal', 'href' => Yii::$app->request->baseUrl . "/owner/index"],
+                                            ['label' => 'Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/index"]
                                         ]
                                     ],
                                     [

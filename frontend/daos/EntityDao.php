@@ -2,6 +2,7 @@
 namespace frontend\daos;
 
 use Yii;
+use common\models\EntityType;
 use frontend\vos\EntityVo;
 use frontend\vos\EntityTypeVo;
 use common\models\Entity;
@@ -60,11 +61,33 @@ class EntityDao implements Dao
                                 and entity_type.id = entity.type_id
                                 and entity.status = :status";
     
+    const GET_ENTITY_TYPE_INFO = "select entity_type.*
+                                from entity_type
+                                where entity_type.id = :entity_type_id and
+                                    entity_type.status = :status";
+    
     const GET_CHILD_RELATIONS = "select entity.*
                                 from entity, entity_relation
                                 where entity.id = entity_relation.child_entity_id and
                                     entity.status = :status and
                                     entity_relation.parent_entity_id = :entity_id";
+    
+    public function getEntityTypeInfo($entityTypeId, $status = EntityType::STATUS_ACTIVE) {
+        $result =  \Yii::$app->db
+            ->createCommand(self::GET_ENTITY_TYPE_INFO)
+            ->bindParam(":entity_type_id", $entityTypeId)
+            ->bindParam(':status', $status)
+            ->queryOne();
+        
+        if(!$result) {
+            return null;
+        }
+        
+        $typeBuilder = EntityTypeVo::createBuilder();
+        $typeBuilder->loadData($result);
+        return $typeBuilder->build();
+        
+    }
     
     public function getEntityInfoWithRelations($entityId, $status = Entity::STATUS_ACTIVE) {
         $result =  \Yii::$app->db

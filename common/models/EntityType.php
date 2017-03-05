@@ -41,5 +41,12 @@ class EntityType extends ActiveRecord
     public static function getTypeId($text) {
         return self::find()->where(['name' => $text])->one()['id'];
     }
+    
+    public static function getStatus() {
+        return [
+            self::STATUS_ACTIVE => "Active",
+            self::STATUS_DELETED => "Removed"
+        ];
+    }
 
 }

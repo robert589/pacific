@@ -13,6 +13,8 @@ use common\components\RService;
 class CodeService extends RService
 {
     
+    const GET_ENTITY_TYPE_INFO = "getentitytypeinfo";
+    
     const GET_ENTITY_INFO_WITH_CHILD = "getentityinfowithchild";
     
     const GET_ENTITY_INFO = "getentityinfo";
@@ -29,6 +31,8 @@ class CodeService extends RService
     public $user_id;
     
     public $entity_id;
+    
+    public $entity_type_id;
     
     private $codeDao;
     
@@ -51,10 +55,22 @@ class CodeService extends RService
             ['entity_id', 'integer'],
             ['entity_id', 'required', 'on' => [self::GET_ENTITY_INFO_WITH_CHILD, 
                                                 self::GET_ENTITY_INFO,
-                                                self::GET_SUB_CODE]]
+                                                self::GET_SUB_CODE]],
+            
+            ['entity_type_id', 'integer'],
+            ['entity_type_id', 'required', 'on' => [ self::GET_ENTITY_TYPE_INFO
+                                                    ]]
         ];
     }
     
+    public function getEntityTypeInfo() {
+        $this->setScenario(self::GET_ENTITY_TYPE_INFO);
+        if(!$this->validate()) {
+            return null;
+        }
+        
+        return $this->entityDao->getEntityTypeInfo($this->entity_type_id);
+    }
     public function getEntityInfo() {
         $this->setScenario(self::GET_ENTITY_INFO);
         if(!$this->validate()) {
@@ -178,6 +194,8 @@ class CodeService extends RService
             $model['id'] = $vo->getId();
             $model['name'] = $vo->getName();
             $model['description'] = $vo->getDescription();
+            $model['status'] = $vo->getStatusText();
+            $model['active'] = $vo->isActive();
             $models[] = $model;
         }
         return new ArrayDataProvider([

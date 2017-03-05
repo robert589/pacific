@@ -21,6 +21,7 @@ import {AssignCodeToShip} from './assign-code-to-ship';
 import {EditShip} from './edit-ship';
 import {AddEntityRelation} from './add-entity-relation';
 import {EditCode} from './edit-code';
+import {EditCodeType} from './edit-code-type';
 
 export class App extends Component{
 
@@ -69,6 +70,8 @@ export class App extends Component{
     editShip  :EditShip;
 
     addEntityRelation : AddEntityRelation;
+
+    editCodeType : EditCodeType;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -126,6 +129,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('edit-code').length !== 0) {
             this.editCode = new EditCode(document.getElementById("cec"));
+        }
+        else if(this.root.getElementsByClassName('edit-code-type').length !== 0) {
+            this.editCodeType = new EditCodeType(document.getElementById("cect"));
         }
         else if(this.root.getElementsByClassName('custom-transaction').length !== 0) {
             this.customTransact = new CustomTransaction(document.getElementById("tct"));

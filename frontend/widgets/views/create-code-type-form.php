@@ -13,10 +13,14 @@
                     . '/code/p-create-type', 
         'widget_class' => 'form cct-form' , 'enable_button' => false
         ]) ?>   
-    <?= InputField::widget(['id' => $id . '-name', 'placeholder' => 'Nama', 'name' => 'name']) ?>
+    <div class="form-field">
+        <?= InputField::widget(['id' => $id . '-name', 'placeholder' => 'Nama', 'name' => 'name']) ?>
+    </div>
     
-    <?= TextAreaField::widget(['id' => $id . '-desc', 'placeholder' => 'Keterangan', 'rows' => 3, 'name' => 'description']) ?>
-
+    <div class="form-field">
+        <?= TextAreaField::widget(['id' => $id . '-desc', 'placeholder' => 'Keterangan',
+                            'rows' => 3, 'name' => 'description']) ?>
+    </div>
     <?= Button::widget(['id' => $id . '-submit-btn' , 
         'text' => 'Add', 'newClass' => 'form-submit']) ?>
 <?php Form::end() ?>
