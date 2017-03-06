@@ -39,7 +39,8 @@
 .as-form{display:-ms-flexbox;display:flex;margin-top:16px}.as-form>.button{-ms-flex-item-align:end;align-self:flex-end;max-width:60px;height:40px}.as-form>.form-field{margin-right:8px}.as-form-switch{height:42px;margin:0 8px 0 0;-ms-flex-item-align:end;align-self:flex-end}
 .at-form{display:-ms-flexbox;display:flex;margin-top:16px}.at-form>.button{-ms-flex-item-align:end;align-self:flex-end;max-width:60px;height:40px}.at-form>.form-field{margin-right:8px;margin-bottom:0}
 
-.au-form>.text-area-field{margin-bottom:8px}
+.au-form{max-width:500px}
+
 
 
 .astock-form{max-width:500px}
@@ -100,6 +101,7 @@
 
 
 .supplier-list-add{width:180px;float:right}
+
 .login{display:table;position:absolute;left:0;bottom:0;top:0;right:0;max-width:300px;min-width:300px;margin:auto;background:#fff;padding:8px}.login-heading{margin-top:4px;text-align:center;background:#0b83c8;color:#fff;padding-top:10px;padding-bottom:10px;-webkit-border-top-left-radius:4px;-webkit-border-top-right-radius:4px;-moz-border-radius-topleft:4px;-moz-border-radius-topright:4px;border-top-left-radius:4px;border-top-right-radius:4px}
 
 .news-item{margin-bottom:16px}.news-item-item{margin-left:8px}.news-item-footer{font-weight:700}
@@ -132,5 +134,6 @@
 
 .transaction-item-field,.transaction-item-remove{padding:8px;border:1px solid #000}.transaction-item-view{display:-ms-flexbox;display:flex}.transaction-item-field{word-break:break-all;width:100%}
 .transaction-view-action,.transaction-view-footer,.transaction-view-header{display:-ms-flexbox;display:flex}.transaction-view-header-field{width:100%;padding:8px;background:#d3d3d3;border:1px solid #000}.transaction-view-date{text-align:center;font-weight:700;font-size:18px;margin-bottom:8px}.transaction-view-title{text-align:center;font-weight:700;font-size:24px}.transaction-view-action>.button{width:160px}.transaction-view-footer-item2,.transaction-view-footer-item3{padding:8px;border:1px solid #000;width:100%}.transaction-view-footer-item3{background:orange;font-weight:700}.transaction-view-area{margin:16px 0 0}
+
 
 .wholesale-field-field{display:-ms-flexbox;display:flex}.wholesale-field-field-item{width:100%;margin-right:16px}

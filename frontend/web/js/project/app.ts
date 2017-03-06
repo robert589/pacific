@@ -23,6 +23,7 @@ import {AddEntityRelation} from './add-entity-relation';
 import {ListUser} from './list-user';
 import {EditCode} from './edit-code';
 import {EditCodeType} from './edit-code-type';
+import {AddUser} from "./add-user";
 
 export class App extends Component{
 
@@ -75,6 +76,8 @@ export class App extends Component{
     addEntityRelation : AddEntityRelation;
 
     editCodeType : EditCodeType;
+
+    addUser : AddUser;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -150,6 +153,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('edit-ship').length !== 0) {
             this.editShip = new EditShip(document.getElementById("ses"));
+        }
+        else if(this.root.getElementsByClassName('add-user').length !== 0) {
+            this.addUser = new AddUser(document.getElementById("uau"));
         }
         else if(this.root.getElementsByClassName('aer').length !== 0) {
             this.addEntityRelation = new AddEntityRelation(document.getElementById("caer"));

@@ -96,7 +96,7 @@ AppAsset::register($this);
                                         'href' => '#',
                                         'items' => [
                                             ['label' => 'Daftar Pengguna', 'href' => Yii::$app->request->baseUrl . "/user/list"],
-                                            ['label' => 'Daftar Jabatan', 'href' => Yii::$app->request->baseUrl . "/user/role-list"]
+                                            ['label' => 'Daftar Jabatan', 'href' => Yii::$app->request->baseUrl . "/user/role"]
                                         ]
                                     ],
                                     [

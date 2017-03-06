@@ -3013,11 +3013,15 @@ define("project/list-user", ["require", "exports", "common/component", "common/s
         __extends(ListUser, _super);
         function ListUser(root) {
             var _this = _super.call(this, root) || this;
+            _this.roleBtn = new button_20.Button(document.getElementById(_this.id + "-role"), _this.redirectToRole.bind(_this));
             _this.addBtn = new button_20.Button(document.getElementById(_this.id + "-add"), _this.redirectToAdd.bind(_this));
             return _this;
         }
         ListUser.prototype.redirectToAdd = function () {
             window.location.href = system_24.System.getBaseUrl() + "/user/add";
+        };
+        ListUser.prototype.redirectToRole = function () {
+            window.location.href = system_24.System.getBaseUrl() + "/user/role-list";
         };
         ListUser.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
@@ -3155,7 +3159,66 @@ define("project/edit-code-type", ["require", "exports", "common/component", "pro
     }(component_38.Component));
     exports.EditCodeType = EditCodeType;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type"], function (require, exports, component_39, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_27, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1) {
+define("project/add-user-form", ["require", "exports", "common/form", "common/input-field", "common/system"], function (require, exports, form_18, input_field_22, system_27) {
+    "use strict";
+    var AddUserForm = (function (_super) {
+        __extends(AddUserForm, _super);
+        function AddUserForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_27.System.getBaseUrl() + "/user/list";
+            }.bind(_this);
+            return _this;
+        }
+        AddUserForm.prototype.rules = function () {
+            this.setRequiredField([this.firstNameField, this.emailField, this.passwordField]);
+            this.registerFields([this.firstNameField, this.lastNameField, this.emailField, this.passwordField]);
+        };
+        AddUserForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.firstNameField = new input_field_22.InputField(document.getElementById(this.id + "-first-name"));
+            this.lastNameField = new input_field_22.InputField(document.getElementById(this.id + "-last-name"));
+            this.emailField = new input_field_22.InputField(document.getElementById(this.id + "-email"));
+            this.passwordField = new input_field_22.InputField(document.getElementById(this.id + "-password"));
+        };
+        AddUserForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddUserForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddUserForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddUserForm;
+    }(form_18.Form));
+    exports.AddUserForm = AddUserForm;
+});
+define("project/add-user", ["require", "exports", "common/component", "project/add-user-form"], function (require, exports, component_39, add_user_form_1) {
+    "use strict";
+    var AddUser = (function (_super) {
+        __extends(AddUser, _super);
+        function AddUser(root) {
+            return _super.call(this, root) || this;
+        }
+        AddUser.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new add_user_form_1.AddUserForm(document.getElementById(this.id + "-form"));
+        };
+        AddUser.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddUser.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddUser.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddUser;
+    }(component_39.Component));
+    exports.AddUser = AddUser;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user"], function (require, exports, component_40, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_28, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -3234,6 +3297,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('edit-ship').length !== 0) {
                 this.editShip = new edit_ship_1.EditShip(document.getElementById("ses"));
             }
+            else if (this.root.getElementsByClassName('add-user').length !== 0) {
+                this.addUser = new add_user_1.AddUser(document.getElementById("uau"));
+            }
             else if (this.root.getElementsByClassName('aer').length !== 0) {
                 this.addEntityRelation = new add_entity_relation_1.AddEntityRelation(document.getElementById("caer"));
             }
@@ -3250,7 +3316,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_27.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_28.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };
@@ -3261,7 +3327,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_39.Component));
+    }(component_40.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

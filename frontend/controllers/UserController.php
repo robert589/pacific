@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\SignupForm;
 use frontend\models\ChangePasswordForm;
 use Yii;
 use yii\web\Controller;
@@ -40,11 +41,25 @@ class UserController extends Controller
     }
     
     public function actionAdd() {
+        return $this->render('add-user', ['id' => 'uau']);
+    }
+    
+    public function actionPAdd() {
+        $model =new SignupForm();
+        $model->first_name = filter_input(INPUT_POST, "first_name");
+        $model->last_name = filter_input(INPUT_POST, "last_name");
+        $model->email = filter_input(INPUT_POST, "email");
+        $model->password = filter_input(INPUT_POST, "password");
+        
+        $data['status'] = $model->signup()  ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
         
     }
     
     public function actionRole() {
-        
+        return $this->render('list-role', ['id' => 'ulr']);
     }
+    
 }
 

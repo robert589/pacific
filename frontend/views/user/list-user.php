@@ -5,6 +5,7 @@
 <div id="<?= $id ?>" class="list-user view">
     <div class="view-header">
         Daftar Pengguna
+        <?= Button::widget(['id' => $id . '-role', 'text' => 'Daftar Role', 'newClass' => 'view-header-btn']) ?>
         <?= Button::widget(['id' => $id . '-add', 'text' => 'Tambah Pengguna', 'newClass' => 'view-header-btn']) ?>
     </div>
 
