@@ -24,6 +24,8 @@ import {ListUser} from './list-user';
 import {EditCode} from './edit-code';
 import {EditCodeType} from './edit-code-type';
 import {AddUser} from "./add-user";
+import {ListRole} from './list-role';
+import {AddRole} from './add-role';
 
 export class App extends Component{
 
@@ -57,6 +59,8 @@ export class App extends Component{
 
     listUser : ListUser;
 
+    listRole : ListRole;
+
     createCodeType : CreateCodeType;
 
     createCode : CreateCode;
@@ -78,6 +82,8 @@ export class App extends Component{
     editCodeType : EditCodeType;
 
     addUser : AddUser;
+
+    addRole : AddRole;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -127,6 +133,9 @@ export class App extends Component{
         else if(this.root.getElementsByClassName('list-code-type').length !== 0) {
             this.listCodeType = new ListCodeType(document.getElementById("clct"));
         }
+        else if(this.root.getElementsByClassName('list-role').length !== 0) {
+            this.listRole = new ListRole(document.getElementById("ulr"));
+        }
         else if(this.root.getElementsByClassName('list-user').length !== 0) {
             this.listUser = new ListUser(document.getElementById("ulu"));
         }
@@ -135,6 +144,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('create-code').length !== 0) {
             this.createCode = new CreateCode(document.getElementById("ccc"));
+        }
+        else if(this.root.getElementsByClassName('add-role').length !== 0) {
+            this.addRole = new AddRole(document.getElementById('uar'));
         }
         else if(this.root.getElementsByClassName('edit-code').length !== 0) {
             this.editCode = new EditCode(document.getElementById("cec"));

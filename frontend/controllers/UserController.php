@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\AddRoleForm;
 use frontend\models\SignupForm;
 use frontend\models\ChangePasswordForm;
 use Yii;
@@ -57,8 +58,29 @@ class UserController extends Controller
         
     }
     
+    public function actionAddRole() {
+        return $this->render('add-role', ['id' => 'uar']);
+    }
+    
+    public function actionPAddRole() {
+        $model = new AddRoleForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $valid = $model->add();
+        $data['status'] = $valid ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
     public function actionRole() {
-        return $this->render('list-role', ['id' => 'ulr']);
+        $provider = $this->service->getRoleList();
+        if(!$provider) {
+        
+            return $this->redirect(['site/error']);
+        }
+        return $this->render('list-role', ['id' => 'ulr', 'provider' => $provider]);
+        
+        
     }
     
 }

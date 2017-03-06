@@ -2,6 +2,7 @@
 namespace frontend\daos;
 
 use Yii;
+use frontend\vos\RoleVo;
 use frontend\vos\UserVo;
 use common\components\Dao;
 /**
@@ -11,6 +12,9 @@ class UserDao implements Dao
 {
     const GET_USER_LIST = "SELECT user.* from user";
     
+    const GET_ROLE_LIST = "select role.* from role";
+    
+    
     public function getUserList() {
         $results = \Yii::$app->db
             ->createCommand(self::GET_USER_LIST)
@@ -19,6 +23,21 @@ class UserDao implements Dao
         $vos = [];
         foreach($results as $result) {
             $builder = UserVo::createBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        
+        return $vos;
+    }
+    
+    public function getRoleList() {
+        $results = \Yii::$app->db
+            ->createCommand(self::GET_ROLE_LIST)
+            ->queryAll();
+            
+        $vos = [];
+        foreach($results as $result) {
+            $builder = RoleVo::createBuilder();
             $builder->loadData($result);
             $vos[] = $builder->build();
         }

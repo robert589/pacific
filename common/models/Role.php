@@ -9,6 +9,9 @@ use yii\behaviors\TimestampBehavior;
  */
 class Role extends ActiveRecord
 {
+    const STATUS_DELETED = 0;
+    const STATUS_ACTIVE = 10;
+    
     public static function tableName()
     {
         return '{{%role}}';
@@ -25,5 +28,11 @@ class Role extends ActiveRecord
         ];
     }
 
+    public static function getStatus() {
+        return [
+            self::STATUS_ACTIVE => "active",
+            self::STATUS_DELETED => "removed"
+        ];
+    }
 
 }
