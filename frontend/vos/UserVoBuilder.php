@@ -23,7 +23,9 @@ class UserVoBuilder extends RVoBuilder
     public $address;
 
     public $telephone;
-
+    
+    public $status;
+    
     public function rules() { 
         return [
            ['id','string'],
@@ -31,7 +33,8 @@ class UserVoBuilder extends RVoBuilder
            ['lastName','string'],
            ['address','string'],
            ['telephone','string'],
-            ['email', 'string']
+            ['email', 'string'],
+            ['status', 'string']
         ];
     }
 
@@ -85,6 +88,14 @@ class UserVoBuilder extends RVoBuilder
 
     function setEmail($email) {
         $this->email = $email;
+    }
+
+    function getStatus() {
+        return $this->status;
+    }
+
+    function setStatus($status) {
+        $this->status = $status;
     }
 
 

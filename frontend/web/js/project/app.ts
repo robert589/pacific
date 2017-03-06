@@ -20,6 +20,7 @@ import {ChangePassword} from './change-password';
 import {AssignCodeToShip} from './assign-code-to-ship';
 import {EditShip} from './edit-ship';
 import {AddEntityRelation} from './add-entity-relation';
+import {ListUser} from './list-user';
 import {EditCode} from './edit-code';
 import {EditCodeType} from './edit-code-type';
 
@@ -52,6 +53,8 @@ export class App extends Component{
     listCode : ListCode;
 
     listCodeType : ListCodeType;
+
+    listUser : ListUser;
 
     createCodeType : CreateCodeType;
 
@@ -120,6 +123,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('list-code-type').length !== 0) {
             this.listCodeType = new ListCodeType(document.getElementById("clct"));
+        }
+        else if(this.root.getElementsByClassName('list-user').length !== 0) {
+            this.listUser = new ListUser(document.getElementById("ulu"));
         }
         else if(this.root.getElementsByClassName('create-codetype').length !== 0) {
             this.createCodeType = new CreateCodeType(document.getElementById("ccct"));

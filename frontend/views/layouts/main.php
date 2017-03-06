@@ -95,8 +95,8 @@ AppAsset::register($this);
                                         'label' => 'Pengguna',
                                         'href' => '#',
                                         'items' => [
-                                            ['label' => 'Pemilik Kapal', 'href' => Yii::$app->request->baseUrl . "/owner/index"],
-                                            ['label' => 'Karyawan', 'href' => Yii::$app->request->baseUrl . "/employee/index"]
+                                            ['label' => 'Daftar Pengguna', 'href' => Yii::$app->request->baseUrl . "/user/list"],
+                                            ['label' => 'Daftar Jabatan', 'href' => Yii::$app->request->baseUrl . "/user/role-list"]
                                         ]
                                     ],
                                     [

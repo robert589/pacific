@@ -1,6 +1,7 @@
 <?php
 namespace frontend\vos;
 
+use common\models\User;
 use yii\db\ActiveRecord;
 use common\components\RVo;
 /**
@@ -23,7 +24,9 @@ class UserVo implements RVo
     private $telephone;
     
     private $email;
-
+    
+    private $status;
+    
     public function __construct(UserVoBuilder $builder) { 
         $this->id = $builder->getId(); 
         $this->firstName = $builder->getFirstName(); 
@@ -31,7 +34,7 @@ class UserVo implements RVo
         $this->address = $builder->getAddress(); 
         $this->telephone = $builder->getTelephone(); 
         $this->email = $builder->getEmail();
-            
+        $this->status = $builder->getStatus();
     }
     
     public function getEmail() {
@@ -65,5 +68,13 @@ class UserVo implements RVo
             return null;
         }
         return $this->firstName . ' ' . $this->lastName; 
+    }
+    
+    public function getStatus() {
+        return $this->status;
+    }
+    
+    public function getStatusText() {
+        return User::getStatus()[$this->status];
     }
 }
