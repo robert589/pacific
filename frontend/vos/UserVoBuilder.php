@@ -26,6 +26,8 @@ class UserVoBuilder extends RVoBuilder
     
     public $status;
     
+    public $roles;
+    
     public function rules() { 
         return [
            ['id','string'],
@@ -97,6 +99,16 @@ class UserVoBuilder extends RVoBuilder
     function setStatus($status) {
         $this->status = $status;
     }
+    
+    function getRoles() {
+        return $this->roles;
+    }
+
+    function setRoles($roles) {
+        $this->roles = $roles;
+    }
+
+
 
 
 }

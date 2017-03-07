@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\RemoveRoleFromUserForm;
 use frontend\models\AddRoleToUserForm;
 use common\widgets\SearchFieldDropdownItem;
 use frontend\models\AddRoleForm;
@@ -113,6 +114,17 @@ class UserController extends Controller
         $data['status'] = $valid ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
         return json_encode($data);
+    }
+    
+    public function actionRemoveRole() {
+        $model = new RemoveRoleFromUserForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $valid = $model->remove();
+        $data['status'] = $valid ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+        
     }
     
 }

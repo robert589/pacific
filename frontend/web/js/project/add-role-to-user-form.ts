@@ -11,7 +11,7 @@ export class AddRoleToUserForm extends Form{
     constructor(root: HTMLElement) {
         super(root);
         this.successCb = function(data) {
-            window.location.reload();
+            window.location.reload();   
         }
     }
 

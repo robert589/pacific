@@ -27,6 +27,8 @@ class UserVo implements RVo
     
     private $status;
     
+    private $roles;
+    
     public function __construct(UserVoBuilder $builder) { 
         $this->id = $builder->getId(); 
         $this->firstName = $builder->getFirstName(); 
@@ -34,6 +36,7 @@ class UserVo implements RVo
         $this->address = $builder->getAddress(); 
         $this->telephone = $builder->getTelephone(); 
         $this->email = $builder->getEmail();
+        $this->roles = $builder->getRoles();
         $this->status = $builder->getStatus();
     }
     
@@ -80,5 +83,9 @@ class UserVo implements RVo
 
     public function isActive() {
         return intval($this->status) === intval(User::STATUS_ACTIVE);
+    }
+    
+    public function getRoles() {
+        return $this->roles;
     }
 }

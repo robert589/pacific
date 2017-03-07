@@ -70,6 +70,7 @@ class UserService extends RService
             $model['id'] = $vo->getId();
             $model['active'] = $vo->isActive() ? 1 : 0;
             $model['name'] = $vo->getName();
+            $model['roles'] = $vo->getRoles();
             $model['status'] = $vo->getStatusText();
             $models[] = $model;
             

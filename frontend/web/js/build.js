@@ -3106,6 +3106,11 @@ define("project/list-user", ["require", "exports", "common/component", "common/s
             var _this = _super.call(this, root) || this;
             _this.roleBtn = new button_21.Button(document.getElementById(_this.id + "-role"), _this.redirectToRole.bind(_this));
             _this.addBtn = new button_21.Button(document.getElementById(_this.id + "-add"), _this.redirectToAdd.bind(_this));
+            _this.removeRoleBtns = [];
+            var removeRoleBtnsRaw = _this.root.getElementsByClassName('list-user-remove-role-btn');
+            for (var i = 0; i < removeRoleBtnsRaw.length; i++) {
+                _this.removeRoleBtns.push(new button_21.Button(removeRoleBtnsRaw.item(i), _this.showRemoveRoleDialog.bind(_this, removeRoleBtnsRaw.item(i))));
+            }
             return _this;
         }
         ListUser.prototype.redirectToAdd = function () {
@@ -3113,6 +3118,30 @@ define("project/list-user", ["require", "exports", "common/component", "common/s
         };
         ListUser.prototype.redirectToRole = function () {
             window.location.href = system_24.System.getBaseUrl() + "/user/role";
+        };
+        ListUser.prototype.showRemoveRoleDialog = function (raw) {
+            system_24.System.showConfirmDialog(this.removeRole.bind(null, raw), "Are you sure", "Are you sure to remove the role?");
+        };
+        ListUser.prototype.removeRole = function (raw) {
+            var user_id = raw.getAttribute('data-user-id');
+            var role_id = raw.getAttribute('data-role-id');
+            var data = {};
+            data['target_user_id'] = user_id;
+            data['role_id'] = role_id;
+            $.ajax({
+                url: system_24.System.getBaseUrl() + "/user/remove-role",
+                data: system_24.System.addCsrf(data),
+                context: this,
+                dataType: "json",
+                method: "post",
+                success: function (data) {
+                    if (data.status) {
+                        window.location.reload();
+                    }
+                },
+                error: function (data) {
+                }
+            });
         };
         ListUser.prototype.decorate = function () {
             _super.prototype.decorate.call(this);

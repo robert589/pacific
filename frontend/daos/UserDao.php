@@ -4,6 +4,7 @@ namespace frontend\daos;
 use common\models\Admin;
 use common\models\Owner;
 use Yii;
+use common\models\Role;
 use frontend\vos\RoleVo;
 use frontend\vos\UserVo;
 use common\components\Dao;
@@ -24,6 +25,12 @@ class UserDao implements Dao
                        left join admin
                        on user.id = admin.id
                        where user.id = :user_id";
+    
+    const GET_ROLES = "select role.*
+                        from role, user_role
+                        where role.id = user_role.role_id and 
+                            user_role.user_id = :user_id and
+                            user_role.status = :role_status";
     
     const SEARCH_ROLE = "SELECT role.*
                         from role 
@@ -48,6 +55,23 @@ class UserDao implements Dao
         return $vos;
     }
     
+    public function getRoles($userId, $roleStatus = Role::STATUS_ACTIVE) {
+        $results = \Yii::$app->db
+             ->createCommand(self::GET_ROLES)
+             ->bindParam(':role_status', $roleStatus)
+             ->bindParam(':user_id', $userId)
+             ->queryAll();
+        
+        $vos = [];
+
+        foreach($results as $result) {
+            $builder = RoleVo::createBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        
+        return $vos;
+    }
     
     public function getRole($userId) {
           $admin =  Admin::GET_ROLE;
@@ -91,6 +115,7 @@ class UserDao implements Dao
         foreach($results as $result) {
             $builder = UserVo::createBuilder();
             $builder->loadData($result);
+            $builder->setRoles($this->getRoles($builder->getId()));
             $vos[] = $builder->build();
         }
         

@@ -1,4 +1,5 @@
 <?php
+    use frontend\vos\RoleVo;
     use common\widgets\Button;
     use yii\grid\GridView;
     use frontend\widgets\AddRoleToUserFormBtnc;
@@ -16,6 +17,36 @@
                 'id',
                 'name',
                 'status',
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'header'=>'Roles',    
+                    'template' => '{roles}',
+                    'buttons' => [
+                        //view button
+                        'roles' => function ($url, $model) {
+                            /* @var $roles RoleVo[] */
+                            $roles = $model['roles'];
+                            $views = "";
+                            foreach($roles as $role) {
+                                $name = $role->getName();
+                                $view = "<span class='list-user-remove-role'>$name";
+                                $view .= Button::widget(['id' => 'list-user' . $model['id'] . $role->getId(), 
+                                                'newClass' => 'list-user-remove-role-btn',
+                                                'color' => Button::NONE_COLOR,
+                                                'text' => "<span class='glyphicon glyphicon-remove'></span>",
+                                                'options' => [
+                                                    'data-user-id' => $model['id'],
+                                                    'data-role-id' => $role->getId()
+                                                ]]);
+                                $view .= "</span>";
+                                $views .= $view;
+                            }
+                            
+                            return $views;
+                        }
+                    ],
+
+                ],
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'header'=>'Actions',    

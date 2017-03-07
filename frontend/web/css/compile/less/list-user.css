@@ -1,0 +1,11 @@
+.list-user-remove-role {
+  position: relative;
+  margin-right: 4px;
+  background: lightblue;
+  padding: 8px;
+  border-radius: 4px;
+  color: white;
+}
+.list-user-remove-role-btn {
+  padding: 0;
+}

@@ -11,6 +11,9 @@ export class ListUser extends Component{
     roleBtn : Button;
 
     artufbs : AddRoleToUserFormBtnc[];
+
+    removeRoleBtns : Button[];
+
     redirectToAdd() {
         window.location.href = System.getBaseUrl() + "/user/add";
     }
@@ -24,6 +27,44 @@ export class ListUser extends Component{
         super(root);
         this.roleBtn = new Button(document.getElementById(this.id + "-role"), this.redirectToRole.bind(this));
         this.addBtn = new Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+
+        this.removeRoleBtns = [];
+        let removeRoleBtnsRaw : NodeListOf<Element> = this.root.getElementsByClassName('list-user-remove-role-btn');
+        for(let i = 0; i < removeRoleBtnsRaw.length ; i++) {
+            this.removeRoleBtns.push(new Button(<HTMLElement>removeRoleBtnsRaw.item(i), 
+                                                this.showRemoveRoleDialog.bind(this, <HTMLElement>removeRoleBtnsRaw.item(i))));
+        }
+    }
+
+    showRemoveRoleDialog(raw : HTMLElement) {
+        System.showConfirmDialog(this.removeRole.bind(null, raw)
+            , "Are you sure", "Are you sure to remove the role?");        
+        
+    }
+
+    removeRole(raw : HTMLElement) {
+        let user_id = raw.getAttribute('data-user-id');
+        let role_id = raw.getAttribute('data-role-id');
+        let data : Object = {};
+        
+        data['target_user_id'] = user_id;
+        data['role_id'] = role_id;
+
+        $.ajax({
+            url : System.getBaseUrl() + "/user/remove-role",
+            data : System.addCsrf(data),
+            context : this,
+            dataType : "json",
+            method  : "post",
+            success : function(data) {
+                if(data.status) {
+                    window.location.reload();
+                }
+            },
+            error : function(data) {
+            }
+        });
+    
     }
     
     decorate() {

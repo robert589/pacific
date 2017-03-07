@@ -1,13 +1,13 @@
 <?php
 namespace frontend\models;
 
-use common\models\UserRole;
 use common\components\RModel;
+use common\models\UserRole;
 /**
- * AddRoleToUserForm model
+ * RemoveRoleFromUserForm model
  *
  */
-class AddRoleToUserForm extends RModel
+class RemoveRoleFromUserForm extends RModel
 {
 
     //attributes
@@ -16,8 +16,8 @@ class AddRoleToUserForm extends RModel
     public $role_id;
 
     public $target_user_id;
-    
-    public function init() {
+
+        public function init() {
         
     }
     
@@ -34,29 +34,27 @@ class AddRoleToUserForm extends RModel
         ];
     }
     
-    public function add() {
+    public function remove() {
         if(!$this->validate()) {
             return null;
         }
         
         $userRole = $this->findUserRole();
-        if($userRole && intval($userRole->status) === intval(UserRole::STATUS_ACTIVE)) {
+        if(!$userRole) {
             return true;
         }
         
-        if($userRole && intval($userRole->status) !== intval(UserRole::STATUS_ACTIVE)) {
-            $userRole->status = UserRole::STATUS_ACTIVE;
-            return $userRole->update();
+        if(intval($userRole->status) === UserRole::STATUS_DELETED ) {
+            return true;
         }
         
-        $userRole = new UserRole();
-        $userRole->user_id = $this->target_user_id;
-        $userRole->role_id = $this->role_id;
-        $userRole->status = UserRole::STATUS_ACTIVE;
-        return $userRole->save();
+        $userRole->status = UserRole::STATUS_DELETED;
+        
+        return $userRole->update();
     }
     
     private function findUserRole() {
         return UserRole::find()->where(['user_id' => $this->target_user_id, 'role_id' => $this->role_id])->one();
     }
+
 }
