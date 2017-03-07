@@ -45,7 +45,7 @@ class AddRoleForm extends RModel
         $role = new Role();
         $role->name = $this->name;
         $role->description = $this->description;
-        
+        $role->status = Role::STATUS_ACTIVE;
         return $role->save();
     }
 }

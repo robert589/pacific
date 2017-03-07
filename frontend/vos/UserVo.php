@@ -77,4 +77,8 @@ class UserVo implements RVo
     public function getStatusText() {
         return User::getStatus()[$this->status];
     }
+
+    public function isActive() {
+        return intval($this->status) === intval(User::STATUS_ACTIVE);
+    }
 }

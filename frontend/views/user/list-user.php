@@ -1,6 +1,7 @@
 <?php
     use common\widgets\Button;
     use yii\grid\GridView;
+    use frontend\widgets\AddRoleToUserFormBtnc;
 ?>
 <div id="<?= $id ?>" class="list-user view">
     <div class="view-header">
@@ -14,7 +15,25 @@
             'columns' => [
                 'id',
                 'name',
-                'status'
+                'status',
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'header'=>'Actions',    
+                    'template' => '{add_role}',
+                    'urlCreator' => function ($action, $model, $key, $index) {
+                        
+                    },
+                    'buttons' => [
+                        //view button
+                        'add_role' => function ($url, $model) {
+                            if($model['active']) {
+                                return AddRoleToUserFormBtnc::widget(['id' => 'artufb-' . $model['id']]);
+                            }
+                        }
+                    ],
+
+                ]
+
             ]
         ]); ?>
     
