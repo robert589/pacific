@@ -9,6 +9,12 @@ class BtnContainer extends Widget {
     
     public $btnText;
    
+    public $btnNewClass;
+    
+    public $color;
+    
+    public $newClass;
+    
     public function init() {
         parent::init();
         ob_start();
@@ -17,6 +23,10 @@ class BtnContainer extends Widget {
     public function run() {
         $content = ob_get_clean();
         return $this->render('btn-container', 
-                ['id' => $this->id, 'content' => $content, 'btnText' => $this->btnText]);
+                ['id' => $this->id, 'content' => $content, 
+                    'btnNewClass' => $this->btnNewClass,
+                    'color' => $this->color,
+                    'newClass' => $this->newClass,
+                    'btnText' => $this->btnText]);
     }
 }

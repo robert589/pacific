@@ -1,0 +1,11 @@
+.btnc {
+  position: relative;
+}
+.btnc-area {
+  position: absolute;
+  margin-top: 16px;
+  background: white;
+  z-index: 1;
+  border: 2px solid red;
+  padding: 8px;
+}

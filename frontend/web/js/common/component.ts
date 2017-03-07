@@ -40,6 +40,10 @@ export abstract class Component {
         return this.root;
     }
 
+    getId() {
+        return this.id;
+    }
+    
     removeClass(className : string) {
         this.root.classList.remove(className);
     }

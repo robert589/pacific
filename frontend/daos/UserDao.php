@@ -15,6 +15,7 @@ class UserDao implements Dao
     const GET_USER_LIST = "SELECT user.* from user";
     
     const GET_ROLE_LIST = "select role.* from role";
+    
     const GET_ROLE = "SELECT (owner.id is not null) as :owner,
                              (admin.id is not null )as :admin
                        FROM user
@@ -23,9 +24,32 @@ class UserDao implements Dao
                        left join admin
                        on user.id = admin.id
                        where user.id = :user_id";
- 
- 
-     public function getRole($userId) {
+    
+    const SEARCH_ROLE = "SELECT role.*
+                        from role 
+                         where role.name LIKE :query
+                         limit 4";
+    
+    public function searchRole($q) {
+        $q = '%' . $q . '%';
+        $results =  \Yii::$app->db
+            ->createCommand(self::SEARCH_ROLE)
+            ->bindParam(':query', $q)
+            ->queryAll();
+        
+        $vos = [];
+        
+        foreach($results as $result) {
+            $builder = RoleVo::createBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        
+        return $vos;
+    }
+    
+    
+    public function getRole($userId) {
           $admin =  Admin::GET_ROLE;
           $owner = Owner::GET_ROLE;
           $result = \Yii::$app->db

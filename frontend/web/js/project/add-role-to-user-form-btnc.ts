@@ -1,7 +1,9 @@
-import {Component} from '../common/component';
+import {BtnContainer} from '../common/btn-container';
+import {AddRoleToUserForm} from './add-role-to-user-form';
 
+export class AddRoleToUserFormBtnc extends BtnContainer{
 
-export class AddRoleToUserFormBtnc extends Component{
+    form : AddRoleToUserForm;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -9,7 +11,7 @@ export class AddRoleToUserFormBtnc extends Component{
     
     decorate() {
         super.decorate();
-        
+        this.form = new AddRoleToUserForm(document.getElementById(this.id + "-form"));    
     }
     
     bindEvent() {

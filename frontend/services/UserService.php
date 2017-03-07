@@ -85,4 +85,11 @@ class UserService extends RService
         ]);
     }
     
+    public function searchRole($q) {
+        if(!$this->validate()) {
+            return null;
+        }
+        
+        return $this->userDao->searchRole($q);
+    }
 }

@@ -27,7 +27,10 @@
                         //view button
                         'add_role' => function ($url, $model) {
                             if($model['active']) {
-                                return AddRoleToUserFormBtnc::widget(['id' => 'artufb-' . $model['id']]);
+                                return AddRoleToUserFormBtnc::widget(
+                                        ['id' => 'artufb-' . $model['id'],  
+                                            'userId' => $model['id'],
+                                            'newClass' => 'list-user-artufb']);
                             }
                         }
                     ],

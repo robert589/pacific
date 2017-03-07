@@ -2,11 +2,13 @@
   use common\widgets\Button;
 ?>
 
-<div class="btnc" id="<?= $id ?>">
+<div class="btnc <?= $newClass ?>" id="<?= $id ?>">
     <?= Button::widget(['id' => $id . '-btn', 
-                        'text' => $btnText]) ?>
+                        'text' => $btnText,
+                        'color' => $color,
+                        'newClass' => $btnNewClass]) ?>
     
-    <div class="btnc-area">
+    <div class="btnc-area app-hide">
         <?= $content ?>
     </div>
 </div>

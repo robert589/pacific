@@ -226,7 +226,7 @@ export class SearchField extends Field {
     }
 
     setDropdown(views : string) {
-
+        this.emptyDropdown();
         this.dropdown.innerHTML = views;
         let results : NodeListOf<Element> = this.dropdown.getElementsByClassName('sfdi');
         let  i : number;
@@ -237,7 +237,7 @@ export class SearchField extends Field {
             }
             this.items[i].attachEvent(SearchFieldDropdownItem.CLICK_SFDI_EVENT,function(e) {
                 this.setValue(e.detail.itemId, e.detail.text);
-                this.emptyDropdown();
+                this.hideDropdown();
             }.bind(this));
             this.items[i].attachEvent(SearchFieldDropdownItem.HOVER_SFDI_EVENT, 
                             this.removeHoverExcept.bind(this));

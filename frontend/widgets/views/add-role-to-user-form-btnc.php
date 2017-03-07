@@ -7,9 +7,11 @@
 <?php BtnContainer::begin([
         'id' => $id,
         'btnText' => 'Tambah Peran',
-        'newClass' => 'artuf-btnc'
+        'btnNewClass' => 'artuf-btnc button-link',
+        'newClass' => $newClass,
+        'color' => 'none'
     ]); ?>
 
-    <?= AddRoleToUserForm::widget(['id' => $id . '-form']) ?>
+    <?= AddRoleToUserForm::widget(['id' => $id . '-form', 'userId' => $userId]) ?>
 
 <?php BtnContainer::end(); ?>
