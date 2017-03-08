@@ -53,6 +53,9 @@ class TransactionController extends Controller
     }
     
     public function actionIndex() {
+        if(!$this->service->hasDailyTransactionRights()) {
+            return $this->redirect(['site/errors']);
+        }
         return $this->render('daily-transaction' ,['id' => 'tdt']);
     }
     

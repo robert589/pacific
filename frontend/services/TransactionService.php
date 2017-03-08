@@ -7,7 +7,8 @@ use frontend\daos\TransactionDao;
 use frontend\vos\TransactionVoBuilder;
 use common\components\RService;
 use frontend\vos\TransactionVo;
-use common\validators\IsAdminValidator;
+use common\validators\AccessValidator;
+use frontend\constants\AccessConstants;
 /**
  * TransactionService service
  *
@@ -20,6 +21,8 @@ class TransactionService extends RService
     const GET_TRANSACTION_VIEW = "gettransactionview";
     
     const GET_TRANSACTION_INFO = "gettransactioninfo";
+    
+    const CHECK_DAILY_TRANSACTION_RIGHTS = "checkcreatedailytransactionrights";
     
     //attributes
     public $user_id;
@@ -47,6 +50,9 @@ class TransactionService extends RService
         return [
             ['user_id', 'integer'],
             ['user_id', 'required'],
+            ['user_id', AccessValidator::className(), 
+                    'access' => AccessConstants::CREATE_DAILY_TRANSACTION, 
+                    'on' => [self::CHECK_DAILY_TRANSACTION_RIGHTS]],
             
             ['transaction_id', 'integer'],
             ['transaction_id' ,'required', 'on' => self::GET_TRANSACTION_INFO],
@@ -68,6 +74,12 @@ class TransactionService extends RService
                 
         ];
     }
+    
+    public function hasDailyTransactionRights() {
+        $this->setScenario(self::CHECK_DAILY_TRANSACTION_RIGHTS);
+        return $this->validate();
+    }
+    
     public function getDailyView() {
         $this->setScenario(self::GET_DAILY_TRANSACTION_VIEW);
         if(!$this->validate()) {

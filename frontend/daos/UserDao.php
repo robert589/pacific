@@ -1,6 +1,8 @@
 <?php
 namespace frontend\daos;
 
+use common\models\RoleAccessControl;
+use common\libraries\UserLibrary;
 use common\models\Admin;
 use frontend\vos\AccessControlVo;
 use common\models\Owner;
@@ -49,6 +51,12 @@ class UserDao implements Dao
                             where access_control.code LIKE :query  or access_control.name LIKE :query
                             limit 4";
     
+    const GET_RIGHTS = "select distinct access_control.code
+                        from role_access_control, user_role,access_control
+                        where user_role.user_id = :user_id and 
+                            user_role.role_id = role_access_control.role_id and
+                            role_access_control.status = :right_status and
+                            role_access_control.access_control_id = access_control.id ";
     public function searchRole($q) {
         $q = '%' . $q . '%';
         $results =  \Yii::$app->db
@@ -188,6 +196,18 @@ class UserDao implements Dao
         return $vos;
     }
     
+    public function hasRight($code, $user_id) {
+        $rightStatus = RoleAccessControl::STATUS_ACTIVE;
+        $results = \Yii::$app->db
+            ->createCommand(self::GET_RIGHTS)
+            ->bindParam(':user_id', $user_id)
+            ->bindParam(':right_status', $rightStatus)
+            ->queryAll();
+        
+        
+        $rights = array_column($results, "code");
+        return in_array($code, $rights) || UserLibrary::isAdmin($user_id) ? 1 : 0;
+    }
     
 }
 

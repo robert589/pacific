@@ -8,6 +8,8 @@
     <div class="view-header">
         Daftar Peran
         <?= Button::widget(['id' => $id . '-add', 'text' => 'Tambah Peran', 'newClass' => 'view-header-btn']) ?>
+        <?= Button::widget(['id' => $id . '-list-ac', 'text' => 'Lihat Semua Hak Akses', 'newClass' => 'view-header-btn']) ?>
+
     </div>
 
     <?=  GridView::widget(
