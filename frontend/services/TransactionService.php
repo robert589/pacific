@@ -24,6 +24,8 @@ class TransactionService extends RService
     
     const CHECK_DAILY_TRANSACTION_RIGHTS = "checkcreatedailytransactionrights";
     
+    const CHECK_CREATE_CUSTOM_TRANSACTION_RIGHTS = "checkcreatecustomtransactionrights";
+    
     //attributes
     public $user_id;
     
@@ -53,6 +55,9 @@ class TransactionService extends RService
             ['user_id', AccessValidator::className(), 
                     'access' => AccessConstants::CREATE_DAILY_TRANSACTION, 
                     'on' => [self::CHECK_DAILY_TRANSACTION_RIGHTS]],
+            ['user_id', AccessValidator::className(),
+                    'access' => AccessConstants::CREATE_CUSTOM_TRANSACTION,
+                    'on' => [self::CHECK_CREATE_CUSTOM_TRANSACTION_RIGHTS]],
             
             ['transaction_id', 'integer'],
             ['transaction_id' ,'required', 'on' => self::GET_TRANSACTION_INFO],
@@ -73,6 +78,11 @@ class TransactionService extends RService
                 
                 
         ];
+    }
+    
+    public function hasCustomTransactionRights() {
+        $this->setScenario(self::CHECK_CREATE_CUSTOM_TRANSACTION_RIGHTS);
+        return $this->validate();
     }
     
     public function hasDailyTransactionRights() {

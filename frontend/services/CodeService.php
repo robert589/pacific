@@ -6,6 +6,7 @@ use yii\data\ArrayDataProvider;
 use frontend\daos\CodeDao;
 use frontend\daos\EntityDao;
 use common\components\RService;
+use common\libraries\UserLibrary;
 /**
  * CodeService service
  *
@@ -138,7 +139,11 @@ class CodeService extends RService
             return false;
         }
         
-        return $this->codeDao->searchCode($query);
+        if(UserLibrary::isAdmin($this->user_id)) {
+            return $this->codeDao->searchCode($query);   
+        } else {
+            return $this->codeDao->searchCodeByOwner($query, $this->user_id);
+        }
     }
     
     /**

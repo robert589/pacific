@@ -98,6 +98,9 @@ class TransactionController extends Controller
     }
     
     public function actionCustom() {
+        if(!$this->service->hasCustomTransactionRights()) {
+            return $this->redirect(['site/error']);
+        }
         return $this->render('custom-transaction', ['id' => 'tct']);
     }
     

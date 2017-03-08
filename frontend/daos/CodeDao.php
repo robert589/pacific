@@ -39,7 +39,14 @@ class CodeDao implements Dao
                             where (entity.name LIKE :query or entity.code LIKE :query) and
                                         entity.status = :status
                             limit 4";
-                                        
+    
+    const SEARCH_CODE_BY_OWNER = "select entity.*
+                                from entity, entity_owner
+                                where (entity.name LIKE :query or entity.code LIKE :query) and
+                                    entity.status = :status and
+                                    entity.id = entity_owner.entity_id and
+                                    entity_owner.owner_id = :user_id
+                                    limit 4";
     public function getSubcode($entityId, $status = Entity::STATUS_ACTIVE) {
         
         $results = \Yii::$app->db
@@ -73,6 +80,25 @@ class CodeDao implements Dao
         foreach($results as $result) {
             $builder = EntityVo::createBuilder();
             
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        return $vos;    
+    
+    }
+    
+    public function searchCodeByOwner($query, $userId, $status = Entity::STATUS_ACTIVE) {
+        $q = '%' . $query . '%';
+        $results =  \Yii::$app->db
+            ->createCommand(self::SEARCH_CODE_BY_OWNER)
+            ->bindParam(':query', $q)
+            ->bindParam(':user_id', $userId)
+            ->bindParam(':status', $status)
+            ->queryAll();
+        $vos = [];
+        
+        foreach($results as $result) {
+            $builder = EntityVo::createBuilder();
             $builder->loadData($result);
             $vos[] = $builder->build();
         }

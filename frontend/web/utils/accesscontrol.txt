@@ -1,3 +1,8 @@
 dailyTransaction;Buat Transaksi Harian
 createCodeTransaction;Buat Kode Transaksi
+listCodeTransaction;Lihat Kode Transaksi
 createCustomTransaction;Buat Laporan Transaksi
+createDailySelling;Buat Penjualan Harian
+createCustomSellingReport;Buat Laporan Penjualan Kapal
+createUser;Buat Pengguna
+listUser;Lihat Daftar Pengguna

@@ -82,9 +82,13 @@ class CodeController extends Controller
         $data['status'] = 1;
         $views = '';
         $vos = $this->service->searchType($query);
-        foreach($vos as $vo) {
-            $views .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vo->getId(),
-                'itemId' => $vo->getId(), 'text' => $vo->getName()]);
+        if(count($vos) !== 0) {
+            foreach($vos as $vo) {
+                $views .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vo->getId(),
+                    'itemId' => $vo->getId(), 'text' => $vo->getName()]);
+            }   
+        } else {
+            $views = "No Matching found";
         }
         $data['views'] = $views;
         return json_encode($data);
@@ -97,9 +101,13 @@ class CodeController extends Controller
         $data['status'] = 1;
         $views = '';
         $vos = $this->service->search($query);
-        foreach($vos as $vo) {
-            $views .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vo->getId(),
-                'itemId' => $vo->getId(), 'text' => $vo->getCode() . '. ' . $vo->getName()]);
+        if(count($vos) !== 0) {
+            foreach($vos as $vo) {
+                $views .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vo->getId(),
+                    'itemId' => $vo->getId(), 'text' => $vo->getCode() . '. ' . $vo->getName()]);
+            }   
+        } else {
+            $views = "No Matching Found";
         }
         $data['views'] = $views;
         return json_encode($data);
@@ -115,6 +123,7 @@ class CodeController extends Controller
     }
     
     public function actionCreate() {
+        
         return $this->render('create-code', ['id' => 'ccc']);
     }
     
