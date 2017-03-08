@@ -1,5 +1,6 @@
 <?php
     use common\widgets\Button;
+    use frontend\widgets\AssignRightsToRoleFormBtnc;
     use yii\grid\GridView;
 ?>
 <div id="<?= $id ?>" class="list-role view">
@@ -13,7 +14,27 @@
             'columns' => [
                 'id',
                 'name',
-                'status'
+                'status',
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'header'=>'Actions',    
+                    'template' => '{add_rights}',
+                    'urlCreator' => function ($action, $model, $key, $index) {
+                        
+                    },
+                    'buttons' => [
+                        //view button
+                        'add_rights' => function ($url, $model) {
+                            if($model['active']) {
+                                return AssignRightsToRoleFormBtnc::widget(
+                                        ['id' => 'artrfb-' . $model['id'],  
+                                            'roleId' => $model['id'],
+                                            'newClass' => 'list-role-artrfbs']);
+                            }
+                        }
+                    ],
+
+                ]
             ]
         ]); ?>
     

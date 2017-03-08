@@ -61,7 +61,6 @@ AppAsset::register($this);
                       </span>
                 </div>
                 <div class="menu-section clearfix">
-                    <?php if(UserLibrary::isAdmin(\Yii::$app->user->getId())) { ?>
                         <?= Sidebar::widget(['id' => 'cssmenu', 
                                 'items' => [
                                     ['label' => 'Kapal',
@@ -75,9 +74,12 @@ AppAsset::register($this);
                                         'label' => 'Transaksi',
                                         'href' => '#',
                                         'items' => [
-                                            ['label' => 'Transaksi Harian', 'href' => Yii::$app->request->baseUrl . "/transaction/index"],
-                                            ['label' => 'Buat Laporan Transaksi', 'href' => Yii::$app->request->baseUrl . "/transaction/custom"],
-                                            ['label' => 'Kode Transaksi', 'href' => Yii::$app->request->baseUrl . "/code/index"],
+                                            ['label' => 'Transaksi Harian', 
+                                             'href' => Yii::$app->request->baseUrl . "/transaction/index"],
+                                            ['label' => 'Buat Laporan Transaksi', 
+                                             'href' => Yii::$app->request->baseUrl . "/transaction/custom"],
+                                            ['label' => 'Kode Transaksi', 
+                                             'href' => Yii::$app->request->baseUrl . "/code/index"],
                                         ]
 
                                     ],    
@@ -86,8 +88,10 @@ AppAsset::register($this);
                                         'label' => 'Penjualan',
                                         'href' => '#',
                                         'items' => [
-                                            ['label' => 'Buat Penjualan', 'href' => Yii::$app->request->baseUrl . "/selling/index"],
-                                            ['label' => 'Cek Jualan Laporan', 'href' => Yii::$app->request->baseUrl . "/selling/custom"]
+                                            ['label' => 'Buat Penjualan', 
+                                             'href' => Yii::$app->request->baseUrl . "/selling/index"],
+                                            ['label' => 'Cek Jualan Laporan', 
+                                             'href' => Yii::$app->request->baseUrl . "/selling/custom"]
                                         ]
 
                                     ],    
@@ -95,8 +99,10 @@ AppAsset::register($this);
                                         'label' => 'Pengguna',
                                         'href' => '#',
                                         'items' => [
-                                            ['label' => 'Daftar Pengguna', 'href' => Yii::$app->request->baseUrl . "/user/list"],
-                                            ['label' => 'Daftar Jabatan', 'href' => Yii::$app->request->baseUrl . "/user/role"]
+                                            ['label' => 'Daftar Pengguna', 
+                                             'href' => Yii::$app->request->baseUrl . "/user/list"],
+                                            ['label' => 'Daftar Jabatan', 
+                                             'href' => Yii::$app->request->baseUrl . "/user/role"]
                                         ]
                                     ],
                                     [
@@ -108,44 +114,6 @@ AppAsset::register($this);
                                     ]
                                 ]
                             ]) ?>
-                    <?php } else if(UserLibrary::isOwner (Yii::$app->user->getId())) {?>
-                    <?= Sidebar::widget(['id' => 'cssmenu', 
-                                'items' => [
-                                    [   
-                                        'label' => 'Laporan',
-                                        'href' => '#',
-                                        'items' => [
-                                            ['label' => 'Cek Kapal Laporan', 'href' => Yii::$app->request->baseUrl . "/report/custom"]
-                                        ]
-
-                                    ],    
-                                    [   
-                                        'label' => 'Transaksi',
-                                        'href' => '#',
-                                        'items' => [
-                                            ['label' => 'Buat Laporan Transaksi', 'href' => Yii::$app->request->baseUrl . "/transaction/custom"],
-                                        ]
-
-                                    ],    
-
-                                    [   
-                                        'label' => 'Penjualan',
-                                        'href' => '#',
-                                        'items' => [
-                                            ['label' => 'Cek Laporan Penjualan', 'href' => Yii::$app->request->baseUrl . "/selling/custom"]
-                                        ]
-
-                                    ],
-                                    [
-                                        'label' => 'Pengaturan',
-                                        'href' => '#',
-                                        'items' => [
-                                            ['label' => 'Ganti Password', 'href' => Yii::$app->request->baseUrl . "/user/change-password"]
-                                        ]
-                                    ]
-                                ]
-                            ]) ?>
-                    <?php } ?>
                 </div>
            </div>
             <div class="right-section clearfix">

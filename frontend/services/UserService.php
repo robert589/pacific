@@ -45,6 +45,7 @@ class UserService extends RService
             $model['name'] = $vo->getName();
             $model['description'] = $vo->getDescription();
             $model['status'] = $vo->getStatusText();
+            $model['active'] = $vo->isActive() ? 1 : 0;
             $models[] = $model;
             
         }
@@ -92,5 +93,13 @@ class UserService extends RService
         }
         
         return $this->userDao->searchRole($q);
+    }
+    
+    public function searchRights($q) {
+        if(!$this->validate()) {
+            return null;
+        }
+        
+        return $this->userDao->searchRights($q);
     }
 }

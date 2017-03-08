@@ -3343,7 +3343,64 @@ define("project/add-user", ["require", "exports", "common/component", "project/a
     }(component_40.Component));
     exports.AddUser = AddUser;
 });
-define("project/list-role", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_41, button_22, system_28) {
+define("project/assign-rights-to-role-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_20, search_field_12, input_field_24) {
+    "use strict";
+    var AssignRightsToRoleForm = (function (_super) {
+        __extends(AssignRightsToRoleForm, _super);
+        function AssignRightsToRoleForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.reload();
+            };
+            return _this;
+        }
+        AssignRightsToRoleForm.prototype.rules = function () {
+            this.registerFields([this.roleField, this.accessField]);
+            this.setRequiredField([this.roleField, this.accessField]);
+        };
+        AssignRightsToRoleForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.roleField = new input_field_24.InputField(document.getElementById(this.id + "-role-id"));
+            this.accessField = new search_field_12.SearchField(document.getElementById(this.id + "-rights"));
+        };
+        AssignRightsToRoleForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AssignRightsToRoleForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AssignRightsToRoleForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AssignRightsToRoleForm;
+    }(form_20.Form));
+    exports.AssignRightsToRoleForm = AssignRightsToRoleForm;
+});
+define("project/assign-rights-to-role-form-btnc", ["require", "exports", "common/btn-container", "project/assign-rights-to-role-form"], function (require, exports, btn_container_2, assign_rights_to_role_form_1) {
+    "use strict";
+    var AssignRightsToRoleFormBtnc = (function (_super) {
+        __extends(AssignRightsToRoleFormBtnc, _super);
+        function AssignRightsToRoleFormBtnc(root) {
+            return _super.call(this, root) || this;
+        }
+        AssignRightsToRoleFormBtnc.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new assign_rights_to_role_form_1.AssignRightsToRoleForm(document.getElementById(this.id + "-form"));
+        };
+        AssignRightsToRoleFormBtnc.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AssignRightsToRoleFormBtnc.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AssignRightsToRoleFormBtnc.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AssignRightsToRoleFormBtnc;
+    }(btn_container_2.BtnContainer));
+    exports.AssignRightsToRoleFormBtnc = AssignRightsToRoleFormBtnc;
+});
+define("project/list-role", ["require", "exports", "common/component", "common/button", "common/system", "project/assign-rights-to-role-form-btnc"], function (require, exports, component_41, button_22, system_28, assign_rights_to_role_form_btnc_1) {
     "use strict";
     var ListRole = (function (_super) {
         __extends(ListRole, _super);
@@ -3356,6 +3413,11 @@ define("project/list-role", ["require", "exports", "common/component", "common/b
         ListRole.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.addBtn = new button_22.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+            var artrfbsRaw = this.root.getElementsByClassName('list-role-artrfbs');
+            this.artrfbs = [];
+            for (var i = 0; i < artrfbsRaw.length; i++) {
+                this.artrfbs.push(new assign_rights_to_role_form_btnc_1.AssignRightsToRoleFormBtnc(artrfbsRaw.item(i)));
+            }
         };
         ListRole.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -3370,7 +3432,7 @@ define("project/list-role", ["require", "exports", "common/component", "common/b
     }(component_41.Component));
     exports.ListRole = ListRole;
 });
-define("project/add-role-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_20, input_field_24, text_area_field_8, system_29) {
+define("project/add-role-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_21, input_field_25, text_area_field_8, system_29) {
     "use strict";
     var AddRoleForm = (function (_super) {
         __extends(AddRoleForm, _super);
@@ -3387,7 +3449,7 @@ define("project/add-role-form", ["require", "exports", "common/form", "common/in
         };
         AddRoleForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.nameField = new input_field_24.InputField(document.getElementById(this.id + "-name"));
+            this.nameField = new input_field_25.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_8.TextAreaField(document.getElementById(this.id + "-desc"));
         };
         AddRoleForm.prototype.bindEvent = function () {
@@ -3400,7 +3462,7 @@ define("project/add-role-form", ["require", "exports", "common/form", "common/in
             // no event to unbind
         };
         return AddRoleForm;
-    }(form_20.Form));
+    }(form_21.Form));
     exports.AddRoleForm = AddRoleForm;
 });
 define("project/add-role", ["require", "exports", "common/component", "project/add-role-form"], function (require, exports, component_42, add_role_form_1) {

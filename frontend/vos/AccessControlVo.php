@@ -1,19 +1,20 @@
 <?php
 namespace frontend\vos;
 
-use common\models\Role;
 use yii\db\ActiveRecord;
 use common\components\RVo;
 /**
- * RoleVo vo
+ * AccessControlVo vo
  *
  */
-class RoleVo implements RVo
+class AccessControlVo implements RVo
 {
-    public static function createBuilder() { return new RoleVoBuilder();} 
+    public static function createBuilder() { return new AccessControlVoBuilder();} 
     //attributes
 
     private $id;
+
+    private $code;
 
     private $name;
 
@@ -25,8 +26,9 @@ class RoleVo implements RVo
 
     private $updatedAt;
 
-    public function __construct(RoleVoBuilder $builder) { 
+    public function __construct(AccessControlVoBuilder $builder) { 
         $this->id = $builder->getId(); 
+        $this->code = $builder->getCode(); 
         $this->name = $builder->getName(); 
         $this->description = $builder->getDescription(); 
         $this->status = $builder->getStatus(); 
@@ -38,6 +40,10 @@ class RoleVo implements RVo
 
     public function getId() { 
         return $this->id; 
+    }
+
+    public function getCode() { 
+        return $this->code; 
     }
 
     public function getName() { 
@@ -58,13 +64,5 @@ class RoleVo implements RVo
 
     public function getUpdatedAt() { 
         return $this->updatedAt; 
-    }
-    
-    public function getStatusText() {
-        return Role::getStatus()[$this->status];
-    }
-    
-    public function isActive() {
-        return intval(Role::STATUS_ACTIVE) === intval($this->status);
     }
 }

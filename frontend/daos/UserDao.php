@@ -2,6 +2,7 @@
 namespace frontend\daos;
 
 use common\models\Admin;
+use frontend\vos\AccessControlVo;
 use common\models\Owner;
 use Yii;
 use common\models\Role;
@@ -36,11 +37,34 @@ class UserDao implements Dao
                         from role 
                          where role.name LIKE :query
                          limit 4";
+                         
+    const SEARCH_RIGHTS = "select access_control.*
+                            from access_control
+                            where access_control.code LIKE :query  or access_control.name LIKE :query
+                            limit 4";
     
     public function searchRole($q) {
         $q = '%' . $q . '%';
         $results =  \Yii::$app->db
             ->createCommand(self::SEARCH_ROLE)
+            ->bindParam(':query', $q)
+            ->queryAll();
+        
+        $vos = [];
+        
+        foreach($results as $result) {
+            $builder = AccessControlVo::createBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        
+        return $vos;
+    }
+    
+    public function searchRights($q) {
+        $q = '%' . $q . '%';
+        $results =  \Yii::$app->db
+            ->createCommand(self::SEARCH_RIGHTS)
             ->bindParam(':query', $q)
             ->queryAll();
         
