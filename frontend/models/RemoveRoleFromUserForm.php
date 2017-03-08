@@ -17,7 +17,7 @@ class RemoveRoleFromUserForm extends RModel
 
     public $target_user_id;
 
-        public function init() {
+    public function init() {
         
     }
     
