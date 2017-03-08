@@ -24,7 +24,9 @@ class RoleVo implements RVo
     private $createdAt;
 
     private $updatedAt;
-
+    
+    private $rights;
+    
     public function __construct(RoleVoBuilder $builder) { 
         $this->id = $builder->getId(); 
         $this->name = $builder->getName(); 
@@ -32,6 +34,8 @@ class RoleVo implements RVo
         $this->status = $builder->getStatus(); 
         $this->createdAt = $builder->getCreatedAt(); 
         $this->updatedAt = $builder->getUpdatedAt(); 
+        $this->rights = $builder->getRights();
+        
     }
 
     //getters
@@ -58,6 +62,10 @@ class RoleVo implements RVo
 
     public function getUpdatedAt() { 
         return $this->updatedAt; 
+    }
+    
+    public function getRights() {
+        return $this->rights;
     }
     
     public function getStatusText() {

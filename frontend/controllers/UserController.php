@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\AssignRightsToRoleForm;
 use frontend\models\RemoveRoleFromUserForm;
 use frontend\models\AddRoleToUserForm;
 use common\widgets\SearchFieldDropdownItem;
@@ -131,6 +132,16 @@ class UserController extends Controller
         $model->user_id = \Yii::$app->user->getId();
         $model->loadData($_POST);
         $valid = $model->add();
+        $data['status'] = $valid ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
+    public function actionAssignAccess() {
+        $model = new AssignRightsToRoleForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $valid = $model->assign();
         $data['status'] = $valid ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
         return json_encode($data);

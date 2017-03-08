@@ -33,6 +33,12 @@ class UserDao implements Dao
                             user_role.user_id = :user_id and
                             user_role.status = :role_status";
     
+    const GET_RIGHTS_FOR_ROLE = "select access_control.*
+                        from access_control, role_access_control
+                        where access_control.id = role_access_control.access_control_id and 
+                            role_access_control.role_id = :role_id and
+                            role_access_control.status = :role_ac_status";
+    
     const SEARCH_ROLE = "SELECT role.*
                         from role 
                          where role.name LIKE :query
@@ -90,6 +96,25 @@ class UserDao implements Dao
 
         foreach($results as $result) {
             $builder = RoleVo::createBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        
+        
+        return $vos;
+    }
+    
+    public function getRightsForRole($roleId, $roleAcStatus = Role::STATUS_ACTIVE) {
+        $results = \Yii::$app->db
+             ->createCommand(self::GET_RIGHTS_FOR_ROLE)
+             ->bindParam(':role_ac_status', $roleAcStatus)
+             ->bindParam(':role_id', $roleId)
+             ->queryAll();
+        
+        $vos = [];
+
+        foreach($results as $result) {
+            $builder = AccessControlVo::createBuilder();
             $builder->loadData($result);
             $vos[] = $builder->build();
         }
@@ -155,6 +180,8 @@ class UserDao implements Dao
         foreach($results as $result) {
             $builder = RoleVo::createBuilder();
             $builder->loadData($result);
+            $builder->setRights($this->getRightsForRole($builder->getId()));
+        
             $vos[] = $builder->build();
         }
         

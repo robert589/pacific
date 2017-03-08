@@ -66,6 +66,9 @@
 
 
 
+
+
+
 .co-form-left,.co-form-right{width:320px;vertical-align:top;display:inline-block}.co-form-row{display:-ms-flexbox;display:flex}.co-form>.form-submit{display:block;margin-top:8px}
 
 
@@ -104,7 +107,7 @@
 
 
 
-
+.list-role-remove-rights{position:relative;margin-right:4px;background:#add8e6;padding:8px;border-radius:4px;color:#fff}.list-role-remove-rights-btn{padding:0}
 
 .supplier-list-add{width:180px;float:right}
 .list-user-remove-role{position:relative;margin-right:4px;background:#add8e6;padding:8px;border-radius:4px;color:#fff}.list-user-remove-role-btn{padding:0}

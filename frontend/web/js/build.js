@@ -3103,15 +3103,7 @@ define("project/list-user", ["require", "exports", "common/component", "common/s
     var ListUser = (function (_super) {
         __extends(ListUser, _super);
         function ListUser(root) {
-            var _this = _super.call(this, root) || this;
-            _this.roleBtn = new button_21.Button(document.getElementById(_this.id + "-role"), _this.redirectToRole.bind(_this));
-            _this.addBtn = new button_21.Button(document.getElementById(_this.id + "-add"), _this.redirectToAdd.bind(_this));
-            _this.removeRoleBtns = [];
-            var removeRoleBtnsRaw = _this.root.getElementsByClassName('list-user-remove-role-btn');
-            for (var i = 0; i < removeRoleBtnsRaw.length; i++) {
-                _this.removeRoleBtns.push(new button_21.Button(removeRoleBtnsRaw.item(i), _this.showRemoveRoleDialog.bind(_this, removeRoleBtnsRaw.item(i))));
-            }
-            return _this;
+            return _super.call(this, root) || this;
         }
         ListUser.prototype.redirectToAdd = function () {
             window.location.href = system_24.System.getBaseUrl() + "/user/add";
@@ -3149,6 +3141,13 @@ define("project/list-user", ["require", "exports", "common/component", "common/s
             this.artufbs = [];
             for (var i = 0; i < artufbsRaw.length; i++) {
                 this.artufbs.push(new add_role_to_user_form_btnc_1.AddRoleToUserFormBtnc(artufbsRaw.item(i)));
+            }
+            this.roleBtn = new button_21.Button(document.getElementById(this.id + "-role"), this.redirectToRole.bind(this));
+            this.addBtn = new button_21.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+            this.removeRoleBtns = [];
+            var removeRoleBtnsRaw = this.root.getElementsByClassName('list-user-remove-role-btn');
+            for (var i = 0; i < removeRoleBtnsRaw.length; i++) {
+                this.removeRoleBtns.push(new button_21.Button(removeRoleBtnsRaw.item(i), this.showRemoveRoleDialog.bind(this, removeRoleBtnsRaw.item(i))));
             }
         };
         ListUser.prototype.bindEvent = function () {
@@ -3418,6 +3417,35 @@ define("project/list-role", ["require", "exports", "common/component", "common/b
             for (var i = 0; i < artrfbsRaw.length; i++) {
                 this.artrfbs.push(new assign_rights_to_role_form_btnc_1.AssignRightsToRoleFormBtnc(artrfbsRaw.item(i)));
             }
+            this.removeRightBtns = [];
+            var removeRightBtnsRaw = this.root.getElementsByClassName('list-role-remove-rights-btn');
+            for (var i = 0; i < removeRightBtnsRaw.length; i++) {
+                this.removeRightBtns.push(new button_22.Button(removeRightBtnsRaw.item(i), this.showRemoveRightDialog.bind(this, removeRightBtnsRaw.item(i))));
+            }
+        };
+        ListRole.prototype.showRemoveRightDialog = function (raw) {
+            system_28.System.showConfirmDialog(this.removeRight.bind(null, raw), "Are you sure", "Are you sure to remove the right?");
+        };
+        ListRole.prototype.removeRight = function (raw) {
+            var access_control_id = raw.getAttribute('data-right-id');
+            var role_id = raw.getAttribute('data-role-id');
+            var data = {};
+            data['access_control_id'] = access_control_id;
+            data['role_id'] = role_id;
+            $.ajax({
+                url: system_28.System.getBaseUrl() + "/user/remove-access",
+                data: system_28.System.addCsrf(data),
+                context: this,
+                dataType: "json",
+                method: "post",
+                success: function (data) {
+                    if (data.status) {
+                        window.location.reload();
+                    }
+                },
+                error: function (data) {
+                }
+            });
         };
         ListRole.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);

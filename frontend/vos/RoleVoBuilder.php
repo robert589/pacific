@@ -23,7 +23,9 @@ class RoleVoBuilder extends RVoBuilder
     public $createdAt;
 
     public $updatedAt;
-
+    
+    public $rights;
+    
     public function rules() { 
         return [
            ['id','string'],
@@ -86,4 +88,14 @@ class RoleVoBuilder extends RVoBuilder
     public function setUpdatedAt($updatedAt) { 
         $this->updatedAt = $updatedAt; 
     }
+    
+    function getRights() {
+        return $this->rights;
+    }
+
+    function setRights($rights) {
+        $this->rights = $rights;
+    }
+
+
 }

@@ -25,15 +25,7 @@ export class ListUser extends Component{
 
     constructor(root: HTMLElement) {
         super(root);
-        this.roleBtn = new Button(document.getElementById(this.id + "-role"), this.redirectToRole.bind(this));
-        this.addBtn = new Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
-
-        this.removeRoleBtns = [];
-        let removeRoleBtnsRaw : NodeListOf<Element> = this.root.getElementsByClassName('list-user-remove-role-btn');
-        for(let i = 0; i < removeRoleBtnsRaw.length ; i++) {
-            this.removeRoleBtns.push(new Button(<HTMLElement>removeRoleBtnsRaw.item(i), 
-                                                this.showRemoveRoleDialog.bind(this, <HTMLElement>removeRoleBtnsRaw.item(i))));
-        }
+        
     }
 
     showRemoveRoleDialog(raw : HTMLElement) {
@@ -75,6 +67,15 @@ export class ListUser extends Component{
         for(let i = 0; i < artufbsRaw.length; i++) {
             this.artufbs.push(new AddRoleToUserFormBtnc(<HTMLElement>artufbsRaw.item(i)));
         }    
+        this.roleBtn = new Button(document.getElementById(this.id + "-role"), this.redirectToRole.bind(this));
+        this.addBtn = new Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+
+        this.removeRoleBtns = [];
+        let removeRoleBtnsRaw : NodeListOf<Element> = this.root.getElementsByClassName('list-user-remove-role-btn');
+        for(let i = 0; i < removeRoleBtnsRaw.length ; i++) {
+            this.removeRoleBtns.push(new Button(<HTMLElement>removeRoleBtnsRaw.item(i), 
+                                                this.showRemoveRoleDialog.bind(this, <HTMLElement>removeRoleBtnsRaw.item(i))));
+        }
     }
     
     bindEvent() {
