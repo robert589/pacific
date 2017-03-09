@@ -1,6 +1,8 @@
 <?php
 namespace frontend\controllers;
 
+use common\models\Selling;
+use frontend\models\ChangeSellingStatusForm;
 use frontend\widgets\SellingView;
 use frontend\vos\SellingVo;
 use frontend\widgets\DailySellingItem;
@@ -38,7 +40,7 @@ class SellingController extends Controller
         if($data['status']) {
             $builder = SellingVo::createBuilder();
             $builder->setId($selling->id);
-            $builder->setShipId($selling->ship_id);
+            $builder->setShipId($selling->entity_id);
             $builder->setRemark($selling->remark);
             $builder->setDate($selling->date);
             $builder->setStatus($selling->status);
@@ -97,11 +99,28 @@ class SellingController extends Controller
         
         
     }
+
+    public function actionRemove() {
+        $model = new ChangeSellingStatusForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->status = Selling::STATUS_DELETED;
+        $model->loadData($_POST);
+        $valid = $model->change();
+        $data['status'] = $valid ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
     
+    }
     
-    
-    public function actionDelete() {
-        
+    public function actionCancelRemove() {
+        $model = new ChangeSellingStatusForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->status = Selling::STATUS_ACTIVE;
+        $model->loadData($_POST);
+        $valid = $model->change();
+        $data['status'] = $valid ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
     }
 }
 

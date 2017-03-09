@@ -10,7 +10,6 @@ use common\components\RModel;
  */
 class ChangeTransactionStatusForm extends RModel
 {
-
     //attributes
     public $user_id;
 

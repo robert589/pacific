@@ -12,13 +12,13 @@ class SellingDao implements Dao
 {
     const GET_DAILY_SELLING_VIEW = "SELECT *
                                 from selling
-                                where selling.ship_id = :ship_id and selling.date = :date and selling.status = :status ";
+                                where selling.entity_id = :ship_id and selling.date = :date and selling.status = :status ";
     
     const GET_ALL_SELLINGS_IN_BETWEEN = "
                     SELECT * FROM `selling`
                     WHERE STR_TO_DATE( date, \"%d/%m/%Y\") >= STR_TO_DATE(:from, \"%d/%m/%Y\")
                      AND STR_TO_DATE( date, \"%d/%m/%Y\") <= STR_TO_DATE(:to, \"%d/%m/%Y\")
-                     AND ship_id = :ship_id and status = :status
+                     AND entity_id = :ship_id and status = :status
                     ORDER BY STR_TO_DATE(date, '%d/%m/%Y') DESC;";
     
     public function getSellingView($shipId, $date, $from, $to, $status = Selling::STATUS_ACTIVE) {

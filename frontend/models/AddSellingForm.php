@@ -69,7 +69,7 @@ class AddSellingForm extends RModel
         $selling = new Selling();
         $selling->remark = $this->remark;
         $selling->date = $this->date;
-        $selling->ship_id = $this->ship_id;
+        $selling->entity_id = $this->ship_id;
         $selling->status = Selling::STATUS_ACTIVE;
         if(!$this->total || $this->total <= 0.00000000001) {
            $selling->price = $this->price;

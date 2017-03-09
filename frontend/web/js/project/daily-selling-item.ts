@@ -40,9 +40,11 @@ export class DailySellingItem extends Component{
             method : "post",
             context : this,
             success : function(data) {
-                this.removeBtn.disable(false);
-                this.viewArea.classList.add('app-hide');
-                this.removeArea.classList.remove('app-hide');
+                if(data.status) {
+                    this.removeBtn.disable(false);
+                    this.viewArea.classList.add('app-hide');
+                    this.removeArea.classList.remove('app-hide');
+                }
             },
             error : function(data) {
                 this.removeBtn.disable(false);
@@ -61,9 +63,11 @@ export class DailySellingItem extends Component{
             method : "post",
             context : this,
             success : function(data) {
-                this.cancelRemove.disable(false);
-                this.viewArea.classList.remove('app-hide');
-                this.removeArea.classList.add('app-hide');
+                if(data.status) {
+                    this.cancelRemove.disable(false);
+                    this.viewArea.classList.remove('app-hide');
+                    this.removeArea.classList.add('app-hide');
+                }
             },
             error : function(data) {
                 this.removeBtn.disable(false);

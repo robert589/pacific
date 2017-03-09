@@ -9,6 +9,7 @@
   height: 40px;
 }
 .as-form > .form-field {
+  margin-bottom: 0;
   margin-right: 8px;
 }
 .as-form-switch {

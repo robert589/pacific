@@ -43,7 +43,7 @@
 
 
 
-.as-form{display:-ms-flexbox;display:flex;margin-top:16px}.as-form>.button{-ms-flex-item-align:end;align-self:flex-end;max-width:60px;height:40px}.as-form>.form-field{margin-right:8px}.as-form-switch{height:42px;margin:0 8px 0 0;-ms-flex-item-align:end;align-self:flex-end}
+.as-form{display:-ms-flexbox;display:flex;margin-top:16px}.as-form>.button{-ms-flex-item-align:end;align-self:flex-end;max-width:60px;height:40px}.as-form>.form-field{margin-bottom:0;margin-right:8px}.as-form-switch{height:42px;margin:0 8px 0 0;-ms-flex-item-align:end;align-self:flex-end}
 .at-form{display:-ms-flexbox;display:flex;margin-top:16px}.at-form>.button{-ms-flex-item-align:end;align-self:flex-end;max-width:60px;height:40px}.at-form>.form-field{margin-right:8px;margin-bottom:0}
 
 .au-form{max-width:500px}

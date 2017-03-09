@@ -2,7 +2,7 @@
     use common\widgets\Button;
 ?>
 
-<div id="<?= $id ?>" class="ds-item" data-report-id="<?= $vo->getid() ?>">
+<div id="<?= $id ?>" class="ds-item" data-selling-id="<?= $vo->getid() ?>">
     <div id="<?= $id . '-view' ?>" class="ds-item-view">
         <div class="ds-item-field">
             <?= $vo->getRemark() ?>
