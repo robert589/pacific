@@ -3530,16 +3530,54 @@ define("project/add-owner-to-code-form-btnc", ["require", "exports", "common/btn
     }(btn_container_3.BtnContainer));
     exports.AddOwnerToCodeFormBtnc = AddOwnerToCodeFormBtnc;
 });
-define("project/view-code", ["require", "exports", "common/component", "project/add-owner-to-code-form-btnc"], function (require, exports, component_42, add_owner_to_code_form_btnc_1) {
+define("project/view-code", ["require", "exports", "common/component", "project/add-owner-to-code-form-btnc", "common/button", "common/system"], function (require, exports, component_42, add_owner_to_code_form_btnc_1, button_23, system_29) {
     "use strict";
     var ViewCode = (function (_super) {
         __extends(ViewCode, _super);
         function ViewCode(root) {
-            return _super.call(this, root) || this;
+            var _this = _super.call(this, root) || this;
+            _this.entityId = _this.root.getAttribute('data-entity-id');
+            return _this;
         }
+        ViewCode.prototype.redirectToAddRelationView = function () {
+            window.location.href = system_29.System.getBaseUrl() + "/code/add-relation?id=" + this.entityId;
+        };
+        ViewCode.prototype.redirectToEdit = function () {
+            window.location.href = system_29.System.getBaseUrl() + "/code/edit?id=" + this.entityId;
+        };
         ViewCode.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.aotcf = new add_owner_to_code_form_btnc_1.AddOwnerToCodeFormBtnc(document.getElementById(this.id + "-aotcfb"));
+            this.editBtn = new button_23.Button(document.getElementById(this.id + "-edit"), this.redirectToEdit.bind(this));
+            this.subcodeBtn = new button_23.Button(document.getElementById(this.id + "-subcode"), this.redirectToAddRelationView.bind(this));
+            this.removeBtns = [];
+            var removeBtnsRaw = this.root.getElementsByClassName('view-code-remove');
+            for (var i = 0; i < removeBtnsRaw.length; i++) {
+                this.removeBtns.push(new button_23.Button(removeBtnsRaw.item(i), this.showRemoveDialog.bind(this, removeBtnsRaw.item(i))));
+            }
+        };
+        ViewCode.prototype.showRemoveDialog = function (raw) {
+            system_29.System.showConfirmDialog(this.removeOwner.bind(this, raw), "Are you sure", "Are you sure to delete this owner?");
+        };
+        ViewCode.prototype.removeOwner = function (raw) {
+            var userId = raw.getAttribute('data-user-id');
+            var data = {};
+            data['entity_id'] = this.entityId;
+            data['target_user_id'] = userId;
+            $.ajax({
+                url: system_29.System.getBaseUrl() + "/code/remove-owner",
+                data: system_29.System.addCsrf(data),
+                context: this,
+                dataType: "json",
+                method: "post",
+                success: function (data) {
+                    if (data.status) {
+                        window.location.reload();
+                    }
+                },
+                error: function (data) {
+                }
+            });
         };
         ViewCode.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -3554,14 +3592,14 @@ define("project/view-code", ["require", "exports", "common/component", "project/
     }(component_42.Component));
     exports.ViewCode = ViewCode;
 });
-define("project/add-role-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_22, input_field_26, text_area_field_8, system_29) {
+define("project/add-role-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_22, input_field_26, text_area_field_8, system_30) {
     "use strict";
     var AddRoleForm = (function (_super) {
         __extends(AddRoleForm, _super);
         function AddRoleForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_29.System.getBaseUrl() + "/user/role";
+                window.location.href = system_30.System.getBaseUrl() + "/user/role";
             };
             return _this;
         }
@@ -3611,7 +3649,7 @@ define("project/add-role", ["require", "exports", "common/component", "project/a
     }(component_43.Component));
     exports.AddRole = AddRole;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role"], function (require, exports, component_44, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_30, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role"], function (require, exports, component_44, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_31, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -3718,7 +3756,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_30.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_31.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };

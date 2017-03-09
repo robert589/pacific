@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\models\RemoveOwnerFromCodeForm;
 use common\models\EntityOwner;
 use frontend\models\AddOwnerToCodeForm;
 use frontend\models\EditCodeTypeForm;
@@ -239,6 +240,18 @@ class CodeController extends Controller
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
         return json_encode($data);
     
+    }
+    
+    public function actionRemoveOwner() {
+        
+        $model = new RemoveOwnerFromCodeForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        
+        $data = [];
+        $data['status'] = $model->remove() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
     }
 }
 

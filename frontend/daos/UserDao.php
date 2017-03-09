@@ -159,7 +159,7 @@ class UserDao implements Dao
           $admin =  Admin::GET_ROLE;
           $result = \Yii::$app->db
              ->createCommand(self::GET_ROLE)
-             ->bindParam(':admin', $admin)
+             ->bindParam(':admin', $admin)      
              ->bindParam(':user_id', $userId)
              ->queryOne();
          
