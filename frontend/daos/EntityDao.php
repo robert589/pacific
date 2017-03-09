@@ -89,6 +89,26 @@ class EntityDao implements Dao
         
     }
     
+    public function getEntityInfo($entityId, $status = Entity::STATUS_ACTIVE) {
+        $result =  \Yii::$app->db
+            ->createCommand(self::GET_ENTITY_INFO)
+            ->bindParam(":entity_id", $entityId)
+            ->bindParam(':status', $status)
+            ->queryOne();
+        
+        if(!$result) {
+            return null;
+        }
+        
+        $builder = EntityVo::createBuilder();
+        $typeBuilder = EntityTypeVo::createBuilder();
+        $typeBuilder->loadData($result, "entity_type");
+        $builder->setEntityType($typeBuilder->build());
+        $builder->loadData($result);
+        return $builder->build();
+        
+    }
+    
     public function getEntityInfoWithRelations($entityId, $status = Entity::STATUS_ACTIVE) {
         $result =  \Yii::$app->db
             ->createCommand(self::GET_ENTITY_INFO)
@@ -179,13 +199,9 @@ class EntityDao implements Dao
         
         $vos = [];
         foreach($results as $result) {
-            $builder = OwnerVo::createBuilder();
-            
             $userBuilder = UserVo::createBuilder();
             $userBuilder->loadData($result, "user");
-            $builder->setUser($userBuilder->build());
-            
-            $vos[] = $builder->build();
+            $vos[] = $userBuilder->build();
         }
         
         return $vos;

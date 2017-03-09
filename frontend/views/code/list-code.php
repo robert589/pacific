@@ -8,7 +8,7 @@
         <?= Button::widget(['id' => $id . '-add', 'text' => 'Tambah Kode', 'newClass' => 'view-header-btn']) ?>
         <?= Button::widget(['id' => $id . '-codetype', 'text' => 'Tipe Kode', 'newClass' => 'view-header-btn']) ?>
     </div>
-
+    
     <?=  GridView::widget(
         [   'dataProvider' => $provider,
             'columns' => [
@@ -20,9 +20,22 @@
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'header'=>'Actions',    
-                    'template' => '{add} - {edit} - {remove}',
+                    'template' => '{view} - {add} - {edit} - {remove}',
                     'buttons' => [
                         //view button
+                        'view' => function ($url, $model) {
+                            if($model['active']) {
+                                return Button::widget(['id' => 'lc-view-' . $model['code'],
+                                        'widgetClass' => 'button-link list-code-view',
+                                        'text' => 'Lihat',
+                                        'options' => [
+                                            'data-entity-id' => $model['code']
+                                        ],
+                                        'color' => Button::NONE_COLOR
+                                    
+                                    ]);
+                            }
+                        },
                         'add' => function ($url, $model) {
                             if($model['active']) {
                                 return Button::widget(['id' => 'lc-add-' . $model['code'],

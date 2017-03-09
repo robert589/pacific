@@ -25,6 +25,7 @@ import {EditCode} from './edit-code';
 import {EditCodeType} from './edit-code-type';
 import {AddUser} from "./add-user";
 import {ListRole} from './list-role';
+import {ViewCode} from './view-code';
 import {AddRole} from './add-role';
 
 export class App extends Component{
@@ -85,6 +86,8 @@ export class App extends Component{
 
     addRole : AddRole;
 
+    viewCode : ViewCode;
+
     constructor(root: HTMLElement) {
         super(root);
         if(window.innerWidth < 600) { 
@@ -144,6 +147,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('create-code').length !== 0) {
             this.createCode = new CreateCode(document.getElementById("ccc"));
+        }
+        else if(this.root.getElementsByClassName('view-code').length !== 0) {
+            this.viewCode = new ViewCode(document.getElementById("cvc"));
         }
         else if(this.root.getElementsByClassName('add-role').length !== 0) {
             this.addRole = new AddRole(document.getElementById('uar'));

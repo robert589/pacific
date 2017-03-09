@@ -28,6 +28,8 @@ class CodeService extends RService
     
     const GET_CODE_INFO_FOR_EDIT = "getcodeinfoforedit";
     
+    const GET_ALL_OWNERS = "getallowners";
+    
     //attributes
     public $user_id;
     
@@ -56,7 +58,8 @@ class CodeService extends RService
             ['entity_id', 'integer'],
             ['entity_id', 'required', 'on' => [self::GET_ENTITY_INFO_WITH_CHILD, 
                                                 self::GET_ENTITY_INFO,
-                                                self::GET_SUB_CODE]],
+                                                self::GET_SUB_CODE,
+                                                self::GET_ALL_OWNERS]],
             
             ['entity_type_id', 'integer'],
             ['entity_type_id', 'required', 'on' => [ self::GET_ENTITY_TYPE_INFO
@@ -72,14 +75,41 @@ class CodeService extends RService
         
         return $this->entityDao->getEntityTypeInfo($this->entity_type_id);
     }
+    
+    public function getAllOwners() {
+        $this->setScenario(self::GET_ALL_OWNERS);
+        if(!$this->validate()) {
+            return null;
+        }
+        
+        $vos = $this->entityDao->getEntityOwnership($this->entity_id);
+        
+        $models = [];
+        
+        foreach($vos as $vo) {
+            $model['id'] = $vo->getId();
+            $model['name'] = $vo->getName();
+            $models[] = $model;
+        }
+        
+        return new ArrayDataProvider([
+            'allModels' => $models,
+            'pagination' => [
+                'pageSize' => 10
+            ]
+        ]);
+        
+    }
+    
     public function getEntityInfo() {
         $this->setScenario(self::GET_ENTITY_INFO);
         if(!$this->validate()) {
             return null;
         }
         
-        return $this->entityDao->getEntityInfoWithRelations($this->entity_id);
+        return $this->entityDao->getEntityInfo($this->entity_id);
     }
+    
     
     public function getEntityInfoForEdit() {
         $this->setScenario(self::GET_CODE_INFO_FOR_EDIT);

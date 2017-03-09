@@ -1,6 +1,7 @@
 <?php
 namespace frontend\controllers;
 
+use frontend\widgets\AddOwnerToCodeForm;
 use frontend\models\EditCodeTypeForm;
 use Yii;
 use frontend\models\EditEntityForm;
@@ -218,6 +219,18 @@ class CodeController extends Controller
         $data['status'] = $model->change(true) ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
         return json_encode($data);
+    }
+    
+    public function actionView() {
+        $this->service->entity_id = filter_input(INPUT_GET, "id");
+        $entityVo = $this->service->getEntityInfo();
+        $ownerProvider = $this->service->getAllOwners();
+        return $this->render('view-code', ['id' => 'cvc', 'ownerProvider' => $ownerProvider, 'entityVo' => $entityVo]);
+    }
+    
+    public function actionAddOwner() {
+        $model = new AddOwnerToCodeForm();
+        
     }
 }
 

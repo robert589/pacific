@@ -43,6 +43,12 @@ class UserDao implements Dao
                             role_access_control.role_id = :role_id and
                             role_access_control.status = :role_ac_status";
     
+    const SEARCH = "select user.*
+                    from user
+                    where user.first_name LIKE :query or user.last_name LIKE :query or
+                                        concat(user.first_name, ' ', user.last_name) LIKE :query
+                    limit 4";
+    
     const SEARCH_ROLE = "SELECT role.*
                         from role 
                          where role.name LIKE :query
@@ -59,6 +65,26 @@ class UserDao implements Dao
                             user_role.role_id = role_access_control.role_id and
                             role_access_control.status = :right_status and
                             role_access_control.access_control_id = access_control.id ";
+    
+    public function search($q) {
+        $q = '%' . $q . '%';
+        $results =  \Yii::$app->db
+            ->createCommand(self::SEARCH)
+            ->bindParam(':query', $q)
+            ->queryAll();
+        
+        $vos = [];
+        
+        foreach($results as $result) {
+            $builder = UserVo::createBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        
+        return $vos;
+        
+    }
+    
     public function searchRole($q) {
         $q = '%' . $q . '%';
         $results =  \Yii::$app->db

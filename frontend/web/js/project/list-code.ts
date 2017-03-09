@@ -10,6 +10,8 @@ export class ListCode extends Component{
 
     removeBtns : Button[];
 
+    viewBtns : Button[];
+
     codeType : Button;
 
     addRelations : Button[];
@@ -24,6 +26,11 @@ export class ListCode extends Component{
 
     redirectToCodeType() {
         window.location.href = System.getBaseUrl() + "/code/type";
+    }
+
+    redirectToView(raw : HTMLElement) {
+        let entityId = raw.getAttribute('data-entity-id');
+        window.location.href = System.getBaseUrl() + "/code/view?id=" + entityId; 
     }
     
     decorate() {
@@ -51,6 +58,14 @@ export class ListCode extends Component{
             this.removeBtns.push(new Button(<HTMLElement> removeBtnsRaw.item(i),
                                 this.showRemoveDialog.bind(this, removeBtnsRaw.item(i))));
         }
+
+        this.viewBtns = [];
+        let viewBtnsRaw : NodeListOf<Element> = this.root.getElementsByClassName('list-code-view');
+        for(let i = 0; i < viewBtnsRaw.length; i++) {
+            this.viewBtns.push(new Button(<HTMLElement> viewBtnsRaw.item(i),
+                                this.redirectToView.bind(this, viewBtnsRaw.item(i))));
+        }
+
 
     }
 

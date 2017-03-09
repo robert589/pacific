@@ -85,6 +85,27 @@ class UserController extends Controller
         return $this->render('list-role', ['id' => 'ulr', 'provider' => $provider]);
     }
     
+    public function actionSearch() {
+        $id = filter_var($_GET['id']);
+        $query = filter_var($_GET['q']);
+        $vos = $this->service->search($query);
+        $views = '';
+        if(count($vos) !== 0) {
+            foreach($vos as $vo) {
+                $views .= SearchFieldDropdownItem::widget(['id' => $id . $vo->getId(), 'itemId' => $vo->getId(), 
+                    'text' => $vo->getName()]);
+            }
+            $data = array();
+            $data['status'] = 1;
+            $data['views'] = $views;
+        } else {
+            $data['status'] = 1;
+            $data['views'] = 'No Matching Found';
+        }
+        
+        return json_encode($data);
+    }
+    
     public function actionSearchRights() {
         $id = filter_var($_GET['id']);
         $query = filter_var($_GET['q']);

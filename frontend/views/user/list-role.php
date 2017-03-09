@@ -52,9 +52,6 @@
                     'class' => 'yii\grid\ActionColumn',
                     'header'=>'Actions',    
                     'template' => '{add_rights}',
-                    'urlCreator' => function ($action, $model, $key, $index) {
-                        
-                    },
                     'buttons' => [
                         //view button
                         'add_rights' => function ($url, $model) {

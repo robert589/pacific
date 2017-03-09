@@ -2135,6 +2135,10 @@ define("project/list-code", ["require", "exports", "common/component", "common/b
         ListCode.prototype.redirectToCodeType = function () {
             window.location.href = system_15.System.getBaseUrl() + "/code/type";
         };
+        ListCode.prototype.redirectToView = function (raw) {
+            var entityId = raw.getAttribute('data-entity-id');
+            window.location.href = system_15.System.getBaseUrl() + "/code/view?id=" + entityId;
+        };
         ListCode.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.addBtn = new button_14.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
@@ -2153,6 +2157,11 @@ define("project/list-code", ["require", "exports", "common/component", "common/b
             var removeBtnsRaw = this.root.getElementsByClassName('list-code-remove');
             for (var i = 0; i < removeBtnsRaw.length; i++) {
                 this.removeBtns.push(new button_14.Button(removeBtnsRaw.item(i), this.showRemoveDialog.bind(this, removeBtnsRaw.item(i))));
+            }
+            this.viewBtns = [];
+            var viewBtnsRaw = this.root.getElementsByClassName('list-code-view');
+            for (var i = 0; i < viewBtnsRaw.length; i++) {
+                this.viewBtns.push(new button_14.Button(viewBtnsRaw.item(i), this.redirectToView.bind(this, viewBtnsRaw.item(i))));
             }
         };
         ListCode.prototype.showRemoveDialog = function (raw) {
@@ -3464,7 +3473,88 @@ define("project/list-role", ["require", "exports", "common/component", "common/b
     }(component_41.Component));
     exports.ListRole = ListRole;
 });
-define("project/add-role-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_21, input_field_25, text_area_field_8, system_29) {
+define("project/add-owner-to-code-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_21, search_field_13, input_field_25) {
+    "use strict";
+    var AddOwnerToCodeForm = (function (_super) {
+        __extends(AddOwnerToCodeForm, _super);
+        function AddOwnerToCodeForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.reload();
+            };
+            return _this;
+        }
+        AddOwnerToCodeForm.prototype.rules = function () {
+            this.registerFields([this.entityIdField, this.userField]);
+            this.setRequiredField([this.entityIdField, this.userField]);
+        };
+        AddOwnerToCodeForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.entityIdField = new input_field_25.InputField(document.getElementById(this.id + "-entity-id"));
+            this.userField = new search_field_13.SearchField(document.getElementById(this.id + "-user-id"));
+        };
+        AddOwnerToCodeForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddOwnerToCodeForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddOwnerToCodeForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddOwnerToCodeForm;
+    }(form_21.Form));
+    exports.AddOwnerToCodeForm = AddOwnerToCodeForm;
+});
+define("project/add-owner-to-code-form-btnc", ["require", "exports", "common/btn-container", "project/add-owner-to-code-form"], function (require, exports, btn_container_3, add_owner_to_code_form_1) {
+    "use strict";
+    var AddOwnerToCodeFormBtnc = (function (_super) {
+        __extends(AddOwnerToCodeFormBtnc, _super);
+        function AddOwnerToCodeFormBtnc(root) {
+            return _super.call(this, root) || this;
+        }
+        AddOwnerToCodeFormBtnc.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new add_owner_to_code_form_1.AddOwnerToCodeForm(document.getElementById(this.id + "-form"));
+        };
+        AddOwnerToCodeFormBtnc.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddOwnerToCodeFormBtnc.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddOwnerToCodeFormBtnc.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddOwnerToCodeFormBtnc;
+    }(btn_container_3.BtnContainer));
+    exports.AddOwnerToCodeFormBtnc = AddOwnerToCodeFormBtnc;
+});
+define("project/view-code", ["require", "exports", "common/component", "project/add-owner-to-code-form-btnc"], function (require, exports, component_42, add_owner_to_code_form_btnc_1) {
+    "use strict";
+    var ViewCode = (function (_super) {
+        __extends(ViewCode, _super);
+        function ViewCode(root) {
+            return _super.call(this, root) || this;
+        }
+        ViewCode.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.aotcf = new add_owner_to_code_form_btnc_1.AddOwnerToCodeFormBtnc(document.getElementById(this.id + "-aotcfb"));
+        };
+        ViewCode.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ViewCode.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ViewCode.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ViewCode;
+    }(component_42.Component));
+    exports.ViewCode = ViewCode;
+});
+define("project/add-role-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_22, input_field_26, text_area_field_8, system_29) {
     "use strict";
     var AddRoleForm = (function (_super) {
         __extends(AddRoleForm, _super);
@@ -3481,7 +3571,7 @@ define("project/add-role-form", ["require", "exports", "common/form", "common/in
         };
         AddRoleForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.nameField = new input_field_25.InputField(document.getElementById(this.id + "-name"));
+            this.nameField = new input_field_26.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_8.TextAreaField(document.getElementById(this.id + "-desc"));
         };
         AddRoleForm.prototype.bindEvent = function () {
@@ -3494,10 +3584,10 @@ define("project/add-role-form", ["require", "exports", "common/form", "common/in
             // no event to unbind
         };
         return AddRoleForm;
-    }(form_21.Form));
+    }(form_22.Form));
     exports.AddRoleForm = AddRoleForm;
 });
-define("project/add-role", ["require", "exports", "common/component", "project/add-role-form"], function (require, exports, component_42, add_role_form_1) {
+define("project/add-role", ["require", "exports", "common/component", "project/add-role-form"], function (require, exports, component_43, add_role_form_1) {
     "use strict";
     var AddRole = (function (_super) {
         __extends(AddRole, _super);
@@ -3518,10 +3608,10 @@ define("project/add-role", ["require", "exports", "common/component", "project/a
             // no event to unbind
         };
         return AddRole;
-    }(component_42.Component));
+    }(component_43.Component));
     exports.AddRole = AddRole;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/add-role"], function (require, exports, component_43, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_30, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, add_role_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role"], function (require, exports, component_44, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_30, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -3585,6 +3675,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('create-code').length !== 0) {
                 this.createCode = new create_code_1.CreateCode(document.getElementById("ccc"));
             }
+            else if (this.root.getElementsByClassName('view-code').length !== 0) {
+                this.viewCode = new view_code_1.ViewCode(document.getElementById("cvc"));
+            }
             else if (this.root.getElementsByClassName('add-role').length !== 0) {
                 this.addRole = new add_role_1.AddRole(document.getElementById('uar'));
             }
@@ -3636,7 +3729,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_43.Component));
+    }(component_44.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {
