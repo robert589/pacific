@@ -20,6 +20,8 @@ class UserDao implements Dao
     
     const GET_ROLE_LIST = "select role.* from role";
     
+    const GET_ACCESS_CONTROL_LIST = "select access_control.* from access_control";
+    
     const GET_ROLE = "SELECT (owner.id is not null) as :owner,
                              (admin.id is not null )as :admin
                        FROM user
@@ -177,6 +179,21 @@ class UserDao implements Dao
         }
         
         return $vos;
+    }
+    public function getAccessControlList() {
+        $results = \Yii::$app->db
+            ->createCommand(self::GET_ACCESS_CONTROL_LIST)
+            ->queryAll();
+            
+        $vos = [];
+        foreach($results as $result) {
+            $builder = AccessControlVo::createBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        
+        return $vos;
+        
     }
     
     public function getRoleList() {

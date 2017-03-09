@@ -3409,9 +3409,13 @@ define("project/list-role", ["require", "exports", "common/component", "common/b
         ListRole.prototype.redirectToAdd = function () {
             window.location.href = system_28.System.getBaseUrl() + "/user/add-role";
         };
+        ListRole.prototype.redirectToListAccessControl = function () {
+            window.location.href = system_28.System.getBaseUrl() + "/user/access-control";
+        };
         ListRole.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.addBtn = new button_22.Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+            this.listAcBtn = new button_22.Button(document.getElementById(this.id + "-list-ac"), this.redirectToListAccessControl.bind(this));
             var artrfbsRaw = this.root.getElementsByClassName('list-role-artrfbs');
             this.artrfbs = [];
             for (var i = 0; i < artrfbsRaw.length; i++) {

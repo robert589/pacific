@@ -20,17 +20,14 @@
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'header'=>'Actions',    
-                    'template' => '{add}{edit}{remove}',
-                    'urlCreator' => function ($action, $model, $key, $index) {
-                        
-                    },
+                    'template' => '{add} - {edit} - {remove}',
                     'buttons' => [
                         //view button
                         'add' => function ($url, $model) {
                             if($model['active']) {
                                 return Button::widget(['id' => 'lc-add-' . $model['code'],
                                     'widgetClass' => 'button-link list-code-add',
-                                    'text' => '<span class="glyphicon glyphicon-plus"></span>',
+                                    'text' => 'Tambah Sub Kode',
                                     'options' => [
                                         'data-entity-id' => $model['id']
                                     ],

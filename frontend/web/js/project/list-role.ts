@@ -7,12 +7,18 @@ export class ListRole extends Component{
 
     addBtn : Button;
 
+    listAcBtn : Button;
+
     artrfbs : AssignRightsToRoleFormBtnc[];
     
     removeRightBtns : Button[];
 
     redirectToAdd() {
         window.location.href = System.getBaseUrl() + "/user/add-role";
+    }
+
+    redirectToListAccessControl() {
+        window.location.href = System.getBaseUrl() + "/user/access-control";
     }
 
     constructor(root: HTMLElement) {
@@ -22,6 +28,8 @@ export class ListRole extends Component{
     decorate() {
         super.decorate();
         this.addBtn = new Button(document.getElementById(this.id + "-add"), this.redirectToAdd.bind(this));
+        this.listAcBtn = new Button(document.getElementById(this.id + "-list-ac"), 
+                                    this.redirectToListAccessControl.bind(this));
         let artrfbsRaw : NodeListOf<Element> = this.root.getElementsByClassName('list-role-artrfbs');
 
         this.artrfbs = [];

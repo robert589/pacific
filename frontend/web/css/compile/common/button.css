@@ -18,6 +18,7 @@
 }
 .button-link:hover {
   opacity: 0.8;
+  text-decoration: underline;
 }
 .button-blue {
   background: #0000FF;

@@ -15,6 +15,8 @@ class UserService extends RService
     
     const ROLE_LIST = "rolelist";
     
+    const ACCESS_CONTROL_LIST = "accesscontrollist";
+    
     //attributes
     public $user_id;
     
@@ -27,9 +29,35 @@ class UserService extends RService
     public function rules() {
         return [
             ['user_id', 'integer'],
-            ['user_id', 'required', 'on' => [self::USER_LIST, self::ROLE_LIST] ]
+            ['user_id', 'required', 'on' => [self::USER_LIST, self::ROLE_LIST, self::ACCESS_CONTROL_LIST] ]
         ];
     } 
+    
+    public function getAccessControlList() {
+        $this->setScenario(self::ACCESS_CONTROL_LIST);
+        if(!$this->validate()) {
+            return null;
+        }
+        
+        $vos = $this->userDao->getAccessControlList();
+        $models = [];
+        foreach($vos as $vo) {
+            $model = [];
+            $model['id'] = $vo->getId();
+            $model['name'] = $vo->getName();
+            $model['description'] = $vo->getDescription();
+            $model['code'] = $vo->getCode();
+            $models[] = $model;
+            
+        }
+        
+        return new ArrayDataProvider([
+            'allModels' => $models,
+            'pagination' =>[
+                'pageSize' => 10
+            ]
+        ]);
+    }
     
     public function getRoleList() {
         $this->setScenario(self::ROLE_LIST);

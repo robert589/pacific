@@ -80,7 +80,6 @@ class UserController extends Controller
     public function actionRole() {
         $provider = $this->service->getRoleList();
         if(!$provider) {
-        
             return $this->redirect(['site/error']);
         }
         return $this->render('list-role', ['id' => 'ulr', 'provider' => $provider]);
@@ -170,5 +169,12 @@ class UserController extends Controller
         return json_encode($data);
     }
     
+    public function actionAccessControl() {
+        $provider = $this->service->getAccessControlList();
+        if(!$provider) {
+            return $this->redirect(['site/error']);
+        }
+        return $this->render('list-access-control', ['id' => 'ula', 'provider' => $provider]);
+    }
 }
 

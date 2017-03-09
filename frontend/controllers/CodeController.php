@@ -123,7 +123,6 @@ class CodeController extends Controller
     }
     
     public function actionCreate() {
-        
         return $this->render('create-code', ['id' => 'ccc']);
     }
     
