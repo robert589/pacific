@@ -22,11 +22,8 @@ class UserDao implements Dao
     
     const GET_ACCESS_CONTROL_LIST = "select access_control.* from access_control";
     
-    const GET_ROLE = "SELECT (owner.id is not null) as :owner,
-                             (admin.id is not null )as :admin
+    const GET_ROLE = "SELECT (admin.id is not null )as :admin
                        FROM user
-                       left join owner
-                       on user.id = owner.id
                        left join admin
                        on user.id = admin.id
                        where user.id = :user_id";
@@ -160,11 +157,9 @@ class UserDao implements Dao
     
     public function getRole($userId) {
           $admin =  Admin::GET_ROLE;
-          $owner = Owner::GET_ROLE;
           $result = \Yii::$app->db
              ->createCommand(self::GET_ROLE)
              ->bindParam(':admin', $admin)
-             ->bindParam(':owner', $owner)
              ->bindParam(':user_id', $userId)
              ->queryOne();
          

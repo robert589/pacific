@@ -1,7 +1,8 @@
 <?php
 namespace frontend\controllers;
 
-use frontend\widgets\AddOwnerToCodeForm;
+use common\models\EntityOwner;
+use frontend\models\AddOwnerToCodeForm;
 use frontend\models\EditCodeTypeForm;
 use Yii;
 use frontend\models\EditEntityForm;
@@ -230,7 +231,14 @@ class CodeController extends Controller
     
     public function actionAddOwner() {
         $model = new AddOwnerToCodeForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
         
+        $data = [];
+        $data['status'] = $model->add() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    
     }
 }
 
