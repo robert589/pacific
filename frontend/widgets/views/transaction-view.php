@@ -9,10 +9,20 @@
         <?= Button::widget(['id' => $id . '-printer', 
             'text' => '<span class="glyphicon glyphicon-print"></span>Print to Printer', 
             'color' => Button::BLUE_COLOR]) ?>
+        
+        <?= Button::widget(['id' => $id . '-piutang', 
+            'text' => '<span class="glyphicon glyphicon-print"></span>Print as Piutang', 
+            'color' => Button::RED_COLOR]) ?>
+        
+        <?= Button::widget(['id' => $id . '-utang', 
+            'text' => '<span class="glyphicon glyphicon-print"></span>Print as Utang', 
+            'color' => Button::RED_COLOR]) ?>
     </div>
     <div class="transaction-view-area">
-        <div class="transaction-view-title">
+        <div class="transaction-view-add-title">
             
+        </div>
+        <div class="transaction-view-title">
             Laporan: <?= $entityVo->getName() ?>
         </div>
         <div class="transaction-view-date">

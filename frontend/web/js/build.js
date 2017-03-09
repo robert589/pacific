@@ -2652,7 +2652,22 @@ define("project/custom-transaction-form", ["require", "exports", "common/form", 
     }(form_11.Form));
     exports.CustomTransactionForm = CustomTransactionForm;
 });
-define("project/transaction-view", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_30, button_18, system_21) {
+define("common/string", ["require", "exports"], function (require, exports) {
+    "use strict";
+    var String = (function () {
+        function String() {
+        }
+        String.trim = function (text) {
+            return text.replace(/^\s+|\s+$/g, "");
+        };
+        String.replaceAll = function (text, search, replacement) {
+            return text.replace(new RegExp(search, 'g'), replacement);
+        };
+        return String;
+    }());
+    exports.String = String;
+});
+define("project/transaction-view", ["require", "exports", "common/component", "common/button", "common/system", "common/string"], function (require, exports, component_30, button_18, system_21, string_1) {
     "use strict";
     var TransactionView = (function (_super) {
         __extends(TransactionView, _super);
@@ -2663,9 +2678,18 @@ define("project/transaction-view", ["require", "exports", "common/component", "c
             _super.prototype.decorate.call(this);
             this.printBtn = new button_18.Button(document.getElementById(this.id + "-printer"), this.print.bind(this));
             this.area = this.root.getElementsByClassName('transaction-view-area')[0];
+            this.printAsPiutang = new button_18.Button(document.getElementById(this.id + "-piutang"), this.print.bind(this, "Kartu Piutang"));
+            this.printAsUtang = new button_18.Button(document.getElementById(this.id + "-utang"), this.print.bind(this, "Kartu Utang"));
+            this.additionalTitleEl = this.root.getElementsByClassName('transaction-view-add-title')[0];
         };
-        TransactionView.prototype.print = function (e) {
-            system_21.System.printToPrinter(this.area.innerHTML);
+        TransactionView.prototype.print = function (addTitle) {
+            this.addAdditionalTitle(addTitle);
+            //REMOVE hide 600
+            var printString = string_1.String.replaceAll(this.area.innerHTML, "hide600", "");
+            system_21.System.printToPrinter(printString);
+        };
+        TransactionView.prototype.addAdditionalTitle = function (addTitle) {
+            this.additionalTitleEl.innerHTML = addTitle;
         };
         TransactionView.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
