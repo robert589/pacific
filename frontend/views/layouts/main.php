@@ -63,13 +63,10 @@ AppAsset::register($this);
                 <div class="menu-section clearfix">
                         <?= Sidebar::widget(['id' => 'cssmenu', 
                                 'items' => [
-                                    ['label' => 'Kapal',
-                                        'href' => '#',
-                                        'items' => [
-                                            ['label' => 'Kapal', 'href' => Yii::$app->request->baseUrl . "/ship/index"],
-                                            ['label' => 'Kepemilikan', 'href' => Yii::$app->request->baseUrl . "/ship/ownership"]
-                                        ]
-                                    ],  
+                                    [
+                                        'label' => 'Dashboard',
+                                        'href' => Yii::$app->request->baseUrl . "/dashboard/index"
+                                    ],
                                     [   
                                         'label' => 'Transaksi',
                                         'href' => '#',
@@ -78,8 +75,6 @@ AppAsset::register($this);
                                              'href' => Yii::$app->request->baseUrl . "/transaction/index"],
                                             ['label' => 'Buat Laporan Transaksi', 
                                              'href' => Yii::$app->request->baseUrl . "/transaction/custom"],
-                                            ['label' => 'Kode Transaksi', 
-                                             'href' => Yii::$app->request->baseUrl . "/code/index"],
                                         ]
 
                                     ],    
@@ -94,7 +89,18 @@ AppAsset::register($this);
                                              'href' => Yii::$app->request->baseUrl . "/selling/custom"]
                                         ]
 
-                                    ],    
+                                    ],   
+                                    [   
+                                        'label' => 'Inventaris',
+                                        'href' => '#',
+                                        'items' => [
+                                            ['label' => 'Daftar Aset', 
+                                             'href' => Yii::$app->request->baseUrl . "/inventory/index"],
+                                            ['label' => 'Buat Aset', 
+                                             'href' => Yii::$app->request->baseUrl . "/inventory/create"]
+                                        ]
+
+                                    ],  
                                     [   
                                         'label' => 'Pengguna',
                                         'href' => '#',
@@ -106,9 +112,14 @@ AppAsset::register($this);
                                         ]
                                     ],
                                     [
+                                        'label' => 'Kode',
+                                        'href' => Yii::$app->request->baseUrl . "/code/index"
+                                    ],
+                                    [
                                         'label' => 'Pengaturan',
                                         'href' => '#',
                                         'items' => [
+                                            ['label' => 'Umum', 'href' => Yii::$app->request->baseUrl . "/setting/index"],
                                             ['label' => 'Ganti Password', 'href' => Yii::$app->request->baseUrl . "/user/change-password"]
                                         ]
                                     ]

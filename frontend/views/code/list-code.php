@@ -25,11 +25,11 @@
                         //view button
                         'view' => function ($url, $model) {
                             if($model['active']) {
-                                return Button::widget(['id' => 'lc-view-' . $model['code'],
+                                return Button::widget(['id' => 'lc-view-' . $model['id'],
                                         'widgetClass' => 'button-link list-code-view',
                                         'text' => 'Lihat',
                                         'options' => [
-                                            'data-entity-id' => $model['code']
+                                            'data-entity-id' => $model['id']
                                         ],
                                         'color' => Button::NONE_COLOR
                                     
@@ -38,7 +38,7 @@
                         },
                         'add' => function ($url, $model) {
                             if($model['active']) {
-                                return Button::widget(['id' => 'lc-add-' . $model['code'],
+                                return Button::widget(['id' => 'lc-add-' . $model['id'],
                                     'widgetClass' => 'button-link list-code-add',
                                     'text' => 'Tambah Sub Kode',
                                     'options' => [
@@ -49,7 +49,7 @@
                         },
                         'edit' => function ($url, $model) {
                             if($model['active']) { 
-                                return Button::widget(['id' => 'lc-edit-' . $model['code'], 
+                                return Button::widget(['id' => 'lc-edit-' . $model['id'], 
                                     'widgetClass' => 'button-link list-code-edit',
                                     'text' => 'Edit',
                                     'options' => [

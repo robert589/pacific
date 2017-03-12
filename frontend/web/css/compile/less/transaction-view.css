@@ -24,6 +24,7 @@
 }
 .transaction-view-action > .button {
   width: 160px;
+  margin-right: 8px;
 }
 .transaction-view-footer {
   display: flex;

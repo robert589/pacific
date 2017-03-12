@@ -226,6 +226,9 @@ class CodeController extends Controller
     public function actionView() {
         $this->service->entity_id = filter_input(INPUT_GET, "id");
         $entityVo = $this->service->getEntityInfo();
+        if(!$entityVo) {
+            return $this->redirect(['site/error']);
+        }
         $ownerProvider = $this->service->getAllOwners();
         return $this->render('view-code', ['id' => 'cvc', 'ownerProvider' => $ownerProvider, 'entityVo' => $entityVo]);
     }

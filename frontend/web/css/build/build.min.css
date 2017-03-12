@@ -145,8 +145,9 @@
 .ship-owner-header{display:-ms-flexbox;display:flex}.ship-owner-header>.search-field{width:300px;margin-right:10px;margin-bottom:10px}.ship-owner-header>.button{width:100px;margin-bottom:10px}
 
 .transaction-item-field,.transaction-item-remove{padding:8px;border:1px solid #000}.transaction-item-view{display:-ms-flexbox;display:flex}.transaction-item-field{word-break:break-all;width:100%}
-.transaction-view-action,.transaction-view-footer,.transaction-view-header{display:-ms-flexbox;display:flex}.transaction-view-header-field{width:100%;padding:8px;background:#d3d3d3;border:1px solid #000}.transaction-view-date{text-align:center;font-weight:700;font-size:18px;margin-bottom:8px}.transaction-view-title{text-align:center;font-weight:700;font-size:24px}.transaction-view-action>.button{width:160px}.transaction-view-footer-item2,.transaction-view-footer-item3{padding:8px;border:1px solid #000;width:100%}.transaction-view-footer-item3{background:orange;font-weight:700}.transaction-view-area{margin:16px 0 0}
+.transaction-view-action,.transaction-view-footer,.transaction-view-header{display:-ms-flexbox;display:flex}.transaction-view-header-field{width:100%;padding:8px;background:#d3d3d3;border:1px solid #000}.transaction-view-date{text-align:center;font-weight:700;font-size:18px;margin-bottom:8px}.transaction-view-title{text-align:center;font-weight:700;font-size:24px}.transaction-view-action>.button{width:160px;margin-right:8px}.transaction-view-footer-item2,.transaction-view-footer-item3{padding:8px;border:1px solid #000;width:100%}.transaction-view-footer-item3{background:orange;font-weight:700}.transaction-view-area{margin:16px 0 0}
 
 
 .view-code>.btnc{margin-bottom:8px}
+.view-dash-item{border:1px solid #d3d3d3;display:inline-block;padding:8px;margin:8px;min-width:120px;vertical-align:top;min-height:70px}.view-dash-item-header{font-weight:700;display:block;font-size:18px}.view-dash-item-value{font-size:16px}
 .wholesale-field-field{display:-ms-flexbox;display:flex}.wholesale-field-field-item{width:100%;margin-right:16px}

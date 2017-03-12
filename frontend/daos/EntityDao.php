@@ -95,7 +95,6 @@ class EntityDao implements Dao
             ->bindParam(":entity_id", $entityId)
             ->bindParam(':status', $status)
             ->queryOne();
-        
         if(!$result) {
             return null;
         }

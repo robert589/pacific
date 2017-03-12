@@ -2,16 +2,16 @@
 
 use yii\db\Migration;
 
-class m170309_063005_add_user_id_to_entity_owner extends Migration
+class m170311_145915_create_table_system extends Migration
 {
     public function up()
     {
-        $this->execute("ALTER TABLE entity_owner add foreign key(owner_id) references user(id)");
+
     }
 
     public function down()
     {
-        echo "m170309_063005_add_user_id_to_entity_owner cannot be reverted.\n";
+        echo "m170311_145915_create_table_system cannot be reverted.\n";
 
         return false;
     }
