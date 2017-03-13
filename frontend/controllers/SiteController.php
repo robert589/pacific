@@ -76,7 +76,7 @@ class SiteController extends Controller
             return $this->render('login');
         }
         
-        return $this->redirect(['report/index']);
+        return $this->redirect(['dashboard/index']);
     }
 
     /**
