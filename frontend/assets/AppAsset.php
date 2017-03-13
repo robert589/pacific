@@ -34,6 +34,7 @@ class AppAsset extends AssetBundle
         'js/side-bar.js',
         'js/ie-emulation-modes-warning.js',
         'js/side-menu.js',
+        "js/library/math.min.js",
         'js/library/jquery-ui.min.js',
         'js/library/jquery.timepicker.min.js',
         'js/library/require.js',

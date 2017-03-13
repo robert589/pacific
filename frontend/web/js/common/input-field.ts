@@ -10,6 +10,8 @@ export class InputField extends Field {
     private dateFormat : string  = 'dd-mm-yy';
 
     private valueChangeEvent : CustomEvent;
+
+    private keyPressedEvent : CustomEvent;
     
     private type : string;
     
@@ -45,6 +47,7 @@ export class InputField extends Field {
     bindEvent() {
         super.bindEvent();
         this.valueChangeEvent = new CustomEvent(InputField.VALUE_CHANGED);
+
         this.inputElement.addEventListener('change', this.triggerValueChangedEvent.bind(this));
         if(this.type === "file") {
             this.inputElement.addEventListener('change click',
@@ -52,9 +55,14 @@ export class InputField extends Field {
         }
     }
 
+
     triggerValueChangedEvent() {
         this.inputElement.setAttribute('value', this.inputElement.value);
         this.root.dispatchEvent(this.valueChangeEvent);
+    }
+
+    public attachInputElement(eventName : string, cb : () => void) {
+        this.inputElement.addEventListener(eventName, cb);
     }
 
     detach() {
@@ -110,5 +118,17 @@ export class InputField extends Field {
             console.log((<Error> e).message );
         }
 
+    }
+
+    getSelectionStart() : number {
+        return this.inputElement.selectionStart;
+    }
+
+    setSelectionStart(startPoint : number) : void {
+        this.inputElement.selectionStart = startPoint;
+    }
+
+    setSelectionEnd(endPoint : number) : void { 
+        this.inputElement.selectionEnd = endPoint;
     }
 }

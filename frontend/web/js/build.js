@@ -338,6 +338,9 @@ define("common/input-field", ["require", "exports", "common/Field", "common/syst
             this.inputElement.setAttribute('value', this.inputElement.value);
             this.root.dispatchEvent(this.valueChangeEvent);
         };
+        InputField.prototype.attachInputElement = function (eventName, cb) {
+            this.inputElement.addEventListener(eventName, cb);
+        };
         InputField.prototype.detach = function () {
             this.inputElement = null;
         };
@@ -386,6 +389,15 @@ define("common/input-field", ["require", "exports", "common/Field", "common/syst
             catch (e) {
                 console.log(e.message);
             }
+        };
+        InputField.prototype.getSelectionStart = function () {
+            return this.inputElement.selectionStart;
+        };
+        InputField.prototype.setSelectionStart = function (startPoint) {
+            this.inputElement.selectionStart = startPoint;
+        };
+        InputField.prototype.setSelectionEnd = function (endPoint) {
+            this.inputElement.selectionEnd = endPoint;
         };
         return InputField;
     }(Field_1.Field));
@@ -1024,17 +1036,116 @@ define("common/key-code", ["require", "exports"], function (require, exports) {
             enumerable: true,
             configurable: true
         });
+        Object.defineProperty(KeyCode, "ZERO", {
+            get: function () {
+                return 48;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(KeyCode, "NINE", {
+            get: function () {
+                return 57;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(KeyCode, "DOT", {
+            get: function () {
+                return 46;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(KeyCode, "x", {
+            get: function () {
+                return 120;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(KeyCode, "ASTERISK", {
+            get: function () {
+                return 42;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(KeyCode, "MINUS", {
+            get: function () {
+                return 45;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(KeyCode, "PLUS", {
+            get: function () {
+                return 43;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(KeyCode, "SLASH", {
+            get: function () {
+                return 47;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(KeyCode, "EQUALS", {
+            get: function () {
+                return 61;
+            },
+            enumerable: true,
+            configurable: true
+        });
         return KeyCode;
     }());
     exports.KeyCode = KeyCode;
 });
-define("common/math", ["require", "exports"], function (require, exports) {
+define("common/string", ["require", "exports"], function (require, exports) {
+    "use strict";
+    var String = (function () {
+        function String() {
+        }
+        String.trim = function (text) {
+            return text.replace(/^\s+|\s+$/g, "");
+        };
+        String.replaceAll = function (text, search, replacement) {
+            return text.replace(new RegExp(search, 'g'), replacement);
+        };
+        String.numberOfOccurences = function (char, text) {
+            return text.split(char).length - 1;
+        };
+        return String;
+    }());
+    exports.String = String;
+});
+define("common/math", ["require", "exports", "common/string"], function (require, exports, string_1) {
     "use strict";
     var Math = (function () {
         function Math() {
         }
         Math.modulo = function (value, base) {
             return ((value % base) + base) % base;
+        };
+        Math.safeEval = function (expr) {
+            try {
+                var result = math.eval(expr);
+                return result;
+            }
+            catch (e) {
+                return null;
+            }
+        };
+        Math.convertToCurrency = function (text) {
+            return parseFloat(text.replace(/,/g, ""))
+                .toFixed(2)
+                .toString()
+                .replace(/\B(?=(\d{3})+(?!\d))/g, ",") + "";
+        };
+        Math.convertFromCurrency = function (text) {
+            return parseFloat(string_1.String.replaceAll(text, ",", ""));
         };
         return Math;
     }());
@@ -2394,7 +2505,126 @@ define("project/create-code", ["require", "exports", "common/component", "projec
     }(component_26.Component));
     exports.CreateCode = CreateCode;
 });
-define("project/add-transaction-form", ["require", "exports", "common/form", "common/input-field", "common/search-field"], function (require, exports, form_10, input_field_13, search_field_7) {
+define("common/currency-field", ["require", "exports", "common/Field", "common/system", "common/input-field", "common/key-code", "common/math"], function (require, exports, Field_4, system_19, input_field_13, key_code_2, math_2) {
+    "use strict";
+    var CurrencyField = (function (_super) {
+        __extends(CurrencyField, _super);
+        function CurrencyField(root) {
+            var _this = _super.call(this, root) || this;
+            _this.excelState = false;
+            return _this;
+        }
+        Object.defineProperty(CurrencyField, "CHAR_TO_EXCEL", {
+            get: function () { return "="; },
+            enumerable: true,
+            configurable: true
+        });
+        ;
+        CurrencyField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.input = new input_field_13.InputField(document.getElementById(this.id + "-input"));
+            this.defaultValue = this.root.getAttribute('data-default-value');
+            this.tempRealValue = this.input.getValue();
+        };
+        CurrencyField.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.input.attachInputElement("keypress", this.keyPressInput.bind(this));
+            this.input.attachInputElement('keyup', this.changeInput.bind(this));
+            this.input.attachInputElement("blur", this.evalValue.bind(this));
+            this.input.attachInputElement("blur", this.updateField.bind(this));
+            this.input.attachInputElement("focus", this.convertFromCurrency.bind(this));
+        };
+        CurrencyField.prototype.convertFromCurrency = function () {
+            var curVal = this.input.getValue();
+            if (curVal.length === 0) {
+                return;
+            }
+            this.input.setValue("" + math_2.Math.convertFromCurrency(curVal));
+        };
+        CurrencyField.prototype.evalValue = function (e) {
+            //console
+            if (this.excelState) {
+                var curValue = this.input.getValue();
+                var result = math_2.Math.safeEval(curValue.substring(1, curValue.length));
+                if (!system_19.System.isEmptyValue(result)) {
+                    this.input.setValue(result);
+                    this.removeExcelState();
+                }
+                else {
+                    this.showError("Expression Not Recognized");
+                }
+            }
+        };
+        CurrencyField.prototype.keyPressInput = function (e) {
+            this.hideError();
+            var keyCode = e.which;
+            if ((keyCode >= key_code_2.KeyCode.ZERO && keyCode <= key_code_2.KeyCode.NINE) ||
+                keyCode === key_code_2.KeyCode.DOT) {
+            }
+            else if (this.excelState && (keyCode === key_code_2.KeyCode.MINUS || keyCode === key_code_2.KeyCode.PLUS ||
+                keyCode === key_code_2.KeyCode.ASTERISK || keyCode === key_code_2.KeyCode.SLASH)) {
+            }
+            else if (keyCode === key_code_2.KeyCode.EQUALS && this.input.getValue().length === 0) {
+            }
+            else if (keyCode === key_code_2.KeyCode.ENTER_KEY && this.excelState) {
+                this.evalValue(e);
+            }
+            else {
+                e.preventDefault();
+                return false;
+            }
+        };
+        CurrencyField.prototype.changeInput = function (e) {
+            var value = this.input.getValue();
+            if (value.length === 1 && value.charAt(0) === CurrencyField.CHAR_TO_EXCEL) {
+                this.changeToExcelState();
+                e.preventDefault();
+                return;
+            }
+            if (value.length === 0) {
+                this.removeExcelState();
+            }
+        };
+        CurrencyField.prototype.updateField = function () {
+            if (this.excelState) {
+                return;
+            }
+            var value = this.input.getValue();
+            if (value.length === 0) {
+                return;
+            }
+            var newVal = math_2.Math.convertToCurrency(value);
+            this.input.setValue(newVal);
+        };
+        CurrencyField.prototype.changeToExcelState = function () {
+            this.excelState = true;
+            this.input.addClass('currency-field-excel');
+        };
+        CurrencyField.prototype.removeExcelState = function () {
+            this.excelState = false;
+            this.input.removeClass('currency-field-excel');
+        };
+        CurrencyField.prototype.getValue = function () {
+            var value = this.input.getValue();
+            if (system_19.System.isEmptyValue(value)) {
+                return parseInt(this.defaultValue);
+            }
+            return math_2.Math.convertFromCurrency(value);
+        };
+        CurrencyField.prototype.emptyValue = function () {
+            this.input.setValue("");
+        };
+        CurrencyField.prototype.setValue = function (number) {
+            if (!system_19.System.isEmptyValue(number) && number !== 0) {
+                this.input.setValue("");
+            }
+            this.input.setValue(number + "");
+        };
+        return CurrencyField;
+    }(Field_4.Field));
+    exports.CurrencyField = CurrencyField;
+});
+define("project/add-transaction-form", ["require", "exports", "common/form", "common/input-field", "common/search-field", "common/currency-field"], function (require, exports, form_10, input_field_14, search_field_7, currency_field_1) {
     "use strict";
     var AddTransactionForm = (function (_super) {
         __extends(AddTransactionForm, _super);
@@ -2422,16 +2652,16 @@ define("project/add-transaction-form", ["require", "exports", "common/form", "co
             };
             this.successEvent = new CustomEvent(AddTransactionForm.ADD_TRANSACTION_FORM_SUCCESS, { detail: json });
             this.root.dispatchEvent(this.successEvent);
-            this.debetField.setValue("0");
+            this.debetField.emptyValue();
             this.remarkField.setValue("");
-            this.creditField.setValue("0");
+            this.creditField.emptyValue();
         };
         AddTransactionForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.date = new input_field_13.InputField(document.getElementById(this.id + "-date"));
-            this.debetField = new input_field_13.InputField(document.getElementById(this.id + "-debet"));
-            this.remarkField = new input_field_13.InputField(document.getElementById(this.id + "-remark"));
-            this.creditField = new input_field_13.InputField(document.getElementById(this.id + "-credit"));
+            this.date = new input_field_14.InputField(document.getElementById(this.id + "-date"));
+            this.debetField = new currency_field_1.CurrencyField(document.getElementById(this.id + "-debet"));
+            this.remarkField = new input_field_14.InputField(document.getElementById(this.id + "-remark"));
+            this.creditField = new currency_field_1.CurrencyField(document.getElementById(this.id + "-credit"));
             this.codeField = new search_field_7.SearchField(document.getElementById(this.id + "-code"));
         };
         AddTransactionForm.prototype.bindEvent = function () {
@@ -2447,7 +2677,7 @@ define("project/add-transaction-form", ["require", "exports", "common/form", "co
     }(form_10.Form));
     exports.AddTransactionForm = AddTransactionForm;
 });
-define("project/daily-transaction-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_27, button_16, system_19) {
+define("project/daily-transaction-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_27, button_16, system_20) {
     "use strict";
     var DailyTransactionItem = (function (_super) {
         __extends(DailyTransactionItem, _super);
@@ -2468,8 +2698,8 @@ define("project/daily-transaction-item", ["require", "exports", "common/componen
             var data = {};
             data['transaction_id'] = this.transactionId;
             $.ajax({
-                url: system_19.System.getBaseUrl() + "/transaction/remove",
-                data: system_19.System.addCsrf(data),
+                url: system_20.System.getBaseUrl() + "/transaction/remove",
+                data: system_20.System.addCsrf(data),
                 dataType: "json",
                 method: "post",
                 context: this,
@@ -2488,8 +2718,8 @@ define("project/daily-transaction-item", ["require", "exports", "common/componen
             var data = {};
             data['transaction_id'] = this.transactionId;
             $.ajax({
-                url: system_19.System.getBaseUrl() + "/transaction/cancel-remove",
-                data: system_19.System.addCsrf(data),
+                url: system_20.System.getBaseUrl() + "/transaction/cancel-remove",
+                data: system_20.System.addCsrf(data),
                 dataType: "json",
                 method: "post",
                 context: this,
@@ -2556,7 +2786,7 @@ define("project/daily-transaction-view", ["require", "exports", "common/componen
     }(component_28.Component));
     exports.DailyTransactionView = DailyTransactionView;
 });
-define("project/daily-transaction", ["require", "exports", "common/component", "common/input-field", "common/system", "project/daily-transaction-view", "common/button"], function (require, exports, component_29, input_field_14, system_20, daily_transaction_view_1, button_17) {
+define("project/daily-transaction", ["require", "exports", "common/component", "common/input-field", "common/system", "project/daily-transaction-view", "common/button"], function (require, exports, component_29, input_field_15, system_21, daily_transaction_view_1, button_17) {
     "use strict";
     var DailyTransaction = (function (_super) {
         __extends(DailyTransaction, _super);
@@ -2565,13 +2795,13 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
         }
         DailyTransaction.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.date = new input_field_14.InputField(document.getElementById(this.id + "-date"));
+            this.date = new input_field_15.InputField(document.getElementById(this.id + "-date"));
             this.area = this.root.getElementsByClassName('daily-transact-area')[0];
             this.refresh = new button_17.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
         };
         DailyTransaction.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            this.date.attachEvent(input_field_14.InputField.VALUE_CHANGED, this.getView.bind(this));
+            this.date.attachEvent(input_field_15.InputField.VALUE_CHANGED, this.getView.bind(this));
         };
         DailyTransaction.prototype.getView = function () {
             var data = {};
@@ -2579,8 +2809,8 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
             this.area.innerHTML = "Loading . . .";
             this.refresh.disable(true);
             $.ajax({
-                url: system_20.System.getBaseUrl() + "/transaction/get-daily-view",
-                data: system_20.System.addCsrf(data),
+                url: system_21.System.getBaseUrl() + "/transaction/get-daily-view",
+                data: system_21.System.addCsrf(data),
                 context: this,
                 dataType: "json",
                 method: "post",
@@ -2596,7 +2826,7 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
         };
         DailyTransaction.prototype.addViewToArea = function (views) {
             this.area.innerHTML = "";
-            if (!system_20.System.isEmptyValue(this.transactView)) {
+            if (!system_21.System.isEmptyValue(this.transactView)) {
                 this.transactView.deconstruct();
             }
             var wrapper = document.createElement("div");
@@ -2615,7 +2845,7 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
     }(component_29.Component));
     exports.DailyTransaction = DailyTransaction;
 });
-define("common/checkbox-field", ["require", "exports", "common/Field"], function (require, exports, Field_4) {
+define("common/checkbox-field", ["require", "exports", "common/Field"], function (require, exports, Field_5) {
     "use strict";
     var CheckboxField = (function (_super) {
         __extends(CheckboxField, _super);
@@ -2644,10 +2874,10 @@ define("common/checkbox-field", ["require", "exports", "common/Field"], function
             return this.inputElement.checked;
         };
         return CheckboxField;
-    }(Field_4.Field));
+    }(Field_5.Field));
     exports.CheckboxField = CheckboxField;
 });
-define("project/custom-transaction-form", ["require", "exports", "common/form", "common/search-field", "common/input-field", "common/checkbox-field"], function (require, exports, form_11, search_field_8, input_field_15, checkbox_field_1) {
+define("project/custom-transaction-form", ["require", "exports", "common/form", "common/search-field", "common/input-field", "common/checkbox-field"], function (require, exports, form_11, search_field_8, input_field_16, checkbox_field_1) {
     "use strict";
     var CustomTransactionForm = (function (_super) {
         __extends(CustomTransactionForm, _super);
@@ -2676,8 +2906,8 @@ define("project/custom-transaction-form", ["require", "exports", "common/form", 
         CustomTransactionForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.code = new search_field_8.SearchField(document.getElementById(this.id + "-code"));
-            this.from = new input_field_15.InputField(document.getElementById(this.id + "-from"));
-            this.to = new input_field_15.InputField(document.getElementById(this.id + "-to"));
+            this.from = new input_field_16.InputField(document.getElementById(this.id + "-from"));
+            this.to = new input_field_16.InputField(document.getElementById(this.id + "-to"));
             this.showCodeField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-code"));
             this.showSaldoField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-saldo"));
             this.showDateField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-date"));
@@ -2709,22 +2939,7 @@ define("project/custom-transaction-form", ["require", "exports", "common/form", 
     }(form_11.Form));
     exports.CustomTransactionForm = CustomTransactionForm;
 });
-define("common/string", ["require", "exports"], function (require, exports) {
-    "use strict";
-    var String = (function () {
-        function String() {
-        }
-        String.trim = function (text) {
-            return text.replace(/^\s+|\s+$/g, "");
-        };
-        String.replaceAll = function (text, search, replacement) {
-            return text.replace(new RegExp(search, 'g'), replacement);
-        };
-        return String;
-    }());
-    exports.String = String;
-});
-define("project/transaction-view", ["require", "exports", "common/component", "common/button", "common/system", "common/string"], function (require, exports, component_30, button_18, system_21, string_1) {
+define("project/transaction-view", ["require", "exports", "common/component", "common/button", "common/system", "common/string"], function (require, exports, component_30, button_18, system_22, string_2) {
     "use strict";
     var TransactionView = (function (_super) {
         __extends(TransactionView, _super);
@@ -2742,8 +2957,8 @@ define("project/transaction-view", ["require", "exports", "common/component", "c
         TransactionView.prototype.print = function (addTitle) {
             this.addAdditionalTitle(addTitle);
             //REMOVE hide 600
-            var printString = string_1.String.replaceAll(this.area.innerHTML, "hide600", "");
-            system_21.System.printToPrinter(printString);
+            var printString = string_2.String.replaceAll(this.area.innerHTML, "hide600", "");
+            system_22.System.printToPrinter(printString);
         };
         TransactionView.prototype.addAdditionalTitle = function (addTitle) {
             this.additionalTitleEl.innerHTML = addTitle;
@@ -2812,7 +3027,7 @@ define("common/equal-validation", ["require", "exports", "common/validation"], f
     }(validation_2.Validation));
     exports.EqualValidation = EqualValidation;
 });
-define("project/change-password-form", ["require", "exports", "common/form", "common/input-field", "common/equal-validation"], function (require, exports, form_12, input_field_16, equal_validation_1) {
+define("project/change-password-form", ["require", "exports", "common/form", "common/input-field", "common/equal-validation"], function (require, exports, form_12, input_field_17, equal_validation_1) {
     "use strict";
     var ChangePasswordForm = (function (_super) {
         __extends(ChangePasswordForm, _super);
@@ -2825,9 +3040,9 @@ define("project/change-password-form", ["require", "exports", "common/form", "co
         }
         ChangePasswordForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.curPasswordField = new input_field_16.InputField(document.getElementById(this.id + "-cur-password-field"));
-            this.newPasswordField = new input_field_16.InputField(document.getElementById(this.id + "-new-password-field"));
-            this.confPasswordField = new input_field_16.InputField(document.getElementById(this.id + "-conf-password-field"));
+            this.curPasswordField = new input_field_17.InputField(document.getElementById(this.id + "-cur-password-field"));
+            this.newPasswordField = new input_field_17.InputField(document.getElementById(this.id + "-new-password-field"));
+            this.confPasswordField = new input_field_17.InputField(document.getElementById(this.id + "-conf-password-field"));
         };
         ChangePasswordForm.prototype.rules = function () {
             this.registerFields([this.curPasswordField, this.newPasswordField, this.confPasswordField]);
@@ -2894,14 +3109,14 @@ define("project/assign-code-to-ship", ["require", "exports", "common/component"]
     }(component_33.Component));
     exports.AssignCodeToShip = AssignCodeToShip;
 });
-define("project/edit-ship-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_13, input_field_17, text_area_field_5, system_22) {
+define("project/edit-ship-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_13, input_field_18, text_area_field_5, system_23) {
     "use strict";
     var EditShipForm = (function (_super) {
         __extends(EditShipForm, _super);
         function EditShipForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_22.System.getBaseUrl() + "/ship/index";
+                window.location.href = system_23.System.getBaseUrl() + "/ship/index";
             }.bind(_this);
             return _this;
         }
@@ -2911,10 +3126,10 @@ define("project/edit-ship-form", ["require", "exports", "common/form", "common/i
         };
         EditShipForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.nameField = new input_field_17.InputField(document.getElementById(this.id + "-name"));
+            this.nameField = new input_field_18.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_5.TextAreaField(document.getElementById(this.id + "-desc"));
-            this.idField = new input_field_17.InputField(document.getElementById(this.id + "-id"));
-            this.codeField = new input_field_17.InputField(document.getElementById(this.id + "-code"));
+            this.idField = new input_field_18.InputField(document.getElementById(this.id + "-id"));
+            this.codeField = new input_field_18.InputField(document.getElementById(this.id + "-code"));
         };
         EditShipForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2953,7 +3168,7 @@ define("project/edit-ship", ["require", "exports", "common/component", "project/
     }(component_34.Component));
     exports.EditShip = EditShip;
 });
-define("project/add-entity-relation-form", ["require", "exports", "common/form", "common/input-field", "common/search-field"], function (require, exports, form_14, input_field_18, search_field_9) {
+define("project/add-entity-relation-form", ["require", "exports", "common/form", "common/input-field", "common/search-field"], function (require, exports, form_14, input_field_19, search_field_9) {
     "use strict";
     var AddEntityRelationForm = (function (_super) {
         __extends(AddEntityRelationForm, _super);
@@ -2971,7 +3186,7 @@ define("project/add-entity-relation-form", ["require", "exports", "common/form",
         };
         AddEntityRelationForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.codeField = new input_field_18.InputField(document.getElementById(this.id + "-code"));
+            this.codeField = new input_field_19.InputField(document.getElementById(this.id + "-code"));
             this.subcode = new search_field_9.SearchField(document.getElementById(this.id + "-subcode"));
         };
         AddEntityRelationForm.prototype.bindEvent = function () {
@@ -2987,7 +3202,7 @@ define("project/add-entity-relation-form", ["require", "exports", "common/form",
     }(form_14.Form));
     exports.AddEntityRelationForm = AddEntityRelationForm;
 });
-define("project/add-entity-relation-range-form", ["require", "exports", "common/form", "common/input-field", "common/range-validation"], function (require, exports, form_15, input_field_19, range_validation_1) {
+define("project/add-entity-relation-range-form", ["require", "exports", "common/form", "common/input-field", "common/range-validation"], function (require, exports, form_15, input_field_20, range_validation_1) {
     "use strict";
     var AddEntityRelationRangeForm = (function (_super) {
         __extends(AddEntityRelationRangeForm, _super);
@@ -3015,9 +3230,9 @@ define("project/add-entity-relation-range-form", ["require", "exports", "common/
         };
         AddEntityRelationRangeForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.fromField = new input_field_19.InputField(document.getElementById(this.id + "-from"));
-            this.toField = new input_field_19.InputField(document.getElementById(this.id + "-to"));
-            this.code = new input_field_19.InputField(document.getElementById(this.id + "-code"));
+            this.fromField = new input_field_20.InputField(document.getElementById(this.id + "-from"));
+            this.toField = new input_field_20.InputField(document.getElementById(this.id + "-to"));
+            this.code = new input_field_20.InputField(document.getElementById(this.id + "-code"));
         };
         AddEntityRelationRangeForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -3032,7 +3247,7 @@ define("project/add-entity-relation-range-form", ["require", "exports", "common/
     }(form_15.Form));
     exports.AddEntityRelationRangeForm = AddEntityRelationRangeForm;
 });
-define("project/add-entity-relation", ["require", "exports", "common/component", "project/add-entity-relation-form", "project/add-entity-relation-range-form", "common/button", "common/system"], function (require, exports, component_35, add_entity_relation_form_1, add_entity_relation_range_form_1, button_19, system_23) {
+define("project/add-entity-relation", ["require", "exports", "common/component", "project/add-entity-relation-form", "project/add-entity-relation-range-form", "common/button", "common/system"], function (require, exports, component_35, add_entity_relation_form_1, add_entity_relation_range_form_1, button_19, system_24) {
     "use strict";
     var AddEntityRelation = (function (_super) {
         __extends(AddEntityRelation, _super);
@@ -3053,17 +3268,17 @@ define("project/add-entity-relation", ["require", "exports", "common/component",
             this.removeAllRelationBtn = new button_19.Button(document.getElementById(this.id + "-remove-all"), this.showRemoveAllRelationDialog.bind(this));
         };
         AddEntityRelation.prototype.showRemoveAllRelationDialog = function () {
-            system_23.System.showConfirmDialog(this.removeAllRelation.bind(this), "Hapus Semua Subkode", "Apakah anda yakin?");
+            system_24.System.showConfirmDialog(this.removeAllRelation.bind(this), "Hapus Semua Subkode", "Apakah anda yakin?");
         };
         AddEntityRelation.prototype.showRemoveRelationDialog = function (raw) {
-            system_23.System.showConfirmDialog(this.removeRelation.bind(this, raw), "Hapus Subkode", "Apakah anda yakin?");
+            system_24.System.showConfirmDialog(this.removeRelation.bind(this, raw), "Hapus Subkode", "Apakah anda yakin?");
         };
         AddEntityRelation.prototype.removeAllRelation = function () {
             var data = {};
             data['code'] = this.codeId;
             $.ajax({
-                url: system_23.System.getBaseUrl() + "/code/remove-all-relation",
-                data: system_23.System.addCsrf(data),
+                url: system_24.System.getBaseUrl() + "/code/remove-all-relation",
+                data: system_24.System.addCsrf(data),
                 dataType: "json",
                 context: this,
                 method: "post",
@@ -3080,8 +3295,8 @@ define("project/add-entity-relation", ["require", "exports", "common/component",
             data['subcode'] = subcodeId;
             data['code'] = this.codeId;
             $.ajax({
-                url: system_23.System.getBaseUrl() + "/code/remove-relation",
-                data: system_23.System.addCsrf(data),
+                url: system_24.System.getBaseUrl() + "/code/remove-relation",
+                data: system_24.System.addCsrf(data),
                 dataType: "json",
                 context: this,
                 method: "post",
@@ -3135,7 +3350,7 @@ define("common/btn-container", ["require", "exports", "common/component", "commo
     }(component_36.Component));
     exports.BtnContainer = BtnContainer;
 });
-define("project/add-role-to-user-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_16, search_field_10, input_field_20) {
+define("project/add-role-to-user-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_16, search_field_10, input_field_21) {
     "use strict";
     var AddRoleToUserForm = (function (_super) {
         __extends(AddRoleToUserForm, _super);
@@ -3153,7 +3368,7 @@ define("project/add-role-to-user-form", ["require", "exports", "common/form", "c
         AddRoleToUserForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.roleField = new search_field_10.SearchField(document.getElementById(this.id + "-role"));
-            this.userField = new input_field_20.InputField(document.getElementById(this.id + "-user-id"));
+            this.userField = new input_field_21.InputField(document.getElementById(this.id + "-user-id"));
         };
         AddRoleToUserForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -3192,7 +3407,7 @@ define("project/add-role-to-user-form-btnc", ["require", "exports", "common/btn-
     }(btn_container_1.BtnContainer));
     exports.AddRoleToUserFormBtnc = AddRoleToUserFormBtnc;
 });
-define("project/list-user", ["require", "exports", "common/component", "common/system", "common/button", "project/add-role-to-user-form-btnc"], function (require, exports, component_37, system_24, button_21, add_role_to_user_form_btnc_1) {
+define("project/list-user", ["require", "exports", "common/component", "common/system", "common/button", "project/add-role-to-user-form-btnc"], function (require, exports, component_37, system_25, button_21, add_role_to_user_form_btnc_1) {
     "use strict";
     var ListUser = (function (_super) {
         __extends(ListUser, _super);
@@ -3200,13 +3415,13 @@ define("project/list-user", ["require", "exports", "common/component", "common/s
             return _super.call(this, root) || this;
         }
         ListUser.prototype.redirectToAdd = function () {
-            window.location.href = system_24.System.getBaseUrl() + "/user/add";
+            window.location.href = system_25.System.getBaseUrl() + "/user/add";
         };
         ListUser.prototype.redirectToRole = function () {
-            window.location.href = system_24.System.getBaseUrl() + "/user/role";
+            window.location.href = system_25.System.getBaseUrl() + "/user/role";
         };
         ListUser.prototype.showRemoveRoleDialog = function (raw) {
-            system_24.System.showConfirmDialog(this.removeRole.bind(null, raw), "Are you sure", "Are you sure to remove the role?");
+            system_25.System.showConfirmDialog(this.removeRole.bind(null, raw), "Are you sure", "Are you sure to remove the role?");
         };
         ListUser.prototype.removeRole = function (raw) {
             var user_id = raw.getAttribute('data-user-id');
@@ -3215,8 +3430,8 @@ define("project/list-user", ["require", "exports", "common/component", "common/s
             data['target_user_id'] = user_id;
             data['role_id'] = role_id;
             $.ajax({
-                url: system_24.System.getBaseUrl() + "/user/remove-role",
-                data: system_24.System.addCsrf(data),
+                url: system_25.System.getBaseUrl() + "/user/remove-role",
+                data: system_25.System.addCsrf(data),
                 context: this,
                 dataType: "json",
                 method: "post",
@@ -3257,14 +3472,14 @@ define("project/list-user", ["require", "exports", "common/component", "common/s
     }(component_37.Component));
     exports.ListUser = ListUser;
 });
-define("project/edit-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system"], function (require, exports, form_17, input_field_21, text_area_field_6, search_field_11, system_25) {
+define("project/edit-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system"], function (require, exports, form_17, input_field_22, text_area_field_6, search_field_11, system_26) {
     "use strict";
     var EditCodeForm = (function (_super) {
         __extends(EditCodeForm, _super);
         function EditCodeForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_25.System.getBaseUrl() + "/code/index";
+                window.location.href = system_26.System.getBaseUrl() + "/code/index";
             };
             return _this;
         }
@@ -3276,10 +3491,10 @@ define("project/edit-code-form", ["require", "exports", "common/form", "common/i
         };
         EditCodeForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.idField = new input_field_21.InputField(document.getElementById(this.id + "-id"));
-            this.codeField = new input_field_21.InputField(document.getElementById(this.id + "-code"));
+            this.idField = new input_field_22.InputField(document.getElementById(this.id + "-id"));
+            this.codeField = new input_field_22.InputField(document.getElementById(this.id + "-code"));
             this.typeIdField = new search_field_11.SearchField(document.getElementById(this.id + "-type-id"));
-            this.nameField = new input_field_21.InputField(document.getElementById(this.id + "-name"));
+            this.nameField = new input_field_22.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_6.TextAreaField(document.getElementById(this.id + "-desc"));
         };
         EditCodeForm.prototype.bindEvent = function () {
@@ -3319,14 +3534,14 @@ define("project/edit-code", ["require", "exports", "common/component", "project/
     }(component_38.Component));
     exports.EditCode = EditCode;
 });
-define("project/edit-code-type-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_18, input_field_22, text_area_field_7, system_26) {
+define("project/edit-code-type-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_18, input_field_23, text_area_field_7, system_27) {
     "use strict";
     var EditCodeTypeForm = (function (_super) {
         __extends(EditCodeTypeForm, _super);
         function EditCodeTypeForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_26.System.getBaseUrl() + "/code/type";
+                window.location.href = system_27.System.getBaseUrl() + "/code/type";
             };
             return _this;
         }
@@ -3336,8 +3551,8 @@ define("project/edit-code-type-form", ["require", "exports", "common/form", "com
         };
         EditCodeTypeForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.idField = new input_field_22.InputField(document.getElementById(this.id + "-id"));
-            this.nameField = new input_field_22.InputField(document.getElementById(this.id + "-name"));
+            this.idField = new input_field_23.InputField(document.getElementById(this.id + "-id"));
+            this.nameField = new input_field_23.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_7.TextAreaField(document.getElementById(this.id + "-desc"));
         };
         EditCodeTypeForm.prototype.bindEvent = function () {
@@ -3377,14 +3592,14 @@ define("project/edit-code-type", ["require", "exports", "common/component", "pro
     }(component_39.Component));
     exports.EditCodeType = EditCodeType;
 });
-define("project/add-user-form", ["require", "exports", "common/form", "common/input-field", "common/system"], function (require, exports, form_19, input_field_23, system_27) {
+define("project/add-user-form", ["require", "exports", "common/form", "common/input-field", "common/system"], function (require, exports, form_19, input_field_24, system_28) {
     "use strict";
     var AddUserForm = (function (_super) {
         __extends(AddUserForm, _super);
         function AddUserForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_27.System.getBaseUrl() + "/user/list";
+                window.location.href = system_28.System.getBaseUrl() + "/user/list";
             }.bind(_this);
             return _this;
         }
@@ -3394,10 +3609,10 @@ define("project/add-user-form", ["require", "exports", "common/form", "common/in
         };
         AddUserForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.firstNameField = new input_field_23.InputField(document.getElementById(this.id + "-first-name"));
-            this.lastNameField = new input_field_23.InputField(document.getElementById(this.id + "-last-name"));
-            this.emailField = new input_field_23.InputField(document.getElementById(this.id + "-email"));
-            this.passwordField = new input_field_23.InputField(document.getElementById(this.id + "-password"));
+            this.firstNameField = new input_field_24.InputField(document.getElementById(this.id + "-first-name"));
+            this.lastNameField = new input_field_24.InputField(document.getElementById(this.id + "-last-name"));
+            this.emailField = new input_field_24.InputField(document.getElementById(this.id + "-email"));
+            this.passwordField = new input_field_24.InputField(document.getElementById(this.id + "-password"));
         };
         AddUserForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -3436,7 +3651,7 @@ define("project/add-user", ["require", "exports", "common/component", "project/a
     }(component_40.Component));
     exports.AddUser = AddUser;
 });
-define("project/assign-rights-to-role-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_20, search_field_12, input_field_24) {
+define("project/assign-rights-to-role-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_20, search_field_12, input_field_25) {
     "use strict";
     var AssignRightsToRoleForm = (function (_super) {
         __extends(AssignRightsToRoleForm, _super);
@@ -3453,7 +3668,7 @@ define("project/assign-rights-to-role-form", ["require", "exports", "common/form
         };
         AssignRightsToRoleForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.roleField = new input_field_24.InputField(document.getElementById(this.id + "-role-id"));
+            this.roleField = new input_field_25.InputField(document.getElementById(this.id + "-role-id"));
             this.accessField = new search_field_12.SearchField(document.getElementById(this.id + "-rights"));
         };
         AssignRightsToRoleForm.prototype.bindEvent = function () {
@@ -3493,7 +3708,7 @@ define("project/assign-rights-to-role-form-btnc", ["require", "exports", "common
     }(btn_container_2.BtnContainer));
     exports.AssignRightsToRoleFormBtnc = AssignRightsToRoleFormBtnc;
 });
-define("project/list-role", ["require", "exports", "common/component", "common/button", "common/system", "project/assign-rights-to-role-form-btnc"], function (require, exports, component_41, button_22, system_28, assign_rights_to_role_form_btnc_1) {
+define("project/list-role", ["require", "exports", "common/component", "common/button", "common/system", "project/assign-rights-to-role-form-btnc"], function (require, exports, component_41, button_22, system_29, assign_rights_to_role_form_btnc_1) {
     "use strict";
     var ListRole = (function (_super) {
         __extends(ListRole, _super);
@@ -3501,10 +3716,10 @@ define("project/list-role", ["require", "exports", "common/component", "common/b
             return _super.call(this, root) || this;
         }
         ListRole.prototype.redirectToAdd = function () {
-            window.location.href = system_28.System.getBaseUrl() + "/user/add-role";
+            window.location.href = system_29.System.getBaseUrl() + "/user/add-role";
         };
         ListRole.prototype.redirectToListAccessControl = function () {
-            window.location.href = system_28.System.getBaseUrl() + "/user/access-control";
+            window.location.href = system_29.System.getBaseUrl() + "/user/access-control";
         };
         ListRole.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
@@ -3522,7 +3737,7 @@ define("project/list-role", ["require", "exports", "common/component", "common/b
             }
         };
         ListRole.prototype.showRemoveRightDialog = function (raw) {
-            system_28.System.showConfirmDialog(this.removeRight.bind(null, raw), "Are you sure", "Are you sure to remove the right?");
+            system_29.System.showConfirmDialog(this.removeRight.bind(null, raw), "Are you sure", "Are you sure to remove the right?");
         };
         ListRole.prototype.removeRight = function (raw) {
             var access_control_id = raw.getAttribute('data-right-id');
@@ -3531,8 +3746,8 @@ define("project/list-role", ["require", "exports", "common/component", "common/b
             data['access_control_id'] = access_control_id;
             data['role_id'] = role_id;
             $.ajax({
-                url: system_28.System.getBaseUrl() + "/user/remove-access",
-                data: system_28.System.addCsrf(data),
+                url: system_29.System.getBaseUrl() + "/user/remove-access",
+                data: system_29.System.addCsrf(data),
                 context: this,
                 dataType: "json",
                 method: "post",
@@ -3558,7 +3773,7 @@ define("project/list-role", ["require", "exports", "common/component", "common/b
     }(component_41.Component));
     exports.ListRole = ListRole;
 });
-define("project/add-owner-to-code-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_21, search_field_13, input_field_25) {
+define("project/add-owner-to-code-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_21, search_field_13, input_field_26) {
     "use strict";
     var AddOwnerToCodeForm = (function (_super) {
         __extends(AddOwnerToCodeForm, _super);
@@ -3575,7 +3790,7 @@ define("project/add-owner-to-code-form", ["require", "exports", "common/form", "
         };
         AddOwnerToCodeForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.entityIdField = new input_field_25.InputField(document.getElementById(this.id + "-entity-id"));
+            this.entityIdField = new input_field_26.InputField(document.getElementById(this.id + "-entity-id"));
             this.userField = new search_field_13.SearchField(document.getElementById(this.id + "-user-id"));
         };
         AddOwnerToCodeForm.prototype.bindEvent = function () {
@@ -3615,7 +3830,7 @@ define("project/add-owner-to-code-form-btnc", ["require", "exports", "common/btn
     }(btn_container_3.BtnContainer));
     exports.AddOwnerToCodeFormBtnc = AddOwnerToCodeFormBtnc;
 });
-define("project/view-code", ["require", "exports", "common/component", "project/add-owner-to-code-form-btnc", "common/button", "common/system"], function (require, exports, component_42, add_owner_to_code_form_btnc_1, button_23, system_29) {
+define("project/view-code", ["require", "exports", "common/component", "project/add-owner-to-code-form-btnc", "common/button", "common/system"], function (require, exports, component_42, add_owner_to_code_form_btnc_1, button_23, system_30) {
     "use strict";
     var ViewCode = (function (_super) {
         __extends(ViewCode, _super);
@@ -3625,10 +3840,10 @@ define("project/view-code", ["require", "exports", "common/component", "project/
             return _this;
         }
         ViewCode.prototype.redirectToAddRelationView = function () {
-            window.location.href = system_29.System.getBaseUrl() + "/code/add-relation?id=" + this.entityId;
+            window.location.href = system_30.System.getBaseUrl() + "/code/add-relation?id=" + this.entityId;
         };
         ViewCode.prototype.redirectToEdit = function () {
-            window.location.href = system_29.System.getBaseUrl() + "/code/edit?id=" + this.entityId;
+            window.location.href = system_30.System.getBaseUrl() + "/code/edit?id=" + this.entityId;
         };
         ViewCode.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
@@ -3642,7 +3857,7 @@ define("project/view-code", ["require", "exports", "common/component", "project/
             }
         };
         ViewCode.prototype.showRemoveDialog = function (raw) {
-            system_29.System.showConfirmDialog(this.removeOwner.bind(this, raw), "Are you sure", "Are you sure to delete this owner?");
+            system_30.System.showConfirmDialog(this.removeOwner.bind(this, raw), "Are you sure", "Are you sure to delete this owner?");
         };
         ViewCode.prototype.removeOwner = function (raw) {
             var userId = raw.getAttribute('data-user-id');
@@ -3650,8 +3865,8 @@ define("project/view-code", ["require", "exports", "common/component", "project/
             data['entity_id'] = this.entityId;
             data['target_user_id'] = userId;
             $.ajax({
-                url: system_29.System.getBaseUrl() + "/code/remove-owner",
-                data: system_29.System.addCsrf(data),
+                url: system_30.System.getBaseUrl() + "/code/remove-owner",
+                data: system_30.System.addCsrf(data),
                 context: this,
                 dataType: "json",
                 method: "post",
@@ -3677,14 +3892,14 @@ define("project/view-code", ["require", "exports", "common/component", "project/
     }(component_42.Component));
     exports.ViewCode = ViewCode;
 });
-define("project/add-role-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_22, input_field_26, text_area_field_8, system_30) {
+define("project/add-role-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_22, input_field_27, text_area_field_8, system_31) {
     "use strict";
     var AddRoleForm = (function (_super) {
         __extends(AddRoleForm, _super);
         function AddRoleForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_30.System.getBaseUrl() + "/user/role";
+                window.location.href = system_31.System.getBaseUrl() + "/user/role";
             };
             return _this;
         }
@@ -3694,7 +3909,7 @@ define("project/add-role-form", ["require", "exports", "common/form", "common/in
         };
         AddRoleForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.nameField = new input_field_26.InputField(document.getElementById(this.id + "-name"));
+            this.nameField = new input_field_27.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_8.TextAreaField(document.getElementById(this.id + "-desc"));
         };
         AddRoleForm.prototype.bindEvent = function () {
@@ -3734,7 +3949,7 @@ define("project/add-role", ["require", "exports", "common/component", "project/a
     }(component_43.Component));
     exports.AddRole = AddRole;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role"], function (require, exports, component_44, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_31, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role"], function (require, exports, component_44, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_32, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -3841,7 +4056,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_31.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_32.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };

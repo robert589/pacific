@@ -1,6 +1,7 @@
 <?php
     use common\widgets\Form;
     use common\widgets\InputField;
+    use common\widgets\CurrencyField;
     use common\widgets\Button;
     use common\widgets\SearchField;
 ?>
@@ -27,16 +28,14 @@
         <div class="form-field-left">
             Debet
         </div>
-        <?= InputField::widget(['id' => $id . '-debet', 'placeholder' => 'Debet', 'value' => 0,
-                                'type' => InputField::NUMBER, 'name' => 'debet']) ?>
+        <?= CurrencyField::widget(['id' => $id . '-debet', 'defaultValue' => 0,  'name' => 'debet']) ?>
     </div>
 
     <div class="form-field">
         <div class="form-field-left">
             Credit
         </div>
-        <?= InputField::widget(['id' => $id . '-credit', 'placeholder' => 'Credit', 'value' => 0,
-                                'type' => InputField::NUMBER, 'name' => 'credit']) ?>
+        <?= CurrencyField::widget(['id' => $id . '-credit', 'defaultValue' => 0, 'name' => 'credit']) ?>
     </div>
 
     <div class="form-field">

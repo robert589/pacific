@@ -8,6 +8,7 @@
     "files" : [
         "./typings/jquery/jquery.d.ts",
         "./typings/jqueryui/jqueryui.d.ts",
+        "./typings/math.d.ts",
         "./typings/jquerytimepicker/jquery.timepicker.d.ts",
         "./common/component.ts",
         "./common/input-field.ts",

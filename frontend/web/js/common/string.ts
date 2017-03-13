@@ -8,4 +8,7 @@ export class String  {
         return text.replace(new RegExp(search, 'g'), replacement);
     }
   
+    public static numberOfOccurences(char : string, text : string) : number {
+        return text.split(char).length-1;
+    }
 }

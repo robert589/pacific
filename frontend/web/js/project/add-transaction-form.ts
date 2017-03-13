@@ -1,6 +1,7 @@
 import {Form} from '../common/form';
 import {InputField} from './../common/input-field';
 import {SearchField} from './../common/search-field';
+import {CurrencyField} from './../common/currency-field';
 
 export class AddTransactionForm extends Form{
     
@@ -8,11 +9,11 @@ export class AddTransactionForm extends Form{
 
     successEvent : CustomEvent;
 
-    debetField : InputField;
+    debetField : CurrencyField;
 
     remarkField : InputField;
 
-    creditField : InputField;
+    creditField : CurrencyField;
 
     codeField : SearchField;
 
@@ -40,17 +41,17 @@ export class AddTransactionForm extends Form{
                         {detail : json});
         this.root.dispatchEvent(this.successEvent);
 
-        this.debetField.setValue("0");
+        this.debetField.emptyValue();
         this.remarkField.setValue("");
-        this.creditField.setValue("0");
+        this.creditField.emptyValue();
     }
     
     decorate() {
         super.decorate();
         this.date = new InputField(document.getElementById(this.id + "-date"));
-        this.debetField = new InputField(document.getElementById(this.id + "-debet"));
+        this.debetField = new CurrencyField(document.getElementById(this.id + "-debet"));
         this.remarkField = new InputField(document.getElementById(this.id + "-remark"));
-        this.creditField = new InputField(document.getElementById(this.id + "-credit"));
+        this.creditField = new CurrencyField(document.getElementById(this.id + "-credit"));
         this.codeField = new SearchField(document.getElementById(this.id + "-code"));
     }
     
