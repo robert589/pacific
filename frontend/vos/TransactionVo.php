@@ -3,6 +3,7 @@ namespace frontend\vos;
 
 use common\libraries\Currency;
 use yii\db\ActiveRecord;
+
 use common\components\RVo;
 /**
  * TransactionVo vo
@@ -94,7 +95,7 @@ class TransactionVo implements RVo
     }
     
     public function getSaldoElement() {
-        $saldo = $this->getSaldo();
+        $saldo = Currency::parse($this->getSaldo());
         if($saldo >= 0) {
             return "<span style='color:green'>$saldo</span>";
         } else {

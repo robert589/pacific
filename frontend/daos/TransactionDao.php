@@ -30,7 +30,7 @@ class TransactionDao implements Dao
          AND STR_TO_DATE( date, \"%d/%m/%Y\") <= STR_TO_DATE(:to, \"%d/%m/%Y\")
          AND transaction.entity_id = :entity_id and transaction.status = :status 
          and transaction.entity_id = entity.id
-        ORDER BY STR_TO_DATE(date, '%d/%m/%Y') DESC;";
+        ORDER BY STR_TO_DATE(date, '%d/%m/%Y') ASC;";
     
     const GET_TOTAL_TRANSACTIONS_IN_BETWEEN = "
         SELECT
@@ -45,9 +45,47 @@ class TransactionDao implements Dao
          AND transaction.entity_id = :entity_id and transaction.status = :status 
          and transaction.entity_id = entity.id 
          and entity.type_id = entity_type.id
-        ORDER BY STR_TO_DATE(date, '%d/%m/%Y') DESC
+        ORDER BY STR_TO_DATE(date, '%d/%m/%Y') ASC
         limit 1;";
+    
+    const GET_INITIAL_SALDO = "SELECT
+            sum(transaction.debet) as debet, 
+            sum(transaction.credit) as credit, 
+            entity.name as entity_name,
+            entity_type.id as entity_type_id,
+            entity_type.name as entity_type_name
+        FROM `transaction`, entity, entity_type
+        WHERE STR_TO_DATE( date, \"%d/%m/%Y\") < STR_TO_DATE(:from, \"%d/%m/%Y\")
+         AND transaction.entity_id = :entity_id and transaction.status = :status 
+         and transaction.entity_id = entity.id 
+         and entity.type_id = entity_type.id
+        ORDER BY STR_TO_DATE(date, '%d/%m/%Y') ASC
+        limit 1;";
+    
+    public function getInitialSaldo($entityId, $from, $status = Transaction::STATUS_ACTIVE) {
+        $result = \Yii::$app->db
+            ->createCommand(self::GET_INITIAL_SALDO)
+            ->bindParam(':entity_id', $entityId)
+            ->bindParam(':from', $from)
+            ->bindParam(':status', $status)
+            ->queryOne();
+        
+        $builder = TransactionVo::createBuilder();
+        
+        $entityBuilder = EntityVo::createBuilder();
+        $entityBuilder->loadData($result, "entity");
+        $entityTypeBuilder = EntityTypeVo::createBuilder();
+        $entityTypeBuilder->loadData($result, "entity_type");
+        $entityBuilder->setEntityType($entityTypeBuilder->build());
+        
+        $builder->setEntity($entityBuilder->build());
 
+        $builder->loadData($result);
+        $vo = $builder->build();
+        
+        return floatval($vo->getDebet()) - floatval($vo->getCredit());
+    }
+    
     public function getTransactionInfo($id, $status = Transaction::STATUS_ACTIVE) {
         $result = \Yii::$app->db
             ->createCommand(self::GET_TRANSACTION_INFO)

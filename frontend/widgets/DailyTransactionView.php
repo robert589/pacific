@@ -20,6 +20,8 @@ class DailyTransactionView extends Widget {
         return $this->render('daily-transaction-view', 
                 ['id' => $this->id, 'vos' => $this->vos, 
                     'dailySaldo' => $this->countDailySaldo(),
+                    'totalDebet' => $this->countDailyDebet(),
+                    'totalCredit' => $this->countDailyCredit(),
                     'date' => $this->date]);
     }
 
@@ -33,5 +35,26 @@ class DailyTransactionView extends Widget {
         
         return $total;
     }
-
+    
+    private function countDailyDebet() {
+        $total = 0;
+        if(is_array($this->vos) && count($this->vos) > 0) {
+            foreach($this->vos as $vo) {
+                $total += floatVal($vo->getDebet());
+            }
+        }
+        
+        return $total;
+    }
+    
+    private function countDailyCredit() {
+        $total = 0;
+        if(is_array($this->vos) && count($this->vos) > 0) {
+            foreach($this->vos as $vo) {
+                $total += floatVal($vo->getCredit());
+            }
+        }
+        
+        return $total;
+    }
 }

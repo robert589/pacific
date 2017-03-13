@@ -26,6 +26,8 @@ class TransactionService extends RService
     
     const CHECK_CREATE_CUSTOM_TRANSACTION_RIGHTS = "checkcreatecustomtransactionrights";
     
+    const GET_INITIAL_SALDO = "getinitialsaldo";
+    
     //attributes
     public $user_id;
     
@@ -67,10 +69,10 @@ class TransactionService extends RService
             ['date', DateValidator::className()],
             ['from', 'string'],
             ['from', DateValidator::className()],
-            ['from', 'required', 'on' => self::GET_TRANSACTION_VIEW],
+            ['from', 'required', 'on' => [self::GET_TRANSACTION_VIEW, self::GET_INITIAL_SALDO]],
             
             ['to', 'string'],
-            ['to', 'required', 'on' => self::GET_TRANSACTION_VIEW],
+            ['to', 'required', 'on' => [self::GET_TRANSACTION_VIEW]],
             ['to', DateValidator::className()],
             
             ['entity_id', 'integer'],
@@ -99,7 +101,43 @@ class TransactionService extends RService
         return $this->transactDao->getDailyTransactionView($this->date);
     }
     
+    public function getInitialSaldo() {
+        $this->setScenario(self::GET_INITIAL_SALDO);
+        if(!$this->validate()) {
+            return  null;
+        }
+        
+        $initialSaldo = 0;
+        $initialSaldo += $this->transactDao->getInitialSaldo($this->entity_id, $this->from);
+        
+        $subcodeVos = $this->codeDao->getSubcode($this->entity_id);
+        foreach($subcodeVos as $vo) {
+            $initialSaldo += $this->getInitialSaldoOfSubcode($vo->getId());
+        }
+        
+        return $initialSaldo;
+    }
     
+    private function getInitialSaldoOfSubcode($subcodeId) {
+        $initialSaldo = 0;
+        $initialSaldo += floatval($this->transactDao->getInitialSaldo($subcodeId, $this->from));
+
+        $subcodeVos = $this->codeDao->getSubcode($subcodeId);
+        if(count($subcodeVos) === 0 ) {
+            return $initialSaldo;
+        }
+        
+        foreach($subcodeVos as $vo) {
+            $initialSaldo += $this->transactDao->getInitialSaldo($vo->getId(), $this->from);
+        }
+    
+        return $initialSaldo;
+    }
+    
+    /**
+     * 
+     * @return array
+     */
     public function getView() {
         $this->setScenario(self::GET_TRANSACTION_VIEW);
         if(!$this->validate()) {

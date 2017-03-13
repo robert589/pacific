@@ -81,6 +81,7 @@ class TransactionController extends Controller
         $this->service->loadData($_POST);
         $this->codeService->loadData($_POST);
         $entityVo = $this->codeService->getEntityInfo();
+        $initialSaldo = $this->service->getInitialSaldo();
         $vos = $this->service->getView();
         if (!$vos && !is_array($vos)) {
             $data['status'] = 0;
@@ -91,6 +92,7 @@ class TransactionController extends Controller
         $data['views'] = TransactionView::widget(['id' => 'tv' , 
                             'vos' => $vos, 
                             'entityVo' => $entityVo,
+                            'initialSaldo' => $initialSaldo,
                             'from' => $this->service->from,
                             'to' => $this->service->to,
                             'date' => $this->service->date]);

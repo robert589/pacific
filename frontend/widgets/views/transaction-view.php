@@ -55,6 +55,32 @@
         
         <div class="transaction-view-footer">
             <div class="transaction-view-footer-item3">
+                Saldo Awal
+            </div>
+            <div class="transaction-view-footer-item2">
+                <?= $initialSaldo ?>
+            </div>
+        </div> 
+        
+        <div class="transaction-view-footer">
+            <div class="transaction-view-footer-item3">
+                Mutasi Debet
+            </div>
+            <div class="transaction-view-footer-item2">
+                <?= $totalDebet ?>
+            </div>
+        </div> 
+        
+        <div class="transaction-view-footer">
+            <div class="transaction-view-footer-item3">
+                Mutasi Kredit
+            </div>
+            <div class="transaction-view-footer-item2">
+                <?= $totalCredit ?>
+            </div>
+        </div> 
+        <div class="transaction-view-footer">
+            <div class="transaction-view-footer-item3">
                 Saldo Total
             </div>
             <div class="transaction-view-footer-item2">
