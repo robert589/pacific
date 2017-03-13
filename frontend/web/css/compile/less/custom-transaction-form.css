@@ -1,17 +1,24 @@
-.custom-transaction-form {
+.custom-transaction-form-action {
+  display: flex;
+  padding: 8px;
+}
+.custom-transaction-form-action > .checkbox-field {
+  margin-right: 16px;
+}
+.custom-transaction-form-view {
   display: flex;
 }
-.custom-transaction-form > .input-field {
+.custom-transaction-form-view > .input-field {
   width: 100%;
   margin-bottom: 8px;
   margin-right: 8px;
 }
-.custom-transaction-form > .search-field {
+.custom-transaction-form-view > .search-field {
   width: 100%;
   margin-bottom: 8px;
   margin-right: 8px;
 }
-.custom-transaction-form > .button {
+.custom-transaction-form-view > .button {
   width: 40%;
   margin-bottom: 8px;
 }

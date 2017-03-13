@@ -5,9 +5,15 @@
   padding: 8px;
   border: 1px solid black;
 }
-.transaction-item-field {
+.transaction-item-field,
+.transaction-item-field2 {
   word-break: break-all;
-  width: 100%;
   padding: 8px;
   border: 1px solid black;
+}
+.transaction-item-field {
+  width: 100%;
+}
+.transaction-item-field2 {
+  width: 200%;
 }

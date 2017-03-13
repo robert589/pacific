@@ -1,12 +1,18 @@
 .transaction-view-header {
   display: flex;
 }
-.transaction-view-header-field {
-  width: 100%;
+.transaction-view-header-field,
+.transaction-view-header-field2 {
   padding: 8px;
   border: 1px solid #000;
   background: lightgray;
   border: 1px solid black;
+}
+.transaction-view-header-field {
+  width: 100%;
+}
+.transaction-view-header-field2 {
+  width: 200%;
 }
 .transaction-view-date {
   text-align: center;

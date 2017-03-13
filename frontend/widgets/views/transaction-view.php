@@ -2,6 +2,7 @@
     use frontend\widgets\AddReportForm;
     use frontend\widgets\TransactionItem;
     use common\widgets\Button;
+    use common\widgets\CheckboxField;
 ?>
 
 <div id="<?= $id ?>" class="transaction-view">
@@ -30,27 +31,34 @@
         </div>
         <div class="transaction-view-header">
             
-            <div class="transaction-view-header-field">
+            <div class="transaction-view-header-field <?= (!$showDate) ? "app-hide" : ""?>">
                 Tanggal
             </div>
-            <div class="transaction-view-header-field">
+            <div class="transaction-view-header-field <?= (!$showCode) ? "app-hide" : ""?>">
                 Kode
             </div>
-            <div class="transaction-view-header-field">
+            <div class="transaction-view-header-field2 <?= (!$showRemark) ? "app-hide" : ""?>">
                 Keterangan
             </div>
-            <div class="hide600 transaction-view-header-field">
+            <div class="hide600 transaction-view-header-field <?= (!$showDebet) ? "app-hide" : ""?>">
                 Debet
             </div>
-            <div class="hide600 transaction-view-header-field">
+            <div class="hide600 transaction-view-header-field <?= (!$showCredit) ? "app-hide" : ""?>">
                 Kredit
             </div>
-            <div class="transaction-view-header-field">
+            <div class="transaction-view-header-field <?= (!$showSaldo) ? "app-hide" : ""?>">
                 Saldo
             </div>
         </div>
         <?php foreach($vos as $vo ) { ?>
-            <?= TransactionItem::widget(['id' => $id . '-' . $vo->getId(), 'vo' => $vo]) ?>
+            <?= TransactionItem::widget(['id' => $id . '-' . $vo->getId(),
+                                        'vo' => $vo,
+                                        'showDate' => $showDate,
+                                        'showCode' => $showCode,
+                                        'showCredit' => $showCredit,
+                                        'showDebet' => $showDebet,
+                                        'showSaldo' => $showSaldo,
+                                        'showRemark' => $showRemark,]) ?>
         <?php } ?>
         
         <div class="transaction-view-footer">

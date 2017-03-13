@@ -88,7 +88,7 @@ export abstract class Form extends Component {
     }
 
 
-    validate() : boolean {
+    validate(showError : boolean = true) : boolean {
         this.hideAllErrors();
 
         let valid : boolean = true;
@@ -96,7 +96,9 @@ export abstract class Form extends Component {
         //validate required fields
         for(let field of this.requiredFields) {
             if(System.isEmptyValue(field.getValue())) {
-                field.showError(field.getDisplayName() + " is required");
+                if(showError) {
+                    field.showError(field.getDisplayName() + " is required");
+                }
                 valid = false;
             }
         }
@@ -104,7 +106,9 @@ export abstract class Form extends Component {
         //validate email fields
         for(let field of this.emailFields) {
             if(!System.isEmail(<string> field.getValue())) {
-                field.showError("The input must be a valid email address");
+                if(showError) {
+                    field.showError("The input must be a valid email address");
+                }
                 valid = false;
             }
         }
@@ -118,7 +122,9 @@ export abstract class Form extends Component {
         //execute all validations
         for(let validation of this.validations) {
             if(!validation.validate()) {
-                validation.targetField.showError(validation.errorMessage);
+                if(showError) {
+                    validation.targetField.showError(validation.errorMessage);
+                }
                 valid = false;
             }
         }

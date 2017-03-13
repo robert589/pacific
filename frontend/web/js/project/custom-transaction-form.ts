@@ -1,6 +1,7 @@
 import {Form} from '../common/form';
 import {SearchField} from './../common/search-field';
 import {InputField} from './../common/input-field';
+import {CheckboxField} from './../common/checkbox-field';
 
 export class CustomTransactionForm extends Form{
     
@@ -14,8 +15,21 @@ export class CustomTransactionForm extends Form{
 
     successEvent : CustomEvent;
     
+    showDateField : CheckboxField;
+
+    showRemarkField : CheckboxField;
+
+    showCodeField : CheckboxField;
+
+    showDebetField : CheckboxField;
+
+    showCreditField : CheckboxField;
+
+    showSaldoField : CheckboxField;
+
     rules() {
-        this.registerFields([this.code, this.from, this.to]);
+        this.registerFields([this.code, this.from, this.showCodeField, this.showSaldoField, this.showDateField, 
+                            this.showRemarkField, this.showCreditField, this.showDebetField, this.to]);
         this.setRequiredField([this.code, this.from, this.to]);
     }
 
@@ -38,10 +52,28 @@ export class CustomTransactionForm extends Form{
         this.code = new SearchField(document.getElementById(this.id + "-code"));    
         this.from = new InputField(document.getElementById(this.id + "-from"));
         this.to = new InputField(document.getElementById(this.id + "-to"));
+        this.showCodeField = new CheckboxField(document.getElementById(this.id +  "-show-code"));
+        this.showSaldoField = new CheckboxField(document.getElementById(this.id +  "-show-saldo"));
+        this.showDateField = new CheckboxField(document.getElementById(this.id +  "-show-date"));
+        this.showRemarkField = new CheckboxField(document.getElementById(this.id +  "-show-remark"));
+        this.showCreditField = new CheckboxField(document.getElementById(this.id +  "-show-credit"));
+        this.showDebetField = new CheckboxField(document.getElementById(this.id +  "-show-debet"));
     }
     
     bindEvent() {
         super.bindEvent();
+        this.showCodeField.attachEvent(CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+        this.showSaldoField.attachEvent(CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+        this.showDateField.attachEvent(CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+        this.showRemarkField.attachEvent(CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+        this.showDebetField.attachEvent(CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+        this.showCreditField.attachEvent(CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+    }
+
+    refreshSubmit(e) {
+        if(this.validate(false)) {
+            this.submit(e);
+        }
     }
 
     detach() {

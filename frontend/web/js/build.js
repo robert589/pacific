@@ -524,14 +524,17 @@ define("common/form", ["require", "exports", "common/component", "common/system"
         Form.prototype.setEmailField = function (fields) {
             this.emailFields = this.emailFields.concat(fields);
         };
-        Form.prototype.validate = function () {
+        Form.prototype.validate = function (showError) {
+            if (showError === void 0) { showError = true; }
             this.hideAllErrors();
             var valid = true;
             //validate required fields
             for (var _i = 0, _a = this.requiredFields; _i < _a.length; _i++) {
                 var field = _a[_i];
                 if (system_3.System.isEmptyValue(field.getValue())) {
-                    field.showError(field.getDisplayName() + " is required");
+                    if (showError) {
+                        field.showError(field.getDisplayName() + " is required");
+                    }
                     valid = false;
                 }
             }
@@ -539,7 +542,9 @@ define("common/form", ["require", "exports", "common/component", "common/system"
             for (var _b = 0, _c = this.emailFields; _b < _c.length; _b++) {
                 var field = _c[_b];
                 if (!system_3.System.isEmail(field.getValue())) {
-                    field.showError("The input must be a valid email address");
+                    if (showError) {
+                        field.showError("The input must be a valid email address");
+                    }
                     valid = false;
                 }
             }
@@ -554,7 +559,9 @@ define("common/form", ["require", "exports", "common/component", "common/system"
             for (var _f = 0, _g = this.validations; _f < _g.length; _f++) {
                 var validation = _g[_f];
                 if (!validation.validate()) {
-                    validation.targetField.showError(validation.errorMessage);
+                    if (showError) {
+                        validation.targetField.showError(validation.errorMessage);
+                    }
                     valid = false;
                 }
             }
@@ -2608,7 +2615,39 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
     }(component_29.Component));
     exports.DailyTransaction = DailyTransaction;
 });
-define("project/custom-transaction-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_11, search_field_8, input_field_15) {
+define("common/checkbox-field", ["require", "exports", "common/Field"], function (require, exports, Field_4) {
+    "use strict";
+    var CheckboxField = (function (_super) {
+        __extends(CheckboxField, _super);
+        function CheckboxField(root) {
+            return _super.call(this, root) || this;
+        }
+        Object.defineProperty(CheckboxField, "CHECKBOX_FIELD_CHANGE_VALUE", {
+            get: function () { return "CHECKBOX_FIELD_CHANGE_VALUE"; },
+            enumerable: true,
+            configurable: true
+        });
+        CheckboxField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.inputElement = this.root.getElementsByClassName('checkbox-field-item')[0];
+        };
+        CheckboxField.prototype.bindEvent = function () {
+            this.changeValueEvent = new CustomEvent(CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE);
+            this.inputElement.addEventListener('change', function (data) {
+                this.root.dispatchEvent(this.changeValueEvent);
+            }.bind(this));
+        };
+        CheckboxField.prototype.detach = function () {
+            this.inputElement = null;
+        };
+        CheckboxField.prototype.getValue = function () {
+            return this.inputElement.checked;
+        };
+        return CheckboxField;
+    }(Field_4.Field));
+    exports.CheckboxField = CheckboxField;
+});
+define("project/custom-transaction-form", ["require", "exports", "common/form", "common/search-field", "common/input-field", "common/checkbox-field"], function (require, exports, form_11, search_field_8, input_field_15, checkbox_field_1) {
     "use strict";
     var CustomTransactionForm = (function (_super) {
         __extends(CustomTransactionForm, _super);
@@ -2623,7 +2662,8 @@ define("project/custom-transaction-form", ["require", "exports", "common/form", 
             configurable: true
         });
         CustomTransactionForm.prototype.rules = function () {
-            this.registerFields([this.code, this.from, this.to]);
+            this.registerFields([this.code, this.from, this.showCodeField, this.showSaldoField, this.showDateField,
+                this.showRemarkField, this.showCreditField, this.showDebetField, this.to]);
             this.setRequiredField([this.code, this.from, this.to]);
         };
         CustomTransactionForm.prototype.successCallback = function (data) {
@@ -2638,9 +2678,26 @@ define("project/custom-transaction-form", ["require", "exports", "common/form", 
             this.code = new search_field_8.SearchField(document.getElementById(this.id + "-code"));
             this.from = new input_field_15.InputField(document.getElementById(this.id + "-from"));
             this.to = new input_field_15.InputField(document.getElementById(this.id + "-to"));
+            this.showCodeField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-code"));
+            this.showSaldoField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-saldo"));
+            this.showDateField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-date"));
+            this.showRemarkField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-remark"));
+            this.showCreditField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-credit"));
+            this.showDebetField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-debet"));
         };
         CustomTransactionForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
+            this.showCodeField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+            this.showSaldoField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+            this.showDateField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+            this.showRemarkField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+            this.showDebetField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+            this.showCreditField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+        };
+        CustomTransactionForm.prototype.refreshSubmit = function (e) {
+            if (this.validate(false)) {
+                this.submit(e);
+            }
         };
         CustomTransactionForm.prototype.detach = function () {
             _super.prototype.detach.call(this);

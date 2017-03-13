@@ -93,6 +93,12 @@ class TransactionController extends Controller
                             'vos' => $vos, 
                             'entityVo' => $entityVo,
                             'initialSaldo' => $initialSaldo,
+                            'showSaldo' => filter_input(INPUT_POST ,"show_saldo", FILTER_VALIDATE_BOOLEAN),
+                            'showDate' => filter_input(INPUT_POST, "show_date", FILTER_VALIDATE_BOOLEAN),
+                            'showCredit' => filter_input(INPUT_POST, "show_credit", FILTER_VALIDATE_BOOLEAN),
+                            'showRemark' => filter_input(INPUT_POST, "show_remark", FILTER_VALIDATE_BOOLEAN),
+                            'showDebet' => filter_input(INPUT_POST, "show_debet", FILTER_VALIDATE_BOOLEAN),
+                            'showCode' => filter_input(INPUT_POST, "show_code", FILTER_VALIDATE_BOOLEAN),
                             'from' => $this->service->from,
                             'to' => $this->service->to,
                             'date' => $this->service->date]);

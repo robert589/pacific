@@ -21,6 +21,18 @@ class TransactionView extends Widget {
     
     public $initialSaldo;
     
+    public $showDate;
+    
+    public $showCode;
+    
+    public $showRemark;
+    
+    public $showDebet;
+    
+    public $showCredit;
+    
+    public $showSaldo;
+    
     public function init() {
         
     }
@@ -30,6 +42,12 @@ class TransactionView extends Widget {
                 ['id' => $this->id, 'totalSaldo' => Currency::parse($this->countSaldo()),
                     'totalDebet' => Currency::parse($this->countDebet()),
                     'totalCredit' => Currency::parse($this->countCredit()),
+                    'showDate' => $this->showDate,
+                    'showCode' => $this->showCode,
+                    'showCredit' => $this->showCredit,
+                    'showDebet' => $this->showDebet,
+                    'showSaldo' => $this->showSaldo,
+                    'showRemark' => $this->showRemark,
                     'initialSaldo' => Currency::parse($this->initialSaldo),
                     'entityVo' => $this->entityVo,
                     'from' => $this->from,

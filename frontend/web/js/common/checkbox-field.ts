@@ -2,9 +2,13 @@ import {Field} from './Field';
 import {System} from './../common/system';
 
 export class CheckboxField extends Field {
+
+    public static get CHECKBOX_FIELD_CHANGE_VALUE()  : string {return "CHECKBOX_FIELD_CHANGE_VALUE"}
+
     protected inputElement : HTMLInputElement;
 
-    
+    changeValueEvent : CustomEvent;
+
     constructor(root : HTMLElement) {
         super(root);
     }
@@ -17,6 +21,10 @@ export class CheckboxField extends Field {
     }
 
     bindEvent() {
+        this.changeValueEvent = new CustomEvent(CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE);
+        this.inputElement.addEventListener('change', function(data) {
+            this.root.dispatchEvent(this.changeValueEvent);
+        }.bind(this) );
     }
 
   
