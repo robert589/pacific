@@ -1,5 +1,6 @@
 <?php
     use frontend\widgets\AddTransactionForm;
+    use common\libraries\Currency;
     use frontend\widgets\DailyTransactionItem;
 ?>
 
@@ -35,7 +36,7 @@
             Transaksi Harian
         </div>
         <div class="dt-view-footer-item2">
-            <?= $dailySaldo ?>
+            <?= Currency::parse($dailySaldo) ?>
         </div>
     </div>
     

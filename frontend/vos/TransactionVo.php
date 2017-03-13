@@ -1,6 +1,7 @@
 <?php
 namespace frontend\vos;
 
+use common\libraries\Currency;
 use yii\db\ActiveRecord;
 use common\components\RVo;
 /**
@@ -59,9 +60,17 @@ class TransactionVo implements RVo
     public function getDebet() { 
         return $this->debet; 
     }
+    
+    public function getDebetView() {
+        return Currency::parse($this->debet);
+    }
 
     public function getCredit() { 
         return $this->credit; 
+    }
+    
+    public function getCreditView() {
+        return Currency::parse($this->credit);
     }
 
     public function getRemark() { 

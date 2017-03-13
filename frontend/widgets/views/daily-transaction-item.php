@@ -8,10 +8,10 @@
             <?= $vo->getEntity()->getName() ?>
         </div>
         <div class="hide600 dt-item-field">
-            <?= $vo->getDebet() ?>
+            <?= $vo->getDebetView() ?>
         </div>
         <div class="hide600 dt-item-field">
-            <?= $vo->getCredit() ?>
+            <?= $vo->getCreditView() ?>
         </div>
 
         <div class="dt-item-field">
