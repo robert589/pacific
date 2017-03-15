@@ -6,7 +6,7 @@ export class CustomSellingForm extends Form{
     
     public static get SUCCESS_EVENT() { return "CUSTOM_SELLING_FORM_SUCCESS_EVENT"}
 
-    ship : SearchField;
+    entitySF : SearchField;
 
     from : InputField;
 
@@ -15,8 +15,8 @@ export class CustomSellingForm extends Form{
     successEvent : CustomEvent;
     
     rules() {
-        this.registerFields([this.ship, this.from, this.to]);
-        this.setRequiredField([this.ship, this.from, this.to]);
+        this.registerFields([this.entitySF, this.from, this.to]);
+        this.setRequiredField([this.entitySF, this.from, this.to]);
     }
 
     constructor(root: HTMLElement) {
@@ -35,7 +35,7 @@ export class CustomSellingForm extends Form{
     
     decorate() {
         super.decorate();
-        this.ship = new SearchField(document.getElementById(this.id + "-ship"));    
+        this.entitySF = new SearchField(document.getElementById(this.id + "-entity"));    
         this.from = new InputField(document.getElementById(this.id + "-from"));
         this.to = new InputField(document.getElementById(this.id + "-to"));
     }

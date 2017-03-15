@@ -9,10 +9,10 @@
     </div>
     
     <div class="daily-selling-header">
-        <?= SearchField::widget(['id' => $id . '-ship', 
-                                'url' => \Yii::$app->request->baseUrl . '/ship/search',
-                                'placeholder' => 'Cari Kapal',
-                                'name' => 'ship_id']) ?>
+        <?= SearchField::widget(['id' => $id . '-entity', 
+                                'url' => \Yii::$app->request->baseUrl . '/code/search',
+                                'placeholder' => 'Cari Kode',
+                                'name' => 'entity_id']) ?>
         
         <?= InputField::widget(['id' => $id . '-date',
                                 'datepicker' => true, 'disabled' => true,

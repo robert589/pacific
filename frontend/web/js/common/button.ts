@@ -13,6 +13,11 @@ export class Button extends Component {
                 cb(e);
             }
         }.bind(this);
+
+    }
+
+    click() {
+        this.root.click();
     }
 
     disable(on) {

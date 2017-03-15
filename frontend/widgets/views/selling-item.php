@@ -11,14 +11,14 @@
             <?= $vo->getRemark() ?>
         </div>
         <div class="hide600 selling-item-field">
-            <?= $vo->getPrice() ?>
+            <?= $vo->getPriceInCurrency() ?>
         </div>
         <div class="hide600 selling-item-field">
             <?= $vo->getTonase() ?>
         </div>
 
         <div class="selling-item-field">
-            <?= $vo->getTotal() ?>
+            <?= $vo->getTotalInCurrency() ?>
         </div>  
     </div>
 </div>

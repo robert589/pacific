@@ -17,7 +17,7 @@ class SellingService extends RService
     //attributes
     public $user_id;    
     
-    public $ship_id;
+    public $entity_id;
     
     public $date;
     
@@ -36,9 +36,9 @@ class SellingService extends RService
             ['user_id', 'integer'],
             ['user_id', 'required'],
             
-            ['ship_id', 'integer'],
-            ['ship_id', 'required', 'on' => self::GET_DAILY_SELLING_VIEW],
-            ['ship_id', 'required', 'on' => self::GET_SELLING_VIEW],
+            ['entity_id', 'integer'],
+            ['entity_id', 'required', 'on' => self::GET_DAILY_SELLING_VIEW],
+            ['entity_id', 'required', 'on' => self::GET_SELLING_VIEW],
             
             ['date', 'string'],
             ['date', 'required', 'on' => self::GET_DAILY_SELLING_VIEW],
@@ -60,7 +60,7 @@ class SellingService extends RService
             return false;
         }
         
-        return $this->sellingDao->getSellingView($this->ship_id, $this->date, $this->from, $this->to);
+        return $this->sellingDao->getSellingView($this->entity_id, $this->date, $this->from, $this->to);
     }
 
     public function getDailySellingView() {
@@ -69,7 +69,7 @@ class SellingService extends RService
             return false;
         }
     
-        return $this->sellingDao->getDailySellingView($this->ship_id, $this->date);
+        return $this->sellingDao->getDailySellingView($this->entity_id, $this->date);
     }
 
 

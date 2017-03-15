@@ -40,7 +40,7 @@ class SellingController extends Controller
         if($data['status']) {
             $builder = SellingVo::createBuilder();
             $builder->setId($selling->id);
-            $builder->setShipId($selling->entity_id);
+            $builder->setEntityId($selling->entity_id);
             $builder->setRemark($selling->remark);
             $builder->setDate($selling->date);
             $builder->setStatus($selling->status);
@@ -74,7 +74,7 @@ class SellingController extends Controller
         $data['status'] = 1;
         $data['views'] = DailySellingView::widget(['id' => 'drv' , 
                             'vos' => $vos, 
-                            'shipId' => $this->service->ship_id,
+                            'entityId' => $this->service->entity_id,
                             'date' => $this->service->date]);
         return json_encode($data);
     }
@@ -91,7 +91,7 @@ class SellingController extends Controller
         }
         $data['status'] = 1;
         $data['views'] = SellingView::widget(['id' => 'rv', 'vos' => $vos,
-                               'shipId' => $this->service->ship_id,
+                               'entityId' => $this->service->entity_id,
                             'currentSaldo' => "0",
                             'date' => $this->service->date]);
         

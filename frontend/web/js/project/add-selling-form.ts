@@ -2,6 +2,7 @@ import {Form} from '../common/form';
 import {InputField} from './../common/input-field';
 import {Button} from './../common/button';
 import {Validation} from './../common/validation';
+import {CurrencyField} from './../common/currency-field';
 
 export class AddSellingForm extends Form{
     
@@ -11,11 +12,11 @@ export class AddSellingForm extends Form{
 
     remark : InputField;
 
-    price : InputField;
+    price : CurrencyField;
 
     tonase : InputField;
 
-    total : InputField;
+    total : CurrencyField;
 
     totalField : HTMLElement;
 
@@ -25,7 +26,7 @@ export class AddSellingForm extends Form{
 
     tonaseField : HTMLElement;
 
-    ship : InputField;
+    entityIF : InputField;
 
     date : InputField;
 
@@ -45,20 +46,20 @@ export class AddSellingForm extends Form{
                         {detail : json});
         this.root.dispatchEvent(this.successEvent);
 
-        this.price.setValue("0");
+        this.price.emptyValue();
         this.tonase.setValue("0");
-        this.total.setValue("0");
+        this.total.emptyValue();
    
     }
     
     decorate() {
         super.decorate();
-        this.ship = new InputField(document.getElementById(this.id + "-ship"));
+        this.entityIF = new InputField(document.getElementById(this.id + "-entity"));
         this.date = new InputField(document.getElementById(this.id + "-date"));
         this.remark = new InputField(document.getElementById(this.id + "-remark"));
-        this.price = new InputField(document.getElementById(this.id + "-price"));
+        this.price = new CurrencyField(document.getElementById(this.id + "-price"));
         this.tonase = new InputField(document.getElementById(this.id + "-tonase"));
-        this.total = new InputField(document.getElementById(this.id + "-total"));
+        this.total = new CurrencyField(document.getElementById(this.id + "-total"));
 
         this.switch = new Button(document.getElementById(this.id + "-switch"), this.clickSwitch.bind(this));
 
@@ -81,14 +82,14 @@ export class AddSellingForm extends Form{
 
         }
 
-        this.total.setValue("0");
-        this.price.setValue("0");
+        this.total.emptyValue();
+        this.price.emptyValue();
         this.tonase.setValue("0");
     }
 
     rules() {
-        this.setRequiredField([this.total, this.price, this.tonase, this.remark, this.date, this.ship]);
-        this.registerFields([this.total, this.price, this.tonase, this.date, this.ship, this.remark]);
+        this.setRequiredField([this.total, this.price, this.tonase, this.date, this.entityIF]);
+        this.registerFields([this.total, this.price, this.tonase, this.date, this.entityIF, this.remark]);
         let validation : Validation = {
             errorMessage : "Total price atau (harga dan tonase) harus diisi",
             validate : this.validateFields.bind(this),
@@ -103,9 +104,9 @@ export class AddSellingForm extends Form{
     }
 
     validateFields() {
-        if(parseFloat(<string>this.total.getValue()) <= 0.00000001) {
-            if(parseFloat(<string> this.tonase.getValue()) <= 0.0000001 ||
-            parseFloat(<string> this.price.getValue()) <= 0.000001) {
+        if(this.total.getValue() <= 0.00000001) {
+            if( this.tonase.getValue() <= 0.0000001 ||
+                    this.price.getValue() <= 0.000001) {
                 return false;
             }
         }

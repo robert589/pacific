@@ -16,6 +16,8 @@ export class EditCodeForm extends Form{
 
     idField : InputField;
 
+    unitField : InputField;
+
     constructor(root: HTMLElement) {
         super(root);
         this.successCb = function(data) {
@@ -27,6 +29,7 @@ export class EditCodeForm extends Form{
         this.setRequiredField([this.nameField, this.typeIdField,
                             this.idField, this.codeField]);
         this.registerFields([this.nameField, this.descField, this.idField,
+            this.unitField,
             this.typeIdField, this.codeField]);
     }
 
@@ -36,6 +39,7 @@ export class EditCodeForm extends Form{
         this.codeField = new InputField(document.getElementById(this.id + "-code"));
         this.typeIdField = new SearchField(document.getElementById(this.id + "-type-id"));
         this.nameField = new InputField(document.getElementById(this.id + "-name"));
+        this.unitField = new InputField(document.getElementById(this.id + "-unit"));
         this.descField = new TextAreaField(document.getElementById(this.id + "-desc"));
     }
     

@@ -3,6 +3,7 @@ namespace frontend\vos;
 
 use yii\db\ActiveRecord;
 use common\components\RVo;
+use common\libraries\Currency;
 /**
  * SellingVo vo
  *
@@ -14,9 +15,9 @@ class SellingVo implements RVo
 
     private $id;
 
-    private $ship;
+    private $entity;
 
-    private $shipId;
+    private $entityId;
 
     private $date;
 
@@ -36,8 +37,8 @@ class SellingVo implements RVo
 
     public function __construct(SellingVoBuilder $builder) { 
         $this->id = $builder->getId(); 
-        $this->ship = $builder->getShip(); 
-        $this->shipId = $builder->getShipId(); 
+        $this->entity = $builder->getEntity(); 
+        $this->entityId = $builder->getEntityId(); 
         $this->date = $builder->getDate(); 
         $this->price = $builder->getPrice(); 
         $this->tonase = $builder->getTonase(); 
@@ -54,12 +55,12 @@ class SellingVo implements RVo
         return $this->id; 
     }
 
-    public function getShip() { 
-        return $this->ship; 
+    public function getEntity() { 
+        return $this->entity; 
     }
 
-    public function getShipId() { 
-        return $this->shipId; 
+    public function getEntityId() { 
+        return $this->entityId; 
     }
 
     public function getDate() { 
@@ -69,13 +70,21 @@ class SellingVo implements RVo
     public function getPrice() { 
         return $this->price; 
     }
-
+    
+    public function getPriceInCurrency() {
+        return Currency::parse($this->price);
+    }
+    
     public function getTonase() { 
         return $this->tonase; 
     }
-
+    
     public function getTotal() { 
         return ($this->total) ? $this->total : (floatval($this->tonase) * floatval($this->price)); 
+    }
+    
+    public function getTotalInCurrency() {
+        return Currency::parse($this->getTotal());
     }
 
     public function getCreatedAt() { 

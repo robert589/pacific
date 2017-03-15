@@ -14,9 +14,9 @@ class SellingVoBuilder extends RVoBuilder
 
     public $id;
 
-    public $ship;
+    public $entity;
 
-    public $shipId;
+    public $entityId;
 
     public $date;
 
@@ -37,8 +37,8 @@ class SellingVoBuilder extends RVoBuilder
     public function rules() { 
         return [
            ['id','string'],
-           ['ship','string'],
-           ['shipId','string'],
+           ['entity','string'],
+           ['entityId','string'],
            ['date','string'],
            ['price','string'],
            ['tonase','string'],
@@ -56,12 +56,12 @@ class SellingVoBuilder extends RVoBuilder
         return $this->id; 
     }
 
-    public function getShip() { 
-        return $this->ship; 
+    public function getEntity() { 
+        return $this->entity; 
     }
 
-    public function getShipId() { 
-        return $this->shipId; 
+    public function getEntityId() { 
+        return $this->entityId; 
     }
 
     public function getDate() { 
@@ -102,12 +102,12 @@ class SellingVoBuilder extends RVoBuilder
         $this->id = $id; 
     }
 
-    public function setShip($ship) { 
-        $this->ship = $ship; 
+    public function setEntity($entity) { 
+        $this->entity = $entity; 
     }
 
-    public function setShipId($shipId) { 
-        $this->shipId = $shipId; 
+    public function setEntityId($entityId) { 
+        $this->entityId = $entityId; 
     }
 
     public function setDate($date) { 

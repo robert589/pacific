@@ -3,6 +3,7 @@
 namespace frontend\widgets;
 
 use yii\base\Widget;
+use common\libraries\Currency;
 
 class SellingView extends Widget {
     
@@ -12,7 +13,7 @@ class SellingView extends Widget {
     
     public $currentSaldo;
     
-    public $shipId;
+    public $entityId;
     
     public $date;
     
@@ -23,8 +24,8 @@ class SellingView extends Widget {
     public function run() {
         return $this->render('selling-view',
                 ['id' => $this->id, 'vos' => $this->vos,
-                    'dailySaldo' => $this->countDailySaldo(),
-                    'shipId' => $this->shipId,
+                    'dailySaldo' => Currency::parse($this->countDailySaldo()),
+                    'entityId' => $this->entityId,
                     'date' => $this->date,
                     'currentSaldo' => $this->currentSaldo]);
         

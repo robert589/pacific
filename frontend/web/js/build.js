@@ -72,6 +72,9 @@ define("common/button", ["require", "exports", "common/component"], function (re
                 }
             }.bind(this);
         };
+        Button.prototype.click = function () {
+            this.root.click();
+        };
         Button.prototype.disable = function (on) {
             this.root.disabled = on;
         };
@@ -517,7 +520,8 @@ define("common/form", ["require", "exports", "common/component", "common/system"
             };
             this.root.onkeypress = function (e) {
                 if (e.keyCode === 13) {
-                    this.submit(e);
+                    e.preventDefault();
+                    this.submitButton.click();
                 }
             }.bind(this);
         };
@@ -1795,8 +1799,8 @@ define("project/custom-report-form", ["require", "exports", "common/form", "comm
             configurable: true
         });
         CustomReportForm.prototype.rules = function () {
-            this.registerFields([this.ship, this.from, this.to]);
-            this.setRequiredField([this.ship, this.from, this.to]);
+            this.registerFields([this.entitySF, this.from, this.to]);
+            this.setRequiredField([this.entitySF, this.from, this.to]);
         };
         CustomReportForm.prototype.successCallback = function (data) {
             var json = {
@@ -1807,7 +1811,7 @@ define("project/custom-report-form", ["require", "exports", "common/form", "comm
         };
         CustomReportForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.ship = new search_field_3.SearchField(document.getElementById(this.id + "-ship"));
+            this.entitySF = new search_field_3.SearchField(document.getElementById(this.id + "-entity"));
             this.from = new input_field_7.InputField(document.getElementById(this.id + "-from"));
             this.to = new input_field_7.InputField(document.getElementById(this.id + "-to"));
         };
@@ -1879,7 +1883,126 @@ define("project/custom-report", ["require", "exports", "common/component", "proj
     }(component_17.Component));
     exports.CustomReport = CustomReport;
 });
-define("project/add-selling-form", ["require", "exports", "common/form", "common/input-field", "common/button"], function (require, exports, form_6, input_field_8, button_11) {
+define("common/currency-field", ["require", "exports", "common/Field", "common/system", "common/input-field", "common/key-code", "common/math"], function (require, exports, Field_4, system_13, input_field_8, key_code_2, math_2) {
+    "use strict";
+    var CurrencyField = (function (_super) {
+        __extends(CurrencyField, _super);
+        function CurrencyField(root) {
+            var _this = _super.call(this, root) || this;
+            _this.excelState = false;
+            return _this;
+        }
+        Object.defineProperty(CurrencyField, "CHAR_TO_EXCEL", {
+            get: function () { return "="; },
+            enumerable: true,
+            configurable: true
+        });
+        ;
+        CurrencyField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.input = new input_field_8.InputField(document.getElementById(this.id + "-input"));
+            this.defaultValue = this.root.getAttribute('data-default-value');
+            this.tempRealValue = this.input.getValue();
+        };
+        CurrencyField.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.input.attachInputElement("keypress", this.keyPressInput.bind(this));
+            this.input.attachInputElement('keyup', this.changeInput.bind(this));
+            this.input.attachInputElement("blur", this.evalValue.bind(this));
+            this.input.attachInputElement("blur", this.updateField.bind(this));
+            this.input.attachInputElement("focus", this.convertFromCurrency.bind(this));
+        };
+        CurrencyField.prototype.convertFromCurrency = function () {
+            var curVal = this.input.getValue();
+            if (curVal.length === 0) {
+                return;
+            }
+            this.input.setValue("" + math_2.Math.convertFromCurrency(curVal));
+        };
+        CurrencyField.prototype.evalValue = function (e) {
+            //console
+            if (this.excelState) {
+                var curValue = this.input.getValue();
+                var result = math_2.Math.safeEval(curValue.substring(1, curValue.length));
+                if (!system_13.System.isEmptyValue(result)) {
+                    this.input.setValue(result);
+                    this.removeExcelState();
+                }
+                else {
+                    this.showError("Expression Not Recognized");
+                }
+            }
+        };
+        CurrencyField.prototype.keyPressInput = function (e) {
+            this.hideError();
+            var keyCode = e.which;
+            if ((keyCode >= key_code_2.KeyCode.ZERO && keyCode <= key_code_2.KeyCode.NINE) ||
+                keyCode === key_code_2.KeyCode.DOT) {
+            }
+            else if (this.excelState && (keyCode === key_code_2.KeyCode.MINUS || keyCode === key_code_2.KeyCode.PLUS ||
+                keyCode === key_code_2.KeyCode.ASTERISK || keyCode === key_code_2.KeyCode.SLASH)) {
+            }
+            else if (keyCode === key_code_2.KeyCode.EQUALS && this.input.getValue().length === 0) {
+            }
+            else if (keyCode === key_code_2.KeyCode.ENTER_KEY && this.excelState) {
+                this.evalValue(e);
+            }
+            else {
+                e.preventDefault();
+                return false;
+            }
+        };
+        CurrencyField.prototype.changeInput = function (e) {
+            var value = this.input.getValue();
+            if (value.length === 1 && value.charAt(0) === CurrencyField.CHAR_TO_EXCEL) {
+                this.changeToExcelState();
+                e.preventDefault();
+                return;
+            }
+            if (value.length === 0) {
+                this.removeExcelState();
+            }
+        };
+        CurrencyField.prototype.updateField = function () {
+            if (this.excelState) {
+                return;
+            }
+            var value = this.input.getValue();
+            if (value.length === 0) {
+                return;
+            }
+            var newVal = math_2.Math.convertToCurrency(value);
+            this.input.setValue(newVal);
+        };
+        CurrencyField.prototype.changeToExcelState = function () {
+            this.excelState = true;
+            this.input.addClass('currency-field-excel');
+        };
+        CurrencyField.prototype.removeExcelState = function () {
+            this.excelState = false;
+            this.input.removeClass('currency-field-excel');
+        };
+        CurrencyField.prototype.getValue = function () {
+            var value = this.input.getValue();
+            if (system_13.System.isEmptyValue(value)) {
+                return parseInt(this.defaultValue);
+            }
+            return math_2.Math.convertFromCurrency(value);
+        };
+        CurrencyField.prototype.emptyValue = function () {
+            this.input.setValue("");
+        };
+        CurrencyField.prototype.setValue = function (number) {
+            if (!system_13.System.isEmptyValue(number) && number !== 0) {
+                this.input.setValue("");
+            }
+            this.input.setValue(number + "");
+        };
+        return CurrencyField;
+    }(Field_4.Field));
+    exports.CurrencyField = CurrencyField;
+});
+define("project/add-selling-form", ["require", "exports", "common/form", "common/input-field", "common/button", "common/currency-field"], function (require, exports, form_6, input_field_9, button_11, currency_field_1) {
     "use strict";
     var AddSellingForm = (function (_super) {
         __extends(AddSellingForm, _super);
@@ -1900,18 +2023,18 @@ define("project/add-selling-form", ["require", "exports", "common/form", "common
             };
             this.successEvent = new CustomEvent(AddSellingForm.ADD_SELLING_FORM_SUCCESS, { detail: json });
             this.root.dispatchEvent(this.successEvent);
-            this.price.setValue("0");
+            this.price.emptyValue();
             this.tonase.setValue("0");
-            this.total.setValue("0");
+            this.total.emptyValue();
         };
         AddSellingForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.ship = new input_field_8.InputField(document.getElementById(this.id + "-ship"));
-            this.date = new input_field_8.InputField(document.getElementById(this.id + "-date"));
-            this.remark = new input_field_8.InputField(document.getElementById(this.id + "-remark"));
-            this.price = new input_field_8.InputField(document.getElementById(this.id + "-price"));
-            this.tonase = new input_field_8.InputField(document.getElementById(this.id + "-tonase"));
-            this.total = new input_field_8.InputField(document.getElementById(this.id + "-total"));
+            this.entityIF = new input_field_9.InputField(document.getElementById(this.id + "-entity"));
+            this.date = new input_field_9.InputField(document.getElementById(this.id + "-date"));
+            this.remark = new input_field_9.InputField(document.getElementById(this.id + "-remark"));
+            this.price = new currency_field_1.CurrencyField(document.getElementById(this.id + "-price"));
+            this.tonase = new input_field_9.InputField(document.getElementById(this.id + "-tonase"));
+            this.total = new currency_field_1.CurrencyField(document.getElementById(this.id + "-total"));
             this.switch = new button_11.Button(document.getElementById(this.id + "-switch"), this.clickSwitch.bind(this));
             this.totalField = document.getElementById(this.id + "total-el");
             this.priceField = document.getElementById(this.id + "price-el");
@@ -1929,13 +2052,13 @@ define("project/add-selling-form", ["require", "exports", "common/form", "common
                 this.priceField.classList.remove('app-hide');
                 this.tonaseField.classList.remove('app-hide');
             }
-            this.total.setValue("0");
-            this.price.setValue("0");
+            this.total.emptyValue();
+            this.price.emptyValue();
             this.tonase.setValue("0");
         };
         AddSellingForm.prototype.rules = function () {
-            this.setRequiredField([this.total, this.price, this.tonase, this.remark, this.date, this.ship]);
-            this.registerFields([this.total, this.price, this.tonase, this.date, this.ship, this.remark]);
+            this.setRequiredField([this.total, this.price, this.tonase, this.date, this.entityIF]);
+            this.registerFields([this.total, this.price, this.tonase, this.date, this.entityIF, this.remark]);
             var validation = {
                 errorMessage: "Total price atau (harga dan tonase) harus diisi",
                 validate: this.validateFields.bind(this),
@@ -1949,9 +2072,9 @@ define("project/add-selling-form", ["require", "exports", "common/form", "common
             this.setValidations([validation, validation1]);
         };
         AddSellingForm.prototype.validateFields = function () {
-            if (parseFloat(this.total.getValue()) <= 0.00000001) {
-                if (parseFloat(this.tonase.getValue()) <= 0.0000001 ||
-                    parseFloat(this.price.getValue()) <= 0.000001) {
+            if (this.total.getValue() <= 0.00000001) {
+                if (this.tonase.getValue() <= 0.0000001 ||
+                    this.price.getValue() <= 0.000001) {
                     return false;
                 }
             }
@@ -1970,7 +2093,7 @@ define("project/add-selling-form", ["require", "exports", "common/form", "common
     }(form_6.Form));
     exports.AddSellingForm = AddSellingForm;
 });
-define("project/daily-selling-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_18, button_12, system_13) {
+define("project/daily-selling-item", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_18, button_12, system_14) {
     "use strict";
     var DailySellingItem = (function (_super) {
         __extends(DailySellingItem, _super);
@@ -1991,8 +2114,8 @@ define("project/daily-selling-item", ["require", "exports", "common/component", 
             var data = {};
             data['selling_id'] = this.sellingId;
             $.ajax({
-                url: system_13.System.getBaseUrl() + "/selling/remove",
-                data: system_13.System.addCsrf(data),
+                url: system_14.System.getBaseUrl() + "/selling/remove",
+                data: system_14.System.addCsrf(data),
                 dataType: "json",
                 method: "post",
                 context: this,
@@ -2013,8 +2136,8 @@ define("project/daily-selling-item", ["require", "exports", "common/component", 
             var data = {};
             data['selling_id'] = this.sellingId;
             $.ajax({
-                url: system_13.System.getBaseUrl() + "/selling/cancel-remove",
-                data: system_13.System.addCsrf(data),
+                url: system_14.System.getBaseUrl() + "/selling/cancel-remove",
+                data: system_14.System.addCsrf(data),
                 dataType: "json",
                 method: "post",
                 context: this,
@@ -2074,7 +2197,7 @@ define("project/daily-selling-view", ["require", "exports", "common/component", 
     }(component_19.Component));
     exports.DailySellingView = DailySellingView;
 });
-define("project/daily-selling", ["require", "exports", "common/component", "common/search-field", "common/input-field", "common/system", "project/daily-selling-view", "common/button"], function (require, exports, component_20, search_field_4, input_field_9, system_14, daily_selling_view_1, button_13) {
+define("project/daily-selling", ["require", "exports", "common/component", "common/search-field", "common/input-field", "common/system", "project/daily-selling-view", "common/button"], function (require, exports, component_20, search_field_4, input_field_10, system_15, daily_selling_view_1, button_13) {
     "use strict";
     var DailySelling = (function (_super) {
         __extends(DailySelling, _super);
@@ -2083,26 +2206,26 @@ define("project/daily-selling", ["require", "exports", "common/component", "comm
         }
         DailySelling.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.ship = new search_field_4.SearchField(document.getElementById(this.id + "-ship"));
-            this.date = new input_field_9.InputField(document.getElementById(this.id + "-date"));
+            this.entitySF = new search_field_4.SearchField(document.getElementById(this.id + "-entity"));
+            this.date = new input_field_10.InputField(document.getElementById(this.id + "-date"));
             this.area = this.root.getElementsByClassName('daily-selling-area')[0];
             this.refresh = new button_13.Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
         };
         DailySelling.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            this.ship.attachEvent(search_field_4.SearchField.GET_VALUE_EVENT, this.enableDateField.bind(this));
-            this.ship.attachEvent(search_field_4.SearchField.LOSE_VALUE_EVENT, this.disableDateField.bind(this));
-            this.date.attachEvent(input_field_9.InputField.VALUE_CHANGED, this.getView.bind(this));
+            this.entitySF.attachEvent(search_field_4.SearchField.GET_VALUE_EVENT, this.enableDateField.bind(this));
+            this.entitySF.attachEvent(search_field_4.SearchField.LOSE_VALUE_EVENT, this.disableDateField.bind(this));
+            this.date.attachEvent(input_field_10.InputField.VALUE_CHANGED, this.getView.bind(this));
         };
         DailySelling.prototype.getView = function () {
             var data = {};
-            data['ship_id'] = this.ship.getValue();
+            data['entity_id'] = this.entitySF.getValue();
             data['date'] = this.date.getValue();
             this.area.innerHTML = "Loading . . .";
             this.refresh.disable(true);
             $.ajax({
-                url: system_14.System.getBaseUrl() + "/selling/get-daily-selling-view",
-                data: system_14.System.addCsrf(data),
+                url: system_15.System.getBaseUrl() + "/selling/get-daily-selling-view",
+                data: system_15.System.addCsrf(data),
                 context: this,
                 dataType: "json",
                 method: "post",
@@ -2118,7 +2241,7 @@ define("project/daily-selling", ["require", "exports", "common/component", "comm
         };
         DailySelling.prototype.addViewToArea = function (views) {
             this.area.innerHTML = "";
-            if (!system_14.System.isEmptyValue(this.sellingView)) {
+            if (!system_15.System.isEmptyValue(this.sellingView)) {
                 this.sellingView.deconstruct();
             }
             var wrapper = document.createElement("div");
@@ -2145,7 +2268,7 @@ define("project/daily-selling", ["require", "exports", "common/component", "comm
     }(component_20.Component));
     exports.DailySelling = DailySelling;
 });
-define("project/custom-selling-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_7, search_field_5, input_field_10) {
+define("project/custom-selling-form", ["require", "exports", "common/form", "common/search-field", "common/input-field"], function (require, exports, form_7, search_field_5, input_field_11) {
     "use strict";
     var CustomSellingForm = (function (_super) {
         __extends(CustomSellingForm, _super);
@@ -2160,8 +2283,8 @@ define("project/custom-selling-form", ["require", "exports", "common/form", "com
             configurable: true
         });
         CustomSellingForm.prototype.rules = function () {
-            this.registerFields([this.ship, this.from, this.to]);
-            this.setRequiredField([this.ship, this.from, this.to]);
+            this.registerFields([this.entitySF, this.from, this.to]);
+            this.setRequiredField([this.entitySF, this.from, this.to]);
         };
         CustomSellingForm.prototype.successCallback = function (data) {
             var json = {
@@ -2172,9 +2295,9 @@ define("project/custom-selling-form", ["require", "exports", "common/form", "com
         };
         CustomSellingForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.ship = new search_field_5.SearchField(document.getElementById(this.id + "-ship"));
-            this.from = new input_field_10.InputField(document.getElementById(this.id + "-from"));
-            this.to = new input_field_10.InputField(document.getElementById(this.id + "-to"));
+            this.entitySF = new search_field_5.SearchField(document.getElementById(this.id + "-entity"));
+            this.from = new input_field_11.InputField(document.getElementById(this.id + "-from"));
+            this.to = new input_field_11.InputField(document.getElementById(this.id + "-to"));
         };
         CustomSellingForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2244,7 +2367,7 @@ define("project/custom-selling", ["require", "exports", "common/component", "pro
     }(component_22.Component));
     exports.CustomSelling = CustomSelling;
 });
-define("project/list-code", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_23, button_14, system_15) {
+define("project/list-code", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_23, button_14, system_16) {
     "use strict";
     var ListCode = (function (_super) {
         __extends(ListCode, _super);
@@ -2252,14 +2375,14 @@ define("project/list-code", ["require", "exports", "common/component", "common/b
             return _super.call(this, root) || this;
         }
         ListCode.prototype.redirectToAdd = function () {
-            window.location.href = system_15.System.getBaseUrl() + "/code/create";
+            window.location.href = system_16.System.getBaseUrl() + "/code/create";
         };
         ListCode.prototype.redirectToCodeType = function () {
-            window.location.href = system_15.System.getBaseUrl() + "/code/type";
+            window.location.href = system_16.System.getBaseUrl() + "/code/type";
         };
         ListCode.prototype.redirectToView = function (raw) {
             var entityId = raw.getAttribute('data-entity-id');
-            window.location.href = system_15.System.getBaseUrl() + "/code/view?id=" + entityId;
+            window.location.href = system_16.System.getBaseUrl() + "/code/view?id=" + entityId;
         };
         ListCode.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
@@ -2287,15 +2410,15 @@ define("project/list-code", ["require", "exports", "common/component", "common/b
             }
         };
         ListCode.prototype.showRemoveDialog = function (raw) {
-            system_15.System.showConfirmDialog(this.removeCode.bind(null, raw), "Are you sure", "Once it is deleted, you will lose the code");
+            system_16.System.showConfirmDialog(this.removeCode.bind(null, raw), "Are you sure", "Once it is deleted, you will lose the code");
         };
         ListCode.prototype.removeCode = function (raw) {
             var entity_id = raw.getAttribute('data-entity-id');
             var data = {};
             data['entity_id'] = entity_id;
             $.ajax({
-                url: system_15.System.getBaseUrl() + "/code/remove",
-                data: system_15.System.addCsrf(data),
+                url: system_16.System.getBaseUrl() + "/code/remove",
+                data: system_16.System.addCsrf(data),
                 context: this,
                 dataType: "json",
                 method: "post",
@@ -2309,10 +2432,10 @@ define("project/list-code", ["require", "exports", "common/component", "common/b
             });
         };
         ListCode.prototype.redirectToEdit = function (raw) {
-            window.location.href = system_15.System.getBaseUrl() + "/code/edit?id=" + raw.getAttribute('data-entity-id');
+            window.location.href = system_16.System.getBaseUrl() + "/code/edit?id=" + raw.getAttribute('data-entity-id');
         };
         ListCode.prototype.redirectToAddRelation = function (raw) {
-            window.location.href = system_15.System.getBaseUrl() + "/code/add-relation?id=" + raw.getAttribute('data-entity-id');
+            window.location.href = system_16.System.getBaseUrl() + "/code/add-relation?id=" + raw.getAttribute('data-entity-id');
         };
         ListCode.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2327,7 +2450,7 @@ define("project/list-code", ["require", "exports", "common/component", "common/b
     }(component_23.Component));
     exports.ListCode = ListCode;
 });
-define("project/list-code-type", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_24, button_15, system_16) {
+define("project/list-code-type", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_24, button_15, system_17) {
     "use strict";
     var ListCodeType = (function (_super) {
         __extends(ListCodeType, _super);
@@ -2349,21 +2472,21 @@ define("project/list-code-type", ["require", "exports", "common/component", "com
             }
         };
         ListCodeType.prototype.redirectToAdd = function () {
-            window.location.href = system_16.System.getBaseUrl() + "/code/create-type";
+            window.location.href = system_17.System.getBaseUrl() + "/code/create-type";
         };
         ListCodeType.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
         };
         ListCodeType.prototype.showRemoveDialog = function (raw) {
-            system_16.System.showConfirmDialog(this.removeCode.bind(null, raw), "Are you sure", "Once it is deleted, you will have to ask the developer to retrieve it");
+            system_17.System.showConfirmDialog(this.removeCode.bind(null, raw), "Are you sure", "Once it is deleted, you will have to ask the developer to retrieve it");
         };
         ListCodeType.prototype.removeCode = function (raw) {
             var entity_id = raw.getAttribute('data-entity-type-id');
             var data = {};
             data['entity_type_id'] = entity_id;
             $.ajax({
-                url: system_16.System.getBaseUrl() + "/code/remove-type",
-                data: system_16.System.addCsrf(data),
+                url: system_17.System.getBaseUrl() + "/code/remove-type",
+                data: system_17.System.addCsrf(data),
                 context: this,
                 dataType: "json",
                 method: "post",
@@ -2377,7 +2500,7 @@ define("project/list-code-type", ["require", "exports", "common/component", "com
             });
         };
         ListCodeType.prototype.redirectToEdit = function (raw) {
-            window.location.href = system_16.System.getBaseUrl() + "/code/edit-type?id=" + raw.getAttribute('data-entity-type-id');
+            window.location.href = system_17.System.getBaseUrl() + "/code/edit-type?id=" + raw.getAttribute('data-entity-type-id');
         };
         ListCodeType.prototype.detach = function () {
             _super.prototype.detach.call(this);
@@ -2389,14 +2512,14 @@ define("project/list-code-type", ["require", "exports", "common/component", "com
     }(component_24.Component));
     exports.ListCodeType = ListCodeType;
 });
-define("project/create-code-type-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_8, input_field_11, text_area_field_3, system_17) {
+define("project/create-code-type-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_8, input_field_12, text_area_field_3, system_18) {
     "use strict";
     var CreateCodeTypeForm = (function (_super) {
         __extends(CreateCodeTypeForm, _super);
         function CreateCodeTypeForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_17.System.getBaseUrl() + "/code/type";
+                window.location.href = system_18.System.getBaseUrl() + "/code/type";
             };
             return _this;
         }
@@ -2406,7 +2529,7 @@ define("project/create-code-type-form", ["require", "exports", "common/form", "c
         };
         CreateCodeTypeForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.nameField = new input_field_11.InputField(document.getElementById(this.id + "-name"));
+            this.nameField = new input_field_12.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_3.TextAreaField(document.getElementById(this.id + "-desc"));
         };
         CreateCodeTypeForm.prototype.bindEvent = function () {
@@ -2446,14 +2569,14 @@ define("project/create-code-type", ["require", "exports", "common/component", "p
     }(component_25.Component));
     exports.CreateCodeType = CreateCodeType;
 });
-define("project/create-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system"], function (require, exports, form_9, input_field_12, text_area_field_4, search_field_6, system_18) {
+define("project/create-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system"], function (require, exports, form_9, input_field_13, text_area_field_4, search_field_6, system_19) {
     "use strict";
     var CreateCodeForm = (function (_super) {
         __extends(CreateCodeForm, _super);
         function CreateCodeForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_18.System.getBaseUrl() + "/code/index";
+                window.location.href = system_19.System.getBaseUrl() + "/code/index";
             };
             return _this;
         }
@@ -2463,9 +2586,9 @@ define("project/create-code-form", ["require", "exports", "common/form", "common
         };
         CreateCodeForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.codeField = new input_field_12.InputField(document.getElementById(this.id + "-code"));
+            this.codeField = new input_field_13.InputField(document.getElementById(this.id + "-code"));
             this.typeIdField = new search_field_6.SearchField(document.getElementById(this.id + "-type-id"));
-            this.nameField = new input_field_12.InputField(document.getElementById(this.id + "-name"));
+            this.nameField = new input_field_13.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_4.TextAreaField(document.getElementById(this.id + "-desc"));
         };
         CreateCodeForm.prototype.bindEvent = function () {
@@ -2505,126 +2628,7 @@ define("project/create-code", ["require", "exports", "common/component", "projec
     }(component_26.Component));
     exports.CreateCode = CreateCode;
 });
-define("common/currency-field", ["require", "exports", "common/Field", "common/system", "common/input-field", "common/key-code", "common/math"], function (require, exports, Field_4, system_19, input_field_13, key_code_2, math_2) {
-    "use strict";
-    var CurrencyField = (function (_super) {
-        __extends(CurrencyField, _super);
-        function CurrencyField(root) {
-            var _this = _super.call(this, root) || this;
-            _this.excelState = false;
-            return _this;
-        }
-        Object.defineProperty(CurrencyField, "CHAR_TO_EXCEL", {
-            get: function () { return "="; },
-            enumerable: true,
-            configurable: true
-        });
-        ;
-        CurrencyField.prototype.decorate = function () {
-            _super.prototype.decorate.call(this);
-            this.input = new input_field_13.InputField(document.getElementById(this.id + "-input"));
-            this.defaultValue = this.root.getAttribute('data-default-value');
-            this.tempRealValue = this.input.getValue();
-        };
-        CurrencyField.prototype.bindEvent = function () {
-            _super.prototype.bindEvent.call(this);
-            this.input.attachInputElement("keypress", this.keyPressInput.bind(this));
-            this.input.attachInputElement('keyup', this.changeInput.bind(this));
-            this.input.attachInputElement("blur", this.evalValue.bind(this));
-            this.input.attachInputElement("blur", this.updateField.bind(this));
-            this.input.attachInputElement("focus", this.convertFromCurrency.bind(this));
-        };
-        CurrencyField.prototype.convertFromCurrency = function () {
-            var curVal = this.input.getValue();
-            if (curVal.length === 0) {
-                return;
-            }
-            this.input.setValue("" + math_2.Math.convertFromCurrency(curVal));
-        };
-        CurrencyField.prototype.evalValue = function (e) {
-            //console
-            if (this.excelState) {
-                var curValue = this.input.getValue();
-                var result = math_2.Math.safeEval(curValue.substring(1, curValue.length));
-                if (!system_19.System.isEmptyValue(result)) {
-                    this.input.setValue(result);
-                    this.removeExcelState();
-                }
-                else {
-                    this.showError("Expression Not Recognized");
-                }
-            }
-        };
-        CurrencyField.prototype.keyPressInput = function (e) {
-            this.hideError();
-            var keyCode = e.which;
-            if ((keyCode >= key_code_2.KeyCode.ZERO && keyCode <= key_code_2.KeyCode.NINE) ||
-                keyCode === key_code_2.KeyCode.DOT) {
-            }
-            else if (this.excelState && (keyCode === key_code_2.KeyCode.MINUS || keyCode === key_code_2.KeyCode.PLUS ||
-                keyCode === key_code_2.KeyCode.ASTERISK || keyCode === key_code_2.KeyCode.SLASH)) {
-            }
-            else if (keyCode === key_code_2.KeyCode.EQUALS && this.input.getValue().length === 0) {
-            }
-            else if (keyCode === key_code_2.KeyCode.ENTER_KEY && this.excelState) {
-                this.evalValue(e);
-            }
-            else {
-                e.preventDefault();
-                return false;
-            }
-        };
-        CurrencyField.prototype.changeInput = function (e) {
-            var value = this.input.getValue();
-            if (value.length === 1 && value.charAt(0) === CurrencyField.CHAR_TO_EXCEL) {
-                this.changeToExcelState();
-                e.preventDefault();
-                return;
-            }
-            if (value.length === 0) {
-                this.removeExcelState();
-            }
-        };
-        CurrencyField.prototype.updateField = function () {
-            if (this.excelState) {
-                return;
-            }
-            var value = this.input.getValue();
-            if (value.length === 0) {
-                return;
-            }
-            var newVal = math_2.Math.convertToCurrency(value);
-            this.input.setValue(newVal);
-        };
-        CurrencyField.prototype.changeToExcelState = function () {
-            this.excelState = true;
-            this.input.addClass('currency-field-excel');
-        };
-        CurrencyField.prototype.removeExcelState = function () {
-            this.excelState = false;
-            this.input.removeClass('currency-field-excel');
-        };
-        CurrencyField.prototype.getValue = function () {
-            var value = this.input.getValue();
-            if (system_19.System.isEmptyValue(value)) {
-                return parseInt(this.defaultValue);
-            }
-            return math_2.Math.convertFromCurrency(value);
-        };
-        CurrencyField.prototype.emptyValue = function () {
-            this.input.setValue("");
-        };
-        CurrencyField.prototype.setValue = function (number) {
-            if (!system_19.System.isEmptyValue(number) && number !== 0) {
-                this.input.setValue("");
-            }
-            this.input.setValue(number + "");
-        };
-        return CurrencyField;
-    }(Field_4.Field));
-    exports.CurrencyField = CurrencyField;
-});
-define("project/add-transaction-form", ["require", "exports", "common/form", "common/input-field", "common/search-field", "common/currency-field"], function (require, exports, form_10, input_field_14, search_field_7, currency_field_1) {
+define("project/add-transaction-form", ["require", "exports", "common/form", "common/input-field", "common/search-field", "common/currency-field"], function (require, exports, form_10, input_field_14, search_field_7, currency_field_2) {
     "use strict";
     var AddTransactionForm = (function (_super) {
         __extends(AddTransactionForm, _super);
@@ -2659,9 +2663,9 @@ define("project/add-transaction-form", ["require", "exports", "common/form", "co
         AddTransactionForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
             this.date = new input_field_14.InputField(document.getElementById(this.id + "-date"));
-            this.debetField = new currency_field_1.CurrencyField(document.getElementById(this.id + "-debet"));
+            this.debetField = new currency_field_2.CurrencyField(document.getElementById(this.id + "-debet"));
             this.remarkField = new input_field_14.InputField(document.getElementById(this.id + "-remark"));
-            this.creditField = new currency_field_1.CurrencyField(document.getElementById(this.id + "-credit"));
+            this.creditField = new currency_field_2.CurrencyField(document.getElementById(this.id + "-credit"));
             this.codeField = new search_field_7.SearchField(document.getElementById(this.id + "-code"));
         };
         AddTransactionForm.prototype.bindEvent = function () {
@@ -3487,6 +3491,7 @@ define("project/edit-code-form", ["require", "exports", "common/form", "common/i
             this.setRequiredField([this.nameField, this.typeIdField,
                 this.idField, this.codeField]);
             this.registerFields([this.nameField, this.descField, this.idField,
+                this.unitField,
                 this.typeIdField, this.codeField]);
         };
         EditCodeForm.prototype.decorate = function () {
@@ -3495,6 +3500,7 @@ define("project/edit-code-form", ["require", "exports", "common/form", "common/i
             this.codeField = new input_field_22.InputField(document.getElementById(this.id + "-code"));
             this.typeIdField = new search_field_11.SearchField(document.getElementById(this.id + "-type-id"));
             this.nameField = new input_field_22.InputField(document.getElementById(this.id + "-name"));
+            this.unitField = new input_field_22.InputField(document.getElementById(this.id + "-unit"));
             this.descField = new text_area_field_6.TextAreaField(document.getElementById(this.id + "-desc"));
         };
         EditCodeForm.prototype.bindEvent = function () {

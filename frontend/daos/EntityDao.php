@@ -8,6 +8,7 @@ use frontend\vos\EntityTypeVo;
 use common\models\Entity;
 use frontend\vos\OwnerVo;
 use frontend\vos\UserVo;
+use frontend\vos\EntitySellingUnitVo;
 use common\components\Dao;
 /**
  * EntityDao class
@@ -53,13 +54,20 @@ class EntityDao implements Dao
                                         where entity.id = :entity_id and entity.type_id = :type_id
                                             and entity.status = :status";
     
-    const GET_ENTITY_INFO = "select entity.*,
+    const GET_ENTITY_INFO = "
+                        SELECT entity_info.*, entity_selling_unit.unit as entity_selling_unit_unit 
+                        FROM (    
+                            select entity.*,
                                     entity_type.id as entity_type_id, 
                                     entity_type.name as entity_type_name
                             from entity, entity_type
                             where entity.id = :entity_id 
                                 and entity_type.id = entity.type_id
-                                and entity.status = :status";
+                                and entity.status = :status
+                        ) entity_info
+                        left join 
+                        entity_selling_unit on
+                        entity_info.id = entity_selling_unit.entity_id ";
     
     const GET_ENTITY_TYPE_INFO = "select entity_type.*
                                 from entity_type
@@ -90,11 +98,17 @@ class EntityDao implements Dao
     }
     
     public function getEntityInfo($entityId, $status = Entity::STATUS_ACTIVE) {
+        $builder = $this->getEntityInfoBuilder($entityId, $status);
+        return $builder->build();
+    }
+    
+    private function getEntityInfoBuilder($entityId, $status = Entity::STATUS_ACTIVE) {
         $result =  \Yii::$app->db
             ->createCommand(self::GET_ENTITY_INFO)
             ->bindParam(":entity_id", $entityId)
             ->bindParam(':status', $status)
             ->queryOne();
+        
         if(!$result) {
             return null;
         }
@@ -104,29 +118,18 @@ class EntityDao implements Dao
         $typeBuilder->loadData($result, "entity_type");
         $builder->setEntityType($typeBuilder->build());
         $builder->loadData($result);
-        return $builder->build();
         
+        $entitySellingUnitBuilder = EntitySellingUnitVo::createBuilder();
+        $entitySellingUnitBuilder->loadData($result, "entity_selling_unit");
+        
+        $builder->setEntitySellingUnitVo($entitySellingUnitBuilder->build());
+        return $builder;
     }
     
     public function getEntityInfoWithRelations($entityId, $status = Entity::STATUS_ACTIVE) {
-        $result =  \Yii::$app->db
-            ->createCommand(self::GET_ENTITY_INFO)
-            ->bindParam(":entity_id", $entityId)
-            ->bindParam(':status', $status)
-            ->queryOne();
-        
-        if(!$result) {
-            return null;
-        }
-        
-        $builder = EntityVo::createBuilder();
-        $typeBuilder = EntityTypeVo::createBuilder();
-        $typeBuilder->loadData($result, "entity_type");
-        $builder->setEntityType($typeBuilder->build());
-        $builder->loadData($result);
+        $builder = $this->getEntityInfoBuilder($entityId, $status);
         $builder->setChildEntities($this->getChildEntities($entityId));
         return $builder->build();
-        
     }
     
     public function getChildEntities($entityId, $status = Entity::STATUS_ACTIVE) {

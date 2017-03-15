@@ -8,14 +8,14 @@
             <?= $vo->getRemark() ?>
         </div>
         <div class="hide600 ds-item-field">
-            <?= $vo->getPrice() ?>
+            <?= $vo->getPriceInCurrency() ?>
         </div>
         <div class="hide600 ds-item-field">
             <?= $vo->getTonase() ?>
         </div>
 
         <div class="ds-item-field">
-            <?= $vo->getTotal() ?>
+            <?= $vo->getTotalInCurrency() ?>
         </div>
         <div class="ds-item-field ds-item-action">
             <?= Button::widget(['id' => $id . '-remove-btn', 'text' => "<span class='glyphicon glyphicon-remove'></span>",

@@ -20,20 +20,27 @@
             'value' => $vo->getCode(),
             'name' => 'code']) ?>
     </div>
+
     <div class="form-field">
-    <?= InputField::widget(['id' => $id . '-name', 'value' => $vo->getName(),
-                    'placeholder' => 'Nama', 'name' => 'name']) ?>
+        <?= InputField::widget(['id' => $id . '-name', 'value' => $vo->getName(),
+                        'placeholder' => 'Nama', 'name' => 'name']) ?>
     </div>
 
     <div class="form-field">
-    <?= TextAreaField::widget(['id' => $id . '-desc', 'value' => $vo->getDescription(),
-                    'placeholder' => 'Keterangan', 'rows' => 3, 'name' => 'description']) ?>
+        <?= TextAreaField::widget(['id' => $id . '-desc', 'value' => $vo->getDescription(),
+                        'placeholder' => 'Keterangan', 'rows' => 3, 'name' => 'description']) ?>
     </div>
+
     <div class="form-field">
-    <?= SearchField::widget(['id' => $id . '-type-id', 'placeholder' => 'Cari Tipe', 
-                'index' => $vo->getEntityType()->getId(),
-                'value' => $vo->getEntityType()->getName(),
-                'url' => \Yii::$app->request->baseUrl . "/code/search-type", 'name' => 'type_id']) ?>
+        <?= SearchField::widget(['id' => $id . '-type-id', 'placeholder' => 'Cari Tipe', 
+                    'index' => $vo->getEntityType()->getId(),
+                    'value' => $vo->getEntityType()->getName(),
+                    'url' => \Yii::$app->request->baseUrl . "/code/search-type", 'name' => 'type_id']) ?>
+    </div>
+
+    <div class="form-field">
+        <?=     InputField::widget(['id' => $id . '-unit', 'placeholder' => 'Unit', 
+                    'value' => $vo->getEntitySellingUnitVo()->getUnit(), 'name' => 'unit']) ?>
     </div>
     <?= InputField::widget(['id' => $id . '-id', 'placeholder' => 'Kode',     
             'value' => $vo->getId(), 'type' => InputField::HIDDEN,

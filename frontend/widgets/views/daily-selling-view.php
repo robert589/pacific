@@ -36,5 +36,5 @@
     </div>
     
     <?=    AddSellingForm::widget(['id' => $id . '-asform',
-        'date' => $date, 'shipId' => $shipId]) ?>  
+        'date' => $date, 'entityId' => $entityId]) ?>  
 </div>

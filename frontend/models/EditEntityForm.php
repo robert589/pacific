@@ -1,6 +1,8 @@
 <?php
 namespace frontend\models;
 
+use frontend\constants\SellingConstants;
+use common\models\EntitySellingUnit;
 use common\components\RModel;
 use common\libraries\UserLibrary;
 use common\models\Admin;
@@ -27,8 +29,11 @@ class EditEntityForm extends RModel
 
     public $id;
     
+    public $unit;
     
     private $entity;
+    
+    private $entitySellingUnit;
     
     public function rules() {
         return [
@@ -50,7 +55,9 @@ class EditEntityForm extends RModel
             
             ['code', 'integer'],
             ['code', 'required'],
-            ['code', 'isNewCodeDuplicate']
+            ['code', 'isNewCodeDuplicate'],
+            
+            ['unit', 'string']
 
         ];
     }
@@ -94,6 +101,31 @@ class EditEntityForm extends RModel
         $this->entity->name = $this->name;
         $this->entity->status = Entity::STATUS_ACTIVE;
         $this->entity->description = $this->description;
-        return $this->entity->update();
+        $this->entity->update();
+
+        $this->entitySellingUnit = EntitySellingUnit::find()->where(['entity_id' => $this->id])->one();
+        if($this->unit === SellingConstants::DEFAULT_UNIT || !$this->unit) {
+            //no need to store if it is the same
+            if($this->entitySellingUnit) {
+                return EntitySellingUnit::deleteAll("entity_id=" . $this->id);   
+            } 
+            else {
+                return true;
+            }
+        }
+        
+        if(!$this->entitySellingUnit) {
+            $this->entitySellingUnit = new EntitySellingUnit();
+            $this->entitySellingUnit->entity_id = $this->id;    
+            $this->entitySellingUnit->unit = $this->unit;
+            return $this->entitySellingUnit->save();
+        }
+        
+        if($this->entitySellingUnit->unit !== $this->unit ) {
+            $this->entitySellingUnit->unit = $this->unit;
+            return $this->entitySellingUnit->update();   
+        }
+
+        return true;
     }
 }

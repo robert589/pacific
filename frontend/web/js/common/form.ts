@@ -60,7 +60,8 @@ export abstract class Form extends Component {
 
         this.root.onkeypress = function(e) {
             if(e.keyCode === 13) {
-                this.submit(e);
+                e.preventDefault();
+                this.submitButton.click();
             }
         }.bind(this);
     }

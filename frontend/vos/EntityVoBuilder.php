@@ -28,6 +28,8 @@ class EntityVoBuilder extends RVoBuilder
     
     public $code;
     
+    public $entitySellingUnitVo;
+    
     public $updatedAt;
 
     public function rules() { 
@@ -117,6 +119,14 @@ class EntityVoBuilder extends RVoBuilder
 
     function setCode($code) {
         $this->code = $code;
+    }
+
+    function getEntitySellingUnitVo() {
+        return $this->entitySellingUnitVo;
+    }
+
+    function setEntitySellingUnitVo($entitySellingUnitVo) {
+        $this->entitySellingUnitVo = $entitySellingUnitVo;
     }
 
 

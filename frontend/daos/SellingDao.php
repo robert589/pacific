@@ -12,19 +12,19 @@ class SellingDao implements Dao
 {
     const GET_DAILY_SELLING_VIEW = "SELECT *
                                 from selling
-                                where selling.entity_id = :ship_id and selling.date = :date and selling.status = :status ";
+                                where selling.entity_id = :entity_id and selling.date = :date and selling.status = :status ";
     
     const GET_ALL_SELLINGS_IN_BETWEEN = "
                     SELECT * FROM `selling`
                     WHERE STR_TO_DATE( date, \"%d/%m/%Y\") >= STR_TO_DATE(:from, \"%d/%m/%Y\")
                      AND STR_TO_DATE( date, \"%d/%m/%Y\") <= STR_TO_DATE(:to, \"%d/%m/%Y\")
-                     AND entity_id = :ship_id and status = :status
-                    ORDER BY STR_TO_DATE(date, '%d/%m/%Y') DESC;";
+                     AND entity_id = :entity_id and status = :status
+                    ORDER BY STR_TO_DATE(date, '%d/%m/%Y') ASC;";
     
-    public function getSellingView($shipId, $date, $from, $to, $status = Selling::STATUS_ACTIVE) {
+    public function getSellingView($entityId, $date, $from, $to, $status = Selling::STATUS_ACTIVE) {
         $results = \Yii::$app->db
             ->createCommand(self::GET_ALL_SELLINGS_IN_BETWEEN)
-            ->bindParam(':ship_id', $shipId)
+            ->bindParam(':entity_id', $entityId)
             ->bindParam(':status', $status)
             ->bindParam(':from', $from)
             ->bindParam(':to', $to)
@@ -41,10 +41,10 @@ class SellingDao implements Dao
     
     }
     
-    public function getDailySellingView($shipId, $date, $status = Selling::STATUS_ACTIVE ) {
-        $results = \Yii::$app->db
+    public function getDailySellingView($entityId, $date, $status = Selling::STATUS_ACTIVE ) {
+        $results = \Yii::$app->db   
             ->createCommand(self::GET_DAILY_SELLING_VIEW)
-            ->bindParam(':ship_id', $shipId)
+            ->bindParam(':entity_id', $entityId)
             ->bindParam(':date', $date)
             ->bindParam(':status', $status)
             ->queryAll();
