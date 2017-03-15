@@ -27,6 +27,8 @@ import {AddUser} from "./add-user";
 import {ListRole} from './list-role';
 import {ViewCode} from './view-code';
 import {AddRole} from './add-role';
+import {ListWarehouse} from './list-warehouse';
+import {AddWarehouse} from './add-warehouse';
 
 export class App extends Component{
 
@@ -39,6 +41,10 @@ export class App extends Component{
     createShip : CreateShip;
 
     listShip : ListShip;
+
+    addWarehouse : AddWarehouse;
+    
+    listWarehouse : ListWarehouse;
 
     shipOwnership : ShipOwnership;
 
@@ -178,7 +184,12 @@ export class App extends Component{
         else if(this.root.getElementsByClassName('aer').length !== 0) {
             this.addEntityRelation = new AddEntityRelation(document.getElementById("caer"));
         }
-    
+        else if(this.root.getElementsByClassName('list-warehouse').length !== 0) {
+            this.listWarehouse = new ListWarehouse(document.getElementById("ilw"));
+        }
+        else if(this.root.getElementsByClassName('add-wh').length !== 0) {
+            this.addWarehouse = new AddWarehouse(document.getElementById("iaw"));
+        }
         this.hamburgerIcon = <HTMLElement> 
                         this.root.getElementsByClassName('app-hamburger')[0];   
         this.leftSide = <HTMLElement> this.root.getElementsByClassName('left-side')[0];

@@ -3958,7 +3958,93 @@ define("project/add-role", ["require", "exports", "common/component", "project/a
     }(component_43.Component));
     exports.AddRole = AddRole;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role"], function (require, exports, component_44, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_32, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1) {
+define("project/list-warehouse", ["require", "exports", "common/component", "common/button", "common/system"], function (require, exports, component_44, button_24, system_32) {
+    "use strict";
+    var ListWarehouse = (function (_super) {
+        __extends(ListWarehouse, _super);
+        function ListWarehouse(root) {
+            return _super.call(this, root) || this;
+        }
+        ListWarehouse.prototype.redirectToAddWarehouse = function () {
+            window.location.href = system_32.System.getBaseUrl() + "/inventory/add-warehouse";
+        };
+        ListWarehouse.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.add = new button_24.Button(document.getElementById(this.id + "-add"), this.redirectToAddWarehouse.bind(this));
+        };
+        ListWarehouse.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ListWarehouse.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ListWarehouse.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ListWarehouse;
+    }(component_44.Component));
+    exports.ListWarehouse = ListWarehouse;
+});
+define("project/add-warehouse-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_23, input_field_28, text_area_field_9, system_33) {
+    "use strict";
+    var AddWarehouseForm = (function (_super) {
+        __extends(AddWarehouseForm, _super);
+        function AddWarehouseForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.href = system_33.System.getBaseUrl() + "/code/index";
+            };
+            return _this;
+        }
+        AddWarehouseForm.prototype.rules = function () {
+            this.setRequiredField([this.nameField, this.codeField]);
+            this.registerFields([this.nameField, this.descField, this.locationField, this.codeField]);
+        };
+        AddWarehouseForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.codeField = new input_field_28.InputField(document.getElementById(this.id + "-code"));
+            this.locationField = new text_area_field_9.TextAreaField(document.getElementById(this.id + "-location"));
+            this.nameField = new input_field_28.InputField(document.getElementById(this.id + "-name"));
+            this.descField = new text_area_field_9.TextAreaField(document.getElementById(this.id + "-desc"));
+        };
+        AddWarehouseForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddWarehouseForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddWarehouseForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddWarehouseForm;
+    }(form_23.Form));
+    exports.AddWarehouseForm = AddWarehouseForm;
+});
+define("project/add-warehouse", ["require", "exports", "common/component", "project/add-warehouse-form"], function (require, exports, component_45, add_warehouse_form_1) {
+    "use strict";
+    var AddWarehouse = (function (_super) {
+        __extends(AddWarehouse, _super);
+        function AddWarehouse(root) {
+            return _super.call(this, root) || this;
+        }
+        AddWarehouse.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new add_warehouse_form_1.AddWarehouseForm(document.getElementById(this.id + "-form"));
+        };
+        AddWarehouse.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddWarehouse.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddWarehouse.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddWarehouse;
+    }(component_45.Component));
+    exports.AddWarehouse = AddWarehouse;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role", "project/list-warehouse", "project/add-warehouse"], function (require, exports, component_46, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_34, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1, list_warehouse_1, add_warehouse_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -4052,6 +4138,12 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             else if (this.root.getElementsByClassName('aer').length !== 0) {
                 this.addEntityRelation = new add_entity_relation_1.AddEntityRelation(document.getElementById("caer"));
             }
+            else if (this.root.getElementsByClassName('list-warehouse').length !== 0) {
+                this.listWarehouse = new list_warehouse_1.ListWarehouse(document.getElementById("ilw"));
+            }
+            else if (this.root.getElementsByClassName('add-wh').length !== 0) {
+                this.addWarehouse = new add_warehouse_1.AddWarehouse(document.getElementById("iaw"));
+            }
             this.hamburgerIcon = this.root.getElementsByClassName('app-hamburger')[0];
             this.leftSide = this.root.getElementsByClassName('left-side')[0];
         };
@@ -4065,7 +4157,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_32.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_34.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };
@@ -4076,7 +4168,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_44.Component));
+    }(component_46.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

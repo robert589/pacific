@@ -91,6 +91,16 @@ AppAsset::register($this);
 
                                     ],   
                                     [   
+                                        'label' => 'Pembelian',
+                                        'href' => '#',
+                                        'items' => [
+                                            ['label' => 'Buat Pembelian', 
+                                             'href' => Yii::$app->request->baseUrl . "/purchase/add"],
+                                        ]
+
+                                    ],   
+
+                                    [   
                                         'label' => 'Inventaris',
                                         'href' => '#',
                                         'items' => [

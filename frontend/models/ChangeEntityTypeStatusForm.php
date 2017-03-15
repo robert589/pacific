@@ -27,10 +27,18 @@ class ChangeEntityTypeStatusForm extends RModel
             ['entity_type_id' , 'integer'],
             ['entity_type_id', 'required'],
             ['entity_type_id', 'getEntityType'],
+            ['entity_type_id', 'isDeletable'],
             
             ['status', 'integer'],
             ['status', 'required']
         ];
+    }
+    
+    public function isDeletable() {
+        if($this->status === EntityType::STATUS_DELETED &&
+                intval($this->entityType->deletable) === 0) {
+            return $this->addError("status", "You cannot delete this entity type");
+        }
     }
     
     public function getEntityType() {
