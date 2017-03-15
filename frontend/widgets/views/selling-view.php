@@ -9,6 +9,10 @@
             <div class="selling-view-header-field">
                 Tanggal
             </div>
+            
+            <div class="selling-view-header-field">
+                Pembeli
+            </div>
             <div class="selling-view-header-field">
                 Keterangan
             </div>

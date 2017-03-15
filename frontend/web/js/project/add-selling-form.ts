@@ -3,6 +3,7 @@ import {InputField} from './../common/input-field';
 import {Button} from './../common/button';
 import {Validation} from './../common/validation';
 import {CurrencyField} from './../common/currency-field';
+import {SearchField} from './../common/search-field';
 
 export class AddSellingForm extends Form{
     
@@ -26,7 +27,9 @@ export class AddSellingForm extends Form{
 
     tonaseField : HTMLElement;
 
-    entityIF : InputField;
+    productIF : InputField;
+
+    buyerSF : SearchField;
 
     date : InputField;
 
@@ -49,12 +52,14 @@ export class AddSellingForm extends Form{
         this.price.emptyValue();
         this.tonase.setValue("0");
         this.total.emptyValue();
+        this.buyerSF.reset();
    
     }
     
     decorate() {
         super.decorate();
-        this.entityIF = new InputField(document.getElementById(this.id + "-entity"));
+        this.productIF = new InputField(document.getElementById(this.id + "-product"));
+        this.buyerSF = new SearchField(document.getElementById(this.id + "-buyer"));
         this.date = new InputField(document.getElementById(this.id + "-date"));
         this.remark = new InputField(document.getElementById(this.id + "-remark"));
         this.price = new CurrencyField(document.getElementById(this.id + "-price"));
@@ -88,8 +93,9 @@ export class AddSellingForm extends Form{
     }
 
     rules() {
-        this.setRequiredField([this.total, this.price, this.tonase, this.date, this.entityIF]);
-        this.registerFields([this.total, this.price, this.tonase, this.date, this.entityIF, this.remark]);
+        this.setRequiredField([this.total, this.price, this.tonase, this.date, this.productIF]);
+        this.registerFields([this.total, this.price, this.tonase, this.buyerSF,
+                    this.date, this.productIF, this.remark]);
         let validation : Validation = {
             errorMessage : "Total price atau (harga dan tonase) harus diisi",
             validate : this.validateFields.bind(this),

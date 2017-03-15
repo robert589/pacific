@@ -3,6 +3,7 @@ namespace frontend\vos;
 
 use yii\db\ActiveRecord;
 use common\components\RVo;
+use frontend\vos\EntityVo;
 use common\libraries\Currency;
 /**
  * SellingVo vo
@@ -15,10 +16,22 @@ class SellingVo implements RVo
 
     private $id;
 
-    private $entity;
+    /**
+     *
+     * @var EntityVo
+     */
+    private $product;
 
-    private $entityId;
-
+    private $productId;
+    
+    /**
+     *
+     * @var EntityVo 
+     */
+    private $buyer;
+    
+    private $buyerId;
+    
     private $date;
 
     private $price;
@@ -37,8 +50,10 @@ class SellingVo implements RVo
 
     public function __construct(SellingVoBuilder $builder) { 
         $this->id = $builder->getId(); 
-        $this->entity = $builder->getEntity(); 
-        $this->entityId = $builder->getEntityId(); 
+        $this->product = $builder->getProduct(); 
+        $this->buyer = $builder->getBuyer();
+        $this->productId = $builder->getProductId();
+        $this->buyerId = $builder->getBuyerId();
         $this->date = $builder->getDate(); 
         $this->price = $builder->getPrice(); 
         $this->tonase = $builder->getTonase(); 
@@ -54,13 +69,20 @@ class SellingVo implements RVo
     public function getId() { 
         return $this->id; 
     }
-
-    public function getEntity() { 
-        return $this->entity; 
+    function getProduct() {
+        return $this->product;
     }
 
-    public function getEntityId() { 
-        return $this->entityId; 
+    function getProductId() {
+        return $this->productId;
+    }
+
+    function getBuyer() {
+        return $this->buyer;
+    }
+
+    function getBuyerId() {
+        return $this->buyerId;
     }
 
     public function getDate() { 

@@ -8,7 +8,7 @@ class AddSellingForm extends Widget {
     
     public $id;
     
-    public $entityId;
+    public $productId;
     
     public $date;
     
@@ -18,6 +18,8 @@ class AddSellingForm extends Widget {
     
     public function run() {
         return $this->render('add-selling-form', 
-                ['id' => $this->id, 'entityId' => $this->entityId, 'date' => $this->date]);
+                ['id' => $this->id, 
+                'productId' => $this->productId, 
+                'date' => $this->date]);
     }
 }

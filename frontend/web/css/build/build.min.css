@@ -151,5 +151,5 @@
 
 
 .view-code>.btnc{margin-bottom:8px}
-.view-dash-item{border:1px solid #d3d3d3;display:inline-block;padding:8px;margin:8px;min-width:120px;vertical-align:top;min-height:70px}.view-dash-item-header{font-weight:700;display:block;font-size:18px}.view-dash-item-value{font-size:16px}
+.view-dash-item{border:1px solid #d3d3d3;display:inline-block;background:orange;color:#fff;min-width:180px;vertical-align:top;text-align:center;min-height:100px}.view-dash-item-header{font-weight:700;display:block;font-size:18px}.view-dash-item-value{font-size:16px}
 .wholesale-field-field{display:-ms-flexbox;display:flex}.wholesale-field-field-item{width:100%;margin-right:16px}

@@ -7,7 +7,7 @@
     <div class="ds-view-area">
         <div class="ds-view-header">
             <div class="ds-view-header-field">
-                Keterangan
+                Pembeli
             </div>
             <div class="hide600 ds-view-header-field">
                 Harga
@@ -17,6 +17,9 @@
             </div>
             <div class="ds-view-header-field">
                 Total
+            </div>
+            <div class="ds-view-header-field">
+                Keterangan
             </div>
             <div class="ds-view-header-field">
                 Aksi
@@ -36,5 +39,5 @@
     </div>
     
     <?=    AddSellingForm::widget(['id' => $id . '-asform',
-        'date' => $date, 'entityId' => $entityId]) ?>  
+        'date' => $date, 'productId' => $productId]) ?>  
 </div>

@@ -4,6 +4,7 @@ namespace frontend\models;
 use common\models\Selling;
 use common\components\RModel;
 use common\validators\DateValidator;
+use frontend\daos\SellingDao;
 
 /**
  * AddSellingForm model
@@ -25,7 +26,11 @@ class AddSellingForm extends RModel
 
     public $price;
 
-    public $entity_id;
+    public $product_id;
+    
+    public $buyer_id;
+    
+    private $sellingDao;
     
     public function rules() {
         return [
@@ -38,8 +43,10 @@ class AddSellingForm extends RModel
             
             ['remark','string'],
             
-            ['entity_id', 'integer'],
-            ['entity_id', 'required'],
+            ['product_id', 'integer'],
+            ['product_id', 'required'],
+            
+            ['buyer_id', 'integer'],
             
             ['total', 'double'],
             ['tonase', 'double'],
@@ -59,6 +66,9 @@ class AddSellingForm extends RModel
         }
     }
     
+    public function init() {
+        $this->sellingDao = new SellingDao();
+    }
     
     public function add() {
         if(!$this->validate()) {
@@ -68,7 +78,8 @@ class AddSellingForm extends RModel
         $selling = new Selling();
         $selling->remark = $this->remark;
         $selling->date = $this->date;
-        $selling->entity_id = $this->entity_id;
+        $selling->product_id = $this->product_id;
+        $selling->buyer_id = $this->buyer_id;
         $selling->status = Selling::STATUS_ACTIVE;
         if(!$this->total || $this->total <= 0.00000000001) {
            $selling->price = $this->price;
@@ -77,6 +88,10 @@ class AddSellingForm extends RModel
             $selling->total = $this->total;
         }
         
-        return ($selling->save()) ? $selling : NULL;
+        if(!$selling->save()) {
+            return NULL;
+        }
+        
+        return $this->sellingDao->getSellingInfo($selling->id);
     }
 }

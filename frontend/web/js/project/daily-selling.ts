@@ -8,7 +8,7 @@ import {Button} from './../common/button';
 
 export class DailySelling extends Component{
 
-    entitySF : SearchField;
+    productSF : SearchField;
 
     date : InputField;
 
@@ -24,7 +24,7 @@ export class DailySelling extends Component{
     
     decorate() {
         super.decorate();
-        this.entitySF = new SearchField(document.getElementById(this.id + "-entity"));
+        this.productSF = new SearchField(document.getElementById(this.id + "-product"));
         this.date = new InputField(document.getElementById(this.id + "-date"));    
         this.area = <HTMLElement> this.root.getElementsByClassName('daily-selling-area')[0];
         this.refresh = new Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
@@ -33,14 +33,14 @@ export class DailySelling extends Component{
     
     bindEvent() {
         super.bindEvent();
-        this.entitySF.attachEvent(SearchField.GET_VALUE_EVENT, this.enableDateField.bind(this));
-        this.entitySF.attachEvent(SearchField.LOSE_VALUE_EVENT, this.disableDateField.bind(this));
+        this.productSF.attachEvent(SearchField.GET_VALUE_EVENT, this.enableDateField.bind(this));
+        this.productSF.attachEvent(SearchField.LOSE_VALUE_EVENT, this.disableDateField.bind(this));
         this.date.attachEvent(InputField.VALUE_CHANGED, this.getView.bind(this));
     }
 
     getView() {
         let data = {};
-        data['entity_id'] = this.entitySF.getValue();
+        data['product_id'] = this.productSF.getValue();
         data['date'] = this.date.getValue();
         this.area.innerHTML = "Loading . . .";
         this.refresh.disable(true);

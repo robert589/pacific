@@ -1,144 +1,172 @@
 <?php
+
 namespace frontend\vos;
 
+use frontend\vos\EntityVo;
 use yii\db\ActiveRecord;
 use common\components\RVoBuilder;
+
 /**
  * SellingVo builder
  *
  */
-class SellingVoBuilder extends RVoBuilder
-{
-    function build() { return new SellingVo($this);  }
+class SellingVoBuilder extends RVoBuilder {
+
+    function build() {
+        return new SellingVo($this);
+    }
+
     //attributes
 
     public $id;
 
-    public $entity;
+    /**
+     *
+     * @var EntityVo
+     */
+    public $product;
+    public $productId;
 
-    public $entityId;
-
+    /**
+     *
+     * @var EntityVo
+     */
+    public $buyer;
+    public $buyerId;
     public $date;
-
     public $price;
-
     public $tonase;
-
     public $total;
-
     public $createdAt;
-
     public $updatedAt;
-
     public $status;
-
     public $remark;
 
-    public function rules() { 
+    public function rules() {
         return [
-           ['id','string'],
-           ['entity','string'],
-           ['entityId','string'],
-           ['date','string'],
-           ['price','string'],
-           ['tonase','string'],
-           ['total','string'],
-           ['createdAt','string'],
-           ['updatedAt','string'],
-           ['status','string'],
-           ['remark','string'],
+            ['id', 'string'],
+            ['product', 'string'],
+            ['productId', 'string'],
+            ['buyer', 'string'],
+            ['buyerId', 'string'],
+            ['date', 'string'],
+            ['price', 'string'],
+            ['tonase', 'string'],
+            ['total', 'string'],
+            ['createdAt', 'string'],
+            ['updatedAt', 'string'],
+            ['status', 'string'],
+            ['remark', 'string'],
         ];
     }
 
     //getters
 
-    public function getId() { 
-        return $this->id; 
+    public function getId() {
+        return $this->id;
     }
 
-    public function getEntity() { 
-        return $this->entity; 
+    public function getDate() {
+        return $this->date;
     }
 
-    public function getEntityId() { 
-        return $this->entityId; 
+    public function getPrice() {
+        return $this->price;
     }
 
-    public function getDate() { 
-        return $this->date; 
+    public function getTonase() {
+        return $this->tonase;
     }
 
-    public function getPrice() { 
-        return $this->price; 
+    public function getTotal() {
+        return $this->total;
     }
 
-    public function getTonase() { 
-        return $this->tonase; 
+    public function getCreatedAt() {
+        return $this->createdAt;
     }
 
-    public function getTotal() { 
-        return $this->total; 
+    public function getUpdatedAt() {
+        return $this->updatedAt;
     }
 
-    public function getCreatedAt() { 
-        return $this->createdAt; 
+    public function getStatus() {
+        return $this->status;
     }
 
-    public function getUpdatedAt() { 
-        return $this->updatedAt; 
-    }
-
-    public function getStatus() { 
-        return $this->status; 
-    }
-
-    public function getRemark() { 
-        return $this->remark; 
+    public function getRemark() {
+        return $this->remark;
     }
 
     //setters
 
-    public function setId($id) { 
-        $this->id = $id; 
+    public function setId($id) {
+        $this->id = $id;
     }
 
-    public function setEntity($entity) { 
-        $this->entity = $entity; 
+    public function setDate($date) {
+        $this->date = $date;
     }
 
-    public function setEntityId($entityId) { 
-        $this->entityId = $entityId; 
+    public function setPrice($price) {
+        $this->price = $price;
     }
 
-    public function setDate($date) { 
-        $this->date = $date; 
+    public function setTonase($tonase) {
+        $this->tonase = $tonase;
     }
 
-    public function setPrice($price) { 
-        $this->price = $price; 
+    public function setTotal($total) {
+        $this->total = $total;
     }
 
-    public function setTonase($tonase) { 
-        $this->tonase = $tonase; 
+    public function setCreatedAt($createdAt) {
+        $this->createdAt = $createdAt;
     }
 
-    public function setTotal($total) { 
-        $this->total = $total; 
+    public function setUpdatedAt($updatedAt) {
+        $this->updatedAt = $updatedAt;
     }
 
-    public function setCreatedAt($createdAt) { 
-        $this->createdAt = $createdAt; 
+    public function setStatus($status) {
+        $this->status = $status;
     }
 
-    public function setUpdatedAt($updatedAt) { 
-        $this->updatedAt = $updatedAt; 
+    public function setRemark($remark) {
+        $this->remark = $remark;
     }
 
-    public function setStatus($status) { 
-        $this->status = $status; 
+    function getProduct() {
+        return $this->product;
     }
 
-    public function setRemark($remark) { 
-        $this->remark = $remark; 
+    function getProductId() {
+        return $this->productId;
     }
+
+    function getBuyer() {
+        return $this->buyer;
+    }
+
+    function getBuyerId() {
+        return $this->buyerId;
+    }
+
+    function setProduct(EntityVo $product) {
+        $this->product = $product;
+    }
+
+    function setProductId($productId) {
+        $this->productId = $productId;
+    }
+
+    function setBuyer(EntityVo $buyer) {
+        $this->buyer = $buyer;
+    }
+
+    function setBuyerId($buyerId) {
+        $this->buyerId = $buyerId;
+    }
+
+
 }

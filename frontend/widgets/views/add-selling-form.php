@@ -3,6 +3,7 @@
     use common\widgets\InputField;
     use common\widgets\TextAreaField;
     use common\widgets\Button;
+    use common\widgets\SearchField;
     use common\widgets\CurrencyField;
 ?>
 
@@ -45,13 +46,21 @@
 
     <div class="form-field">
         <div class="form-field-left">
+            Pembeli
+        </div>
+        <?= SearchField::widget(['id' => $id . '-buyer', 'placeholder' => 'Cari Pembeli', 
+                               'name' => 'buyer_id', 'url' => \Yii::$app->request->baseUrl . "/code/search"]) ?>
+    </div>
+
+    <div class="form-field">
+        <div class="form-field-left">
             Keterangan
         </div>
         <?= InputField::widget(['id' => $id . '-remark', 'placeholder' => 'Keterangan', 
                                'name' => 'remark', 'type' => InputField::TEXT]) ?>
     </div>
 
-    <?= InputField::widget(['id' => $id . '-entity', 'type' => InputField::HIDDEN, 'name' => 'entity_id', 'value' => $entityId]) ?>
+    <?= InputField::widget(['id' => $id . '-product', 'type' => InputField::HIDDEN, 'name' => 'product_id', 'value' => $productId]) ?>
 
     <?= InputField::widget(['id' => $id . '-date', 'type' => InputField::HIDDEN, 'name' => 'date', 'value' => $date]) ?>
 

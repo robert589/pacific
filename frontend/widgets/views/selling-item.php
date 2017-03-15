@@ -8,6 +8,10 @@
             <?= $vo->getDate() ?>
         </div>
         <div class="selling-item-field">
+            <?= $vo->getBuyer()->getName() ?>
+        </div>
+
+        <div class="selling-item-field">
             <?= $vo->getRemark() ?>
         </div>
         <div class="hide600 selling-item-field">

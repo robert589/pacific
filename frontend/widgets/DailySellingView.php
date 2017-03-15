@@ -14,7 +14,7 @@ class DailySellingView extends Widget {
     
     public $date;
     
-    public $entityId;
+    public $productId;
 
     public function init() {
         
@@ -24,7 +24,7 @@ class DailySellingView extends Widget {
         return $this->render('daily-selling-view', 
                 ['id' => $this->id, 'vos' => $this->vos,
                     'dailySaldo' => Currency::parse($this->countDailySaldo()),
-                    'date' => $this->date, 'entityId' => $this->entityId]);
+                    'date' => $this->date, 'productId' => $this->productId]);
     }
     
     private function countDailySaldo() {

@@ -33,24 +33,14 @@ class SellingController extends Controller
         $model = new AddSellingForm();
         $model->user_id = \Yii::$app->user->getId();
         $model->loadData($_POST);
-        $selling = $model->add();
-        $data['status'] = $selling ? 1 : 0;
+        $sellingVo = $model->add();
+        $data['status'] = $sellingVo ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
         
         if($data['status']) {
-            $builder = SellingVo::createBuilder();
-            $builder->setId($selling->id);
-            $builder->setEntityId($selling->entity_id);
-            $builder->setRemark($selling->remark);
-            $builder->setDate($selling->date);
-            $builder->setStatus($selling->status);
-            $builder->setTonase($selling->tonase);
-            $builder->setPrice($selling->price);
-            $builder->setTotal($selling->total);
-            
             $data['views'] = 
                     DailySellingItem::widget(
-                            ['id' => 'dsi-' . $builder->getId(), 'vo' => $builder->build()]);
+                            ['id' => 'dsi-' . $sellingVo->getId(), 'vo' => $sellingVo]);
         }
         
         return json_encode($data);
@@ -74,7 +64,7 @@ class SellingController extends Controller
         $data['status'] = 1;
         $data['views'] = DailySellingView::widget(['id' => 'drv' , 
                             'vos' => $vos, 
-                            'entityId' => $this->service->entity_id,
+                            'productId' => $this->service->product_id,
                             'date' => $this->service->date]);
         return json_encode($data);
     }
@@ -91,7 +81,7 @@ class SellingController extends Controller
         }
         $data['status'] = 1;
         $data['views'] = SellingView::widget(['id' => 'rv', 'vos' => $vos,
-                               'entityId' => $this->service->entity_id,
+                               'productId' => $this->service->product_id,
                             'currentSaldo' => "0",
                             'date' => $this->service->date]);
         

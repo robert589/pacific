@@ -5,8 +5,9 @@
 <div id="<?= $id ?>" class="ds-item" data-selling-id="<?= $vo->getid() ?>">
     <div id="<?= $id . '-view' ?>" class="ds-item-view">
         <div class="ds-item-field">
-            <?= $vo->getRemark() ?>
+            <?= $vo->getBuyer()->getName() ?>
         </div>
+        
         <div class="hide600 ds-item-field">
             <?= $vo->getPriceInCurrency() ?>
         </div>
@@ -16,6 +17,9 @@
 
         <div class="ds-item-field">
             <?= $vo->getTotalInCurrency() ?>
+        </div>
+        <div class="ds-item-field">
+            <?= $vo->getRemark() ?>
         </div>
         <div class="ds-item-field ds-item-action">
             <?= Button::widget(['id' => $id . '-remove-btn', 'text' => "<span class='glyphicon glyphicon-remove'></span>",

@@ -12,10 +12,10 @@
     'enable_button' => false,
     'url' => \Yii::$app->request->baseUrl . '/selling/get-selling-view'
 ]) ?>
-    <?= SearchField::widget(['id' => $id . '-entity', 
+    <?= SearchField::widget(['id' => $id . '-product', 
                             'url' => \Yii::$app->request->baseUrl . '/code/search',
-                            'placeholder' => 'Cari Kode',
-                            'name' => 'entity_id']) ?>
+                            'placeholder' => 'Cari Produk',
+                            'name' => 'product_id']) ?>
 
     <?= InputField::widget(['id' => $id . '-from',
                             'datepicker' => true, 

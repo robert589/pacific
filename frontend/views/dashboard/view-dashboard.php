@@ -7,7 +7,6 @@
         <div class="view-header">
             Transaksi Harian
         </div>
-        
         <div class="view-dash-item">
             <span class="view-dash-item-header">
                 Neraca:
