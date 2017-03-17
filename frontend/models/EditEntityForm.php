@@ -31,6 +31,8 @@ class EditEntityForm extends RModel
     
     public $unit;
     
+    public $in_inventory;
+    
     private $entity;
     
     private $entitySellingUnit;
@@ -49,6 +51,9 @@ class EditEntityForm extends RModel
             ['name', 'required'],
             
             ['description', 'string'],
+            
+            ['in_inventory', 'boolean'],
+            ['in_inventory', 'required'],
             
             ['type_id', 'integer'],
             ['type_id', 'required'],
@@ -99,6 +104,7 @@ class EditEntityForm extends RModel
         $this->entity->code = $this->code;
         $this->entity->type_id = $this->type_id;
         $this->entity->name = $this->name;
+        $this->entity->in_inventory = $this->in_inventory;
         $this->entity->status = Entity::STATUS_ACTIVE;
         $this->entity->description = $this->description;
         $this->entity->update();

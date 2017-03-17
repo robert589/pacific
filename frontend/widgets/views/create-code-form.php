@@ -4,6 +4,7 @@
     use common\widgets\TextAreaField;
     use common\widgets\Button;
     use common\widgets\SearchField;
+    use common\widgets\CheckboxField;
 ?>
 
 
@@ -29,6 +30,9 @@
     <div class="form-field">
     <?= SearchField::widget(['id' => $id . '-type-id', 'placeholder' => 'Cari Tipe', 
                 'url' => \Yii::$app->request->baseUrl . "/code/search-type", 'name' => 'type_id']) ?>
+    </div>
+    <div class="form-field">
+        <?= CheckboxField::widget(['id' => $id . '-in-inventory', 'name' => 'in_inventory', 'item' => 'In Inventory']) ?>
     </div>
     <?= Button::widget(['id' => $id . '-submit-btn' , 
         'text' => 'Add', 'newClass' => 'form-submit']) ?>

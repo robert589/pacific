@@ -3,6 +3,7 @@ import {InputField} from './../common/input-field';
 import {TextAreaField} from './../common/text-area-field';
 import {SearchField} from './../common/search-field';
 import {System} from './../common/system';
+import {CheckboxField} from './../common/checkbox-field';
 
 export class CreateCodeForm extends Form{
 
@@ -14,6 +15,8 @@ export class CreateCodeForm extends Form{
 
     typeIdField : SearchField;
 
+    inInventoryField : CheckboxField;
+
     constructor(root: HTMLElement) {
         super(root);
         this.successCb = function(data) {
@@ -23,7 +26,9 @@ export class CreateCodeForm extends Form{
     
     rules() {
         this.setRequiredField([this.nameField, this.typeIdField, this.codeField]);
-        this.registerFields([this.nameField, this.descField, this.typeIdField, this.codeField]);
+        this.registerFields([this.nameField, this.descField, this.typeIdField,
+                this.inInventoryField,
+                 this.codeField]);
     }
 
     decorate() {
@@ -32,6 +37,7 @@ export class CreateCodeForm extends Form{
         this.typeIdField = new SearchField(document.getElementById(this.id + "-type-id"));
         this.nameField = new InputField(document.getElementById(this.id + "-name"));
         this.descField = new TextAreaField(document.getElementById(this.id + "-desc"));
+        this.inInventoryField = new CheckboxField(document.getElementById(this.id + "-in-inventory"));
     }
     
     bindEvent() {

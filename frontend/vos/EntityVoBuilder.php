@@ -13,6 +13,8 @@ class EntityVoBuilder extends RVoBuilder
     //attributes
 
     public $id;
+    
+    public $inInventory;
 
     public $name;
 
@@ -35,6 +37,7 @@ class EntityVoBuilder extends RVoBuilder
     public function rules() { 
         return [
            ['id','string'],
+            ['inInventory', 'string'],
            ['name','string'],
            ['description','string'],
            ['status','string'],
@@ -128,8 +131,12 @@ class EntityVoBuilder extends RVoBuilder
     function setEntitySellingUnitVo($entitySellingUnitVo) {
         $this->entitySellingUnitVo = $entitySellingUnitVo;
     }
+    
+    function getInInventory() {
+        return $this->inInventory;
+    }
 
-
-
-
+    function setInInventory($inInventory) {
+        $this->inInventory = $inInventory;
+    }
 }

@@ -3,6 +3,7 @@ import {InputField} from './../common/input-field';
 import {TextAreaField} from './../common/text-area-field';
 import {SearchField} from './../common/search-field';
 import {System} from './../common/system';
+import {CheckboxField} from './../common/checkbox-field';
 
 export class EditCodeForm extends Form{
 
@@ -18,6 +19,8 @@ export class EditCodeForm extends Form{
 
     unitField : InputField;
 
+    inInventoryField : CheckboxField;
+
     constructor(root: HTMLElement) {
         super(root);
         this.successCb = function(data) {
@@ -29,7 +32,7 @@ export class EditCodeForm extends Form{
         this.setRequiredField([this.nameField, this.typeIdField,
                             this.idField, this.codeField]);
         this.registerFields([this.nameField, this.descField, this.idField,
-            this.unitField,
+            this.unitField, this.inInventoryField,
             this.typeIdField, this.codeField]);
     }
 
@@ -39,6 +42,7 @@ export class EditCodeForm extends Form{
         this.codeField = new InputField(document.getElementById(this.id + "-code"));
         this.typeIdField = new SearchField(document.getElementById(this.id + "-type-id"));
         this.nameField = new InputField(document.getElementById(this.id + "-name"));
+        this.inInventoryField = new CheckboxField(document.getElementById(this.id + "-in-inventory"));
         this.unitField = new InputField(document.getElementById(this.id + "-unit"));
         this.descField = new TextAreaField(document.getElementById(this.id + "-desc"));
     }

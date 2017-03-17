@@ -33,8 +33,8 @@ export class CheckboxField extends Field {
     }
 
 
-    getValue() : Object {
-        return this.inputElement.checked;
+    getValue() : number {
+        return this.inputElement.checked ? 1 : 0;
     }
 
     

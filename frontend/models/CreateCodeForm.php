@@ -21,7 +21,9 @@ class CreateCodeForm extends RModel
     public $description;
 
     public $type_id;
-
+    
+    public $in_inventory;
+    
     public function rules() {
         return [
             ['user_id', 'integer'],
@@ -32,6 +34,9 @@ class CreateCodeForm extends RModel
             ['name', 'required'],
             
             ['description', 'string'],
+            
+            ['in_inventory', 'boolean'],
+            ['in_inventory', 'required'],
             
             ['type_id', 'integer'],
             ['type_id', 'required'],
@@ -52,6 +57,7 @@ class CreateCodeForm extends RModel
         $entity->code = $this->code;
         $entity->type_id = $this->type_id;
         $entity->name = $this->name;
+        $entity->in_inventory = $this->in_inventory;
         $entity->status = Entity::STATUS_ACTIVE;
         $entity->description = $this->description;
         return $entity->save();

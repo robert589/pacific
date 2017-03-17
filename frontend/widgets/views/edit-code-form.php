@@ -4,6 +4,7 @@
     use common\widgets\TextAreaField;
     use common\widgets\Button;
     use common\widgets\SearchField;
+    use common\widgets\CheckboxField;
 ?>
 
 
@@ -41,6 +42,11 @@
     <div class="form-field">
         <?=     InputField::widget(['id' => $id . '-unit', 'placeholder' => 'Unit', 
                     'value' => $vo->getEntitySellingUnitVo()->getUnit(), 'name' => 'unit']) ?>
+    </div>
+
+    <div class="form-field">
+        <?=     CheckboxField::widget(['id' => $id . '-in-inventory', 'item' => 'In Inventory', 
+                    'checked' => $vo->inInventory(), 'name' => 'in_inventory']) ?>
     </div>
     <?= InputField::widget(['id' => $id . '-id', 'placeholder' => 'Kode',     
             'value' => $vo->getId(), 'type' => InputField::HIDDEN,

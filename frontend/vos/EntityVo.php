@@ -42,6 +42,8 @@ class EntityVo implements RVo
 
     private $updatedAt;
 
+    private $inInventory;
+    
     public function __construct(EntityVoBuilder $builder) { 
         $this->id = $builder->getId(); 
         $this->name = $builder->getName(); 
@@ -52,6 +54,7 @@ class EntityVo implements RVo
         $this->createdAt = $builder->getCreatedAt(); 
         $this->updatedAt = $builder->getUpdatedAt(); 
         $this->entitySellingUnitVo = $builder->getEntitySellingUnitVo();
+        $this->inInventory = $builder->getInInventory();
         $this->code = $builder->getCode();
     }
 
@@ -116,6 +119,9 @@ class EntityVo implements RVo
     function getEntitySellingUnitVo() {
         return $this->entitySellingUnitVo;
     }
-
+    
+    public function inInventory() {
+        return $this->inInventory;
+    }
 
 }
