@@ -116,6 +116,24 @@ class CodeController extends Controller
         return json_encode($data);
     }
     
+    public function actionSearchInventory() {
+        $query = filter_var($_GET['q']);
+        $id = filter_var($_GET['id']);
+        $data['status'] = 1;
+        $views = '';
+        $vos = $this->service->searchInventory($query);
+        if(count($vos) !== 0) {
+            foreach($vos as $vo) {
+                $views .= SearchFieldDropdownItem::widget(['id' => $id . '-' . $vo->getId(),
+                    'itemId' => $vo->getId(), 'text' => $vo->getCode() . '. ' . $vo->getName()]);
+            }   
+        } else {
+            $views = "No Matching Found";
+        }
+        $data['views'] = $views;
+        return json_encode($data);
+    }
+    
     public function actionPCreateType() {
         $model = new CreateCodeTypeForm();
         $model->user_id = \Yii::$app->user->getId();

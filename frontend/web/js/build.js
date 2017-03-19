@@ -86,6 +86,12 @@ define("common/button", ["require", "exports", "common/component"], function (re
             this.root.onclick = null;
             this.root = null;
         };
+        Button.prototype.getText = function () {
+            return this.root.innerHTML;
+        };
+        Button.prototype.setText = function (text) {
+            this.root.innerHTML = text;
+        };
         return Button;
     }(component_1.Component));
     exports.Button = Button;
@@ -3989,7 +3995,100 @@ define("project/list-warehouse", ["require", "exports", "common/component", "com
     }(component_44.Component));
     exports.ListWarehouse = ListWarehouse;
 });
-define("project/add-warehouse-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_23, input_field_28, text_area_field_9, system_33) {
+define("project/add-purchase-form", ["require", "exports", "common/form", "common/search-field", "common/input-field", "common/range-validation", "common/currency-field"], function (require, exports, form_23, search_field_15, input_field_28, range_validation_2, currency_field_3) {
+    "use strict";
+    var AddPurchaseForm = (function (_super) {
+        __extends(AddPurchaseForm, _super);
+        function AddPurchaseForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = function (data) {
+                window.location.reload();
+            };
+            return _this;
+        }
+        AddPurchaseForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.codeField = new search_field_15.SearchField(document.getElementById(this.id + "-code"));
+            this.dateField = new input_field_28.InputField(document.getElementById(this.id + "-date"));
+            this.quantityField = new input_field_28.InputField(document.getElementById(this.id + "-quantity"));
+            this.costField = new currency_field_3.CurrencyField(document.getElementById(this.id + "-cost"));
+            this.expiryDateField = new input_field_28.InputField(document.getElementById(this.id + "-expiry-date"));
+        };
+        AddPurchaseForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddPurchaseForm.prototype.rules = function () {
+            this.registerFields([this.codeField, this.dateField, this.quantityField,
+                this.costField, this.expiryDateField]);
+            this.setRequiredField([this.codeField, this.dateField, this.quantityField,
+                this.costField, this.expiryDateField]);
+            var rangeValidation = new range_validation_2.RangeValidation(this.costField, 0, null);
+            this.setRangeValidations([rangeValidation]);
+        };
+        AddPurchaseForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddPurchaseForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddPurchaseForm;
+    }(form_23.Form));
+    exports.AddPurchaseForm = AddPurchaseForm;
+});
+define("project/list-purchase", ["require", "exports", "common/component", "common/button", "project/add-purchase-form", "common/string"], function (require, exports, component_45, button_25, add_purchase_form_1, string_3) {
+    "use strict";
+    var ListPurchase = (function (_super) {
+        __extends(ListPurchase, _super);
+        function ListPurchase(root) {
+            return _super.call(this, root) || this;
+        }
+        ListPurchase.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new add_purchase_form_1.AddPurchaseForm(document.getElementById(this.id + "-form"));
+            this.formarea = this.root.getElementsByClassName('list-purchase-formarea')[0];
+            this.showformBtn = new button_25.Button(document.getElementById(this.id + "-showform"), this.toggleForm.bind(this));
+        };
+        ListPurchase.prototype.toggleForm = function () {
+            var hidden = this.formarea.classList.contains('app-hide');
+            if (hidden) {
+                this.showForm();
+            }
+            else {
+                this.hideForm();
+            }
+        };
+        ListPurchase.prototype.showForm = function () {
+            this.changeShowFormBtnArrowUp(true);
+            this.formarea.classList.remove('app-hide');
+        };
+        ListPurchase.prototype.changeShowFormBtnArrowUp = function (up) {
+            var text = this.showformBtn.getText();
+            if (up) {
+                text = string_3.String.replaceAll(text, "down", "up");
+            }
+            else {
+                text = string_3.String.replaceAll(text, "up", "down");
+            }
+            this.showformBtn.setText(text);
+        };
+        ListPurchase.prototype.hideForm = function () {
+            this.changeShowFormBtnArrowUp(false);
+            this.formarea.classList.add('app-hide');
+        };
+        ListPurchase.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ListPurchase.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ListPurchase.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ListPurchase;
+    }(component_45.Component));
+    exports.ListPurchase = ListPurchase;
+});
+define("project/add-warehouse-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_24, input_field_29, text_area_field_9, system_33) {
     "use strict";
     var AddWarehouseForm = (function (_super) {
         __extends(AddWarehouseForm, _super);
@@ -4006,9 +4105,9 @@ define("project/add-warehouse-form", ["require", "exports", "common/form", "comm
         };
         AddWarehouseForm.prototype.decorate = function () {
             _super.prototype.decorate.call(this);
-            this.codeField = new input_field_28.InputField(document.getElementById(this.id + "-code"));
+            this.codeField = new input_field_29.InputField(document.getElementById(this.id + "-code"));
             this.locationField = new text_area_field_9.TextAreaField(document.getElementById(this.id + "-location"));
-            this.nameField = new input_field_28.InputField(document.getElementById(this.id + "-name"));
+            this.nameField = new input_field_29.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_9.TextAreaField(document.getElementById(this.id + "-desc"));
         };
         AddWarehouseForm.prototype.bindEvent = function () {
@@ -4021,10 +4120,10 @@ define("project/add-warehouse-form", ["require", "exports", "common/form", "comm
             // no event to unbind
         };
         return AddWarehouseForm;
-    }(form_23.Form));
+    }(form_24.Form));
     exports.AddWarehouseForm = AddWarehouseForm;
 });
-define("project/add-warehouse", ["require", "exports", "common/component", "project/add-warehouse-form"], function (require, exports, component_45, add_warehouse_form_1) {
+define("project/add-warehouse", ["require", "exports", "common/component", "project/add-warehouse-form"], function (require, exports, component_46, add_warehouse_form_1) {
     "use strict";
     var AddWarehouse = (function (_super) {
         __extends(AddWarehouse, _super);
@@ -4045,10 +4144,10 @@ define("project/add-warehouse", ["require", "exports", "common/component", "proj
             // no event to unbind
         };
         return AddWarehouse;
-    }(component_45.Component));
+    }(component_46.Component));
     exports.AddWarehouse = AddWarehouse;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role", "project/list-warehouse", "project/add-warehouse"], function (require, exports, component_46, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_34, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1, list_warehouse_1, add_warehouse_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role", "project/list-warehouse", "project/list-purchase", "project/add-warehouse"], function (require, exports, component_47, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_34, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1, list_warehouse_1, list_purchase_1, add_warehouse_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -4096,6 +4195,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             }
             else if (this.root.getElementsByClassName('list-code').length !== 0) {
                 this.listCode = new list_code_1.ListCode(document.getElementById("clc"));
+            }
+            else if (this.root.getElementsByClassName('list-purchase').length !== 0) {
+                this.listPurchase = new list_purchase_1.ListPurchase(document.getElementById("plp"));
             }
             else if (this.root.getElementsByClassName('list-code-type').length !== 0) {
                 this.listCodeType = new list_code_type_1.ListCodeType(document.getElementById("clct"));
@@ -4172,7 +4274,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_46.Component));
+    }(component_47.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

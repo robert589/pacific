@@ -37,7 +37,8 @@ class CodeDao implements Dao
     const SEARCH_CODE = "SELECT entity.id, entity.name, entity.code
                             from entity
                             where (entity.name LIKE :query or entity.code LIKE :query) and
-                                        entity.status = :status
+                                        entity.status = :status and
+                                        entity.in_inventory = IFNULL(:inventory_only, entity.in_inventory )
                             limit 4";
     
     const SEARCH_CODE_BY_OWNER = "select entity.*
@@ -45,8 +46,10 @@ class CodeDao implements Dao
                                 where (entity.name LIKE :query or entity.code LIKE :query) and
                                     entity.status = :status and
                                     entity.id = entity_owner.entity_id and
-                                    entity_owner.owner_id = :user_id
+                                    entity_owner.owner_id = :user_id and
+                                    entity.in_inventory = IFNULL(:inventory_only, entity.in_inventory)
                                     limit 4";
+    
     public function getSubcode($entityId, $status = Entity::STATUS_ACTIVE) {
         
         $results = \Yii::$app->db
@@ -68,11 +71,33 @@ class CodeDao implements Dao
         return $vos;
     }
     
-    public function searchCode($query, $status = Entity::STATUS_ACTIVE) {
+    public function searchInventoryCode($query, $status = Entity::STATUS_ACTIVE) {
         $q = '%' . $query . '%';
+        $inventoryOnly = 1;
         $results =  \Yii::$app->db
             ->createCommand(self::SEARCH_CODE)
             ->bindParam(':query', $q)
+            ->bindParam(':inventory_only', $inventoryOnly)
+            ->bindParam(':status', $status)
+            ->queryAll();
+        $vos = [];
+        
+        foreach($results as $result) {
+            $builder = EntityVo::createBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        return $vos;    
+        
+    }
+    
+    public function searchCode($query, $status = Entity::STATUS_ACTIVE) {
+        $q = '%' . $query . '%';
+        $inventoryOnly = NULL;
+        $results =  \Yii::$app->db
+            ->createCommand(self::SEARCH_CODE)
+            ->bindParam(':query', $q)
+            ->bindParam(':inventory_only', $inventoryOnly)
             ->bindParam(':status', $status)
             ->queryAll();
         $vos = [];
@@ -87,12 +112,34 @@ class CodeDao implements Dao
     
     }
     
-    public function searchCodeByOwner($query, $userId, $status = Entity::STATUS_ACTIVE) {
+    public function searchInventoryCodeByOwner($query, $userId, $status = Entity::STATUS_ACTIVE) {
         $q = '%' . $query . '%';
+        $inventoryOnly = 1;
         $results =  \Yii::$app->db
             ->createCommand(self::SEARCH_CODE_BY_OWNER)
             ->bindParam(':query', $q)
             ->bindParam(':user_id', $userId)
+            ->bindParam(':inventory_only', $inventoryOnly)
+            ->bindParam(':status', $status)
+            ->queryAll();
+        $vos = [];
+        
+        foreach($results as $result) {
+            $builder = EntityVo::createBuilder();
+            $builder->loadData($result);
+            $vos[] = $builder->build();
+        }
+        return $vos;
+    }
+    
+    public function searchCodeByOwner($query, $userId, $status = Entity::STATUS_ACTIVE) {
+        $q = '%' . $query . '%';
+        $inventoryOnly = NULL;
+        $results =  \Yii::$app->db
+            ->createCommand(self::SEARCH_CODE_BY_OWNER)
+            ->bindParam(':query', $q)
+            ->bindParam(':user_id', $userId)
+            ->bindParam(':inventory_only', $inventoryOnly)
             ->bindParam(':status', $status)
             ->queryAll();
         $vos = [];

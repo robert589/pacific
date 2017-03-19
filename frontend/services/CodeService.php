@@ -176,6 +176,18 @@ class CodeService extends RService
         }
     }
     
+    public function searchInventory($query) {
+        if(!$this->validate()) {
+            return false;
+        }
+        
+        if(UserLibrary::isAdmin($this->user_id)) {
+            return $this->codeDao->searchInventoryCode($query);   
+        } else {
+            return $this->codeDao->searchInventoryCodeByOwner($query, $this->user_id);
+        }
+    }
+    
     /**
      * 
      * @return EntityVo[]

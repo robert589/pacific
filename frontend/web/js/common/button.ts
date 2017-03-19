@@ -33,4 +33,12 @@ export class Button extends Component {
         this.root.onclick = null;
         this.root = null;
     }
+
+    getText() : string {
+        return this.root.innerHTML;
+    }
+
+    setText(text : string) {
+        this.root.innerHTML = text;
+    }
 }

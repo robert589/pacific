@@ -13,10 +13,17 @@
 .form-submit {
   width: 120px;
   max-height: 32px;
-  margin-top: 8px;
+}
+.form-submit2 {
+  padding: 9px 24px;
+  vertical-align: bottom;
 }
 .form-inline {
   display: flex;
+}
+.form-horizontal {
+  display: inline-block;
+  vertical-align: top;
 }
 .form-field {
   width: 100%;

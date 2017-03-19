@@ -4,7 +4,7 @@ import {TextAreaField} from './../common/text-area-field';
 import {SearchField} from './../common/search-field';
 import {System} from './../common/system';
 import {CheckboxField} from './../common/checkbox-field';
-
+    
 export class EditCodeForm extends Form{
 
     codeField : InputField;

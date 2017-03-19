@@ -28,6 +28,7 @@ import {ListRole} from './list-role';
 import {ViewCode} from './view-code';
 import {AddRole} from './add-role';
 import {ListWarehouse} from './list-warehouse';
+import {ListPurchase} from './list-purchase';
 import {AddWarehouse} from './add-warehouse';
 
 export class App extends Component{
@@ -61,6 +62,8 @@ export class App extends Component{
     customSelling : CustomSelling;
 
     listCode : ListCode;
+
+    listPurchase : ListPurchase;
 
     listCodeType : ListCodeType;
 
@@ -138,6 +141,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('list-code').length !== 0) {
             this.listCode = new ListCode(document.getElementById("clc"));
+        }
+        else if(this.root.getElementsByClassName('list-purchase').length !== 0) {
+            this.listPurchase = new ListPurchase(document.getElementById("plp"));
         }
         else if(this.root.getElementsByClassName('list-code-type').length !== 0) {
             this.listCodeType = new ListCodeType(document.getElementById("clct"));
