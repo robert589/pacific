@@ -17,7 +17,7 @@ class ChangeEntityStatusForm extends RModel
 
     public $status;
 
-    public $entity;
+    private $entity;
     
     
     public function rules() {

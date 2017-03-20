@@ -25,6 +25,7 @@
                 'date',
                 'quantity',
                 'expired_date',
+                'warehouse_name',
                 'status',
                 [
                     'class' => 'yii\grid\ActionColumn',

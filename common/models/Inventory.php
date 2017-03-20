@@ -48,12 +48,14 @@ class Inventory extends ActiveRecord
         ];
     }
 
-    public static function add($entityId, $quantity) {
-        return Inventory::updateAllCounters(['quantity' => $quantity], 'entity_id=' . intval($entityId));    
+    public static function add($entityId, $warehouseId, $quantity) {
+        return Inventory::updateAllCounters(['quantity' => $quantity], 'warehouse_id=' . intval($warehouseId) .
+                                                                            ' AND entity_id=' . intval($entityId));    
     }
     
-    public static function remove($entityId, $quantity) {
-        return Inventory::updateAllCounters(['quantity' => -1 * $quantity], 'entity_id=' . intval($entityId));    
+    public static function remove($entityId, $warehouseId, $quantity) {
+        return Inventory::updateAllCounters(['quantity' => -1 * $quantity], 'warehouse_id=' . intval($warehouseId) .
+                                                                            ' AND entity_id=' . intval($entityId));    
         
     }
 }

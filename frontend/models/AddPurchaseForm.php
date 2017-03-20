@@ -78,13 +78,16 @@ class AddPurchaseForm extends RModel
             return;
         }
         
-        $this->inventory = Inventory::find()->where(['entity_id' => $this->entity_id, 'status' => Inventory::STATUS_ACTIVE])->one();
+        $this->inventory = Inventory::find()->where(['entity_id' => $this->entity_id,
+                                                    'status' => Inventory::STATUS_ACTIVE,
+                                                    'warehouse_id' => $this->warehouse_id])->one();
         
         if(!$this->inventory) {
             $this->inventory = new Inventory();
             $this->inventory->entity_id = $this->entity_id;
             $this->inventory->fixed_asset = 0;
             $this->inventory->quantity = 0;
+            $this->inventory->warehouse_id = $this->warehouse_id;
             $this->inventory->status = Inventory::STATUS_ACTIVE;
             $this->inventory->type = Inventory::FIFO_TYPE;
             if(!$this->inventory->save()) {
@@ -101,6 +104,7 @@ class AddPurchaseForm extends RModel
         $purchase = new Purchase();
         $purchase->entity_id = $this->entity_id;
         $purchase->quantity = $this->quantity;
+        $purchase->warehouse_id = $this->warehouse_id;
         $purchase->unit_cost = $this->unit_cost;
         $purchase->date = $this->date;
         $purchase->expiry_date = $this->expiry_date;
@@ -109,7 +113,7 @@ class AddPurchaseForm extends RModel
             return null;
         }
         
-        return Inventory::add($this->entity_id, $this->quantity);
+        return Inventory::add($this->entity_id, $this->warehouse_id, $this->quantity);
         
     }
 }

@@ -2,6 +2,8 @@
 namespace frontend\controllers;
 
 use Yii;
+use common\models\Purchase;
+use frontend\models\ChangePurchaseStatusForm;
 use frontend\models\AddPurchaseForm;
 use yii\web\Controller;
 use frontend\services\PurchaseService;
@@ -38,5 +40,17 @@ class PurchaseController extends Controller
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
         return json_encode($data);
     }
+    
+    public function actionRemove() {
+        $model = new ChangePurchaseStatusForm();
+        $model->status = Purchase::STATUS_DELETED;
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        
+        $data = [];
+        $data['status'] = $model->change(true) ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }       
 }
 

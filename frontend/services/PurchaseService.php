@@ -36,6 +36,7 @@ class PurchaseService extends RService
             $model['date'] = $vo->getDate();
             $model['expired_date'] = $vo->getExpiryDate();
             $model['quantity'] = $vo->getQuantity();
+            $model['warehouse_name'] = $vo->getWarehouse()->getEntity()->getName();
             $model['status'] = $vo->getStatusText();
             $model['active'] = $vo->isActive();
             $models[] = $model;

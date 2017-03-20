@@ -16,15 +16,22 @@ class InventoryController extends Controller
     
     public function init() {
         $this->service = new InventoryService();
+        $this->service->user_id = \Yii::$app->user->getId();
     }
     
     /**
      * List Warehouse
      */
-    public function actionIndex() {
+    public function actionListWarehouse() {
         $provider = $this->service->getWarehouseList();
         return $this->render('list-warehouse', ['id' => 'ilw', 'provider' => $provider]);
     }
+    
+    public function actionIndex() {
+        $provider = $this->service->getInventoryList();
+        return $this->render('list-inventory', ['id' => 'ili', 'provider' => $provider]);
+    }
+
     public function actionPAddWh() {
         $data = array();
         $model = new AddWarehouseForm();

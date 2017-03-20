@@ -34,7 +34,9 @@ class PurchaseVo implements RVo
     private $status;
 
     private $date;
-
+    
+    private $warehouse;
+    
     public function __construct(PurchaseVoBuilder $builder) { 
         $this->id = $builder->getId(); 
         $this->entity = $builder->getEntity(); 
@@ -44,6 +46,7 @@ class PurchaseVo implements RVo
         $this->createdAt = $builder->getCreatedAt(); 
         $this->updatedAt = $builder->getUpdatedAt(); 
         $this->createdBy = $builder->getCreatedBy(); 
+        $this->warehouse = $builder->getWarehouse();
         $this->updatedBy = $builder->getUpdatedBy(); 
         $this->status = $builder->getStatus(); 
         $this->date = $builder->getDate(); 
@@ -101,5 +104,9 @@ class PurchaseVo implements RVo
      
     public function getDate() { 
         return $this->date; 
+    }
+    
+    public function getWarehouse() {
+        return $this->warehouse;
     }
 }

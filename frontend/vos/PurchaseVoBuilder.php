@@ -33,7 +33,9 @@ class PurchaseVoBuilder extends RVoBuilder
     public $status;
 
     public $date;
-
+    
+    public $warehouse;
+    
     public function rules() { 
         return [
            ['id','string'],
@@ -140,5 +142,13 @@ class PurchaseVoBuilder extends RVoBuilder
 
     public function setDate($date) { 
         $this->date = $date; 
+    }
+    
+    function getWarehouse() {
+        return $this->warehouse;
+    }
+
+    function setWarehouse($warehouse) {
+        $this->warehouse = $warehouse;
     }
 }

@@ -4053,6 +4053,7 @@ define("project/list-purchase", ["require", "exports", "common/component", "comm
             var removeBtnsRaw = this.root.getElementsByClassName('list-purchase-remove');
             this.removeBtns = [];
             for (var i = 0; i < removeBtnsRaw.length; i++) {
+                this.removeBtns.push(new button_25.Button(removeBtnsRaw.item(i), this.showRemoveDialog.bind(this, removeBtnsRaw.item(i))));
             }
         };
         ListPurchase.prototype.showRemoveDialog = function (raw) {

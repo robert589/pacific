@@ -22,11 +22,13 @@ class InventoryVoBuilder extends RVoBuilder
 
     public $type;
 
-    public $status;
-
     public $createdAt;
 
     public $updatedAt;
+
+    public $warehouse;
+
+    public $status;
 
     public function rules() { 
         return [
@@ -35,9 +37,10 @@ class InventoryVoBuilder extends RVoBuilder
            ['quantity','string'],
            ['fixedAsset','string'],
            ['type','string'],
-           ['status','string'],
            ['createdAt','string'],
            ['updatedAt','string'],
+           ['warehouse','string'],
+           ['status','string'],
         ];
     }
 
@@ -63,16 +66,20 @@ class InventoryVoBuilder extends RVoBuilder
         return $this->type; 
     }
 
-    public function getStatus() { 
-        return $this->status; 
-    }
-
     public function getCreatedAt() { 
         return $this->createdAt; 
     }
 
     public function getUpdatedAt() { 
         return $this->updatedAt; 
+    }
+
+    public function getWarehouse() { 
+        return $this->warehouse; 
+    }
+
+    public function getStatus() { 
+        return $this->status; 
     }
 
     //setters
@@ -97,15 +104,19 @@ class InventoryVoBuilder extends RVoBuilder
         $this->type = $type; 
     }
 
-    public function setStatus($status) { 
-        $this->status = $status; 
-    }
-
     public function setCreatedAt($createdAt) { 
         $this->createdAt = $createdAt; 
     }
 
     public function setUpdatedAt($updatedAt) { 
         $this->updatedAt = $updatedAt; 
+    }
+
+    public function setWarehouse($warehouse) { 
+        $this->warehouse = $warehouse; 
+    }
+
+    public function setStatus($status) { 
+        $this->status = $status; 
     }
 }

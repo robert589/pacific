@@ -36,16 +36,35 @@ class InventoryService extends RService
         return $this->inventoryDao->searchWarehouse($query);
     }
     
+    public function getInventoryList() {
+        if(!$this->validate()) {
+            return null;
+        }
+        $vos = $this->inventoryDao->getInventoryList();
+        $models = [];
+        $model = [];
+        foreach($vos as $vo) {
+            $model['product_name'] = $vo->getEntity()->getName();
+            $model['warehouse_name'] = $vo->getWarehouse()->getEntity()->getName();
+            $model['quantity'] = $vo->getQuantity();
+            $models[] = $model;
+        }
+        return new ArrayDataProvider([
+            'allModels' => $models,
+            'pagination' => [
+                'pageSize' => 10
+            ]
+        ]);
+        
+    }
+    
     public function getWarehouseList() {
         if(!$this->validate()) {
             return null;
         }
-        
         $vos = $this->inventoryDao->getWarehouseList();
-        
         $models = [];
         $model = [];
-        
         foreach($vos as $vo) {
             $model['id'] = $vo->getEntity()->getId();
             $model['name'] = $vo->getEntity()->getName();
@@ -53,12 +72,8 @@ class InventoryService extends RService
             $model['status'] = $vo->getEntity()->getStatusText();
             $model['active'] = $vo->getEntity()->isActive();
             $model['code'] = $vo->getEntity()->getCode();
-            
             $models[] = $model;
-            
         }
-        
-        
         return new ArrayDataProvider([
             'allModels' => $models,
             'pagination' => [

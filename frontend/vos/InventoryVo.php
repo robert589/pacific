@@ -22,11 +22,13 @@ class InventoryVo implements RVo
 
     private $type;
 
-    private $status;
-
     private $createdAt;
 
     private $updatedAt;
+
+    private $warehouse;
+
+    private $status;
 
     public function __construct(InventoryVoBuilder $builder) { 
         $this->id = $builder->getId(); 
@@ -34,9 +36,10 @@ class InventoryVo implements RVo
         $this->quantity = $builder->getQuantity(); 
         $this->fixedAsset = $builder->getFixedAsset(); 
         $this->type = $builder->getType(); 
-        $this->status = $builder->getStatus(); 
         $this->createdAt = $builder->getCreatedAt(); 
         $this->updatedAt = $builder->getUpdatedAt(); 
+        $this->warehouse = $builder->getWarehouse(); 
+        $this->status = $builder->getStatus(); 
     }
 
     //getters
@@ -61,15 +64,19 @@ class InventoryVo implements RVo
         return $this->type; 
     }
 
-    public function getStatus() { 
-        return $this->status; 
-    }
-
     public function getCreatedAt() { 
         return $this->createdAt; 
     }
 
     public function getUpdatedAt() { 
         return $this->updatedAt; 
+    }
+
+    public function getWarehouse() { 
+        return $this->warehouse; 
+    }
+
+    public function getStatus() { 
+        return $this->status; 
     }
 }

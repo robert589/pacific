@@ -27,7 +27,8 @@ export class ListPurchase extends Component{
         let removeBtnsRaw : NodeListOf<Element> = this.root.getElementsByClassName('list-purchase-remove');
         this.removeBtns = [];
         for(let  i = 0; i < removeBtnsRaw.length; i++) {
-                
+            this.removeBtns.push(new Button(<HTMLElement>removeBtnsRaw.item(i), 
+                        this.showRemoveDialog.bind(this, removeBtnsRaw.item(i))));
         }
     }
 

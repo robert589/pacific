@@ -61,7 +61,7 @@
     
         <?= SearchField::widget(['id' => $id . '-warehouse', 'placeholder' => 'Cari Warehouse', 
                                'name' => 'warehouse_id', 
-                                'url' => \Yii::$app->request->baseUrl . "/warehouse/search"]) ?>
+                                'url' => \Yii::$app->request->baseUrl . "/inventory/search-warehouse"]) ?>
     </div>
     
 
