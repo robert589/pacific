@@ -14,7 +14,7 @@ class m170205_080857_create_table_report extends Migration
                             debet float not null default 0,
                             credit float not null default 0,
                             status int not null,
-                            foreign key(ship_id) references ship(id))");
+                            foreign key(ship_id) references ship(id)) ENGINE=InnoDB");
     }
 
     public function down()

@@ -14,7 +14,7 @@ class m170205_080152_create_table_ship extends Migration
                 created_at int not null,
                 updated_at int not null,
                 status smallint(6) not null
-        )");
+        ) ENGINE=InnoDB");
     }
 
     public function down()

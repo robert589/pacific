@@ -1,8 +1,6 @@
 <?php
-    use frontend\vos\RoleVo;
     use common\widgets\Button;
     use yii\grid\GridView;
-    use frontend\widgets\AddRoleToUserFormBtnc;
 ?>
 <div id="<?= $id ?>" class="list-warehouse view">
     <div class="view-header">
@@ -15,22 +13,43 @@
             'columns' => [
                 'id',
                 'name',
+                'location',
                 'status',
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'header'=>'Actions',    
-                    'template' => '{add}',
+                    'template' => '{view} {remove}',
                     'urlCreator' => function ($action, $model, $key, $index) {
                         
                     },
                     'buttons' => [
                         //view button
-                        'add' => function ($url, $model) {
+                        'view' => function ($url, $model) {
                             if($model['active']) {
-                                return AddRoleToUserFormBtnc::widget(
-                                        ['id' => 'artufb-' . $model['id'],  
-                                            'userId' => $model['id'],
-                                            'newClass' => 'list-user-artufb']);
+                                return Button::widget(
+                                        ['id' => 'ilw-' . $model['id'],
+                                            'text' => 'View',
+                                            'color' => Button::NONE_COLOR, 
+                                            'newClass' => 'list-warehouse-view button-link',
+                                        'options' => 
+                                            [
+                                                'data-entity-id' => $model['id']
+                                            ]
+                                        ]);
+                            }
+                        },
+                        'remove' => function ($url, $model) {
+                            if($model['active']) {
+                                return Button::widget(
+                                        ['id' => 'ilw-' . $model['id'],
+                                            'text' => 'Remove',
+                                            'color' => Button::NONE_COLOR, 
+                                            'newClass' => 'list-warehouse-remove button-link',
+                                        'options' => 
+                                            [
+                                                'data-entity-id' => $model['id']
+                                            ]
+                                        ]);
                             }
                         }
                     ],

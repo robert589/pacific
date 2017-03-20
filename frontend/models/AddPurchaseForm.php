@@ -31,6 +31,8 @@ class AddPurchaseForm extends RModel
     
     private $entity;
     
+    public $warehouse_id;
+    
     public function init() {
         
     }
@@ -56,7 +58,10 @@ class AddPurchaseForm extends RModel
             
             ['expiry_date', 'string'],
             ['expiry_date', 'required'],
-            ['expiry_date', DateValidator::className()]
+            ['expiry_date', DateValidator::className()],
+            
+            ['warehouse_id', 'integer'],
+            ['warehouse_id', 'required']
             
         ];
     }

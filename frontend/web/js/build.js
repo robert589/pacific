@@ -4013,14 +4013,17 @@ define("project/add-purchase-form", ["require", "exports", "common/form", "commo
             this.quantityField = new input_field_28.InputField(document.getElementById(this.id + "-quantity"));
             this.costField = new currency_field_3.CurrencyField(document.getElementById(this.id + "-cost"));
             this.expiryDateField = new input_field_28.InputField(document.getElementById(this.id + "-expiry-date"));
+            this.warehouseField = new search_field_15.SearchField(document.getElementById(this.id + "-warehouse"));
         };
         AddPurchaseForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
         };
         AddPurchaseForm.prototype.rules = function () {
             this.registerFields([this.codeField, this.dateField, this.quantityField,
+                this.warehouseField,
                 this.costField, this.expiryDateField]);
             this.setRequiredField([this.codeField, this.dateField, this.quantityField,
+                this.warehouseField,
                 this.costField, this.expiryDateField]);
             var rangeValidation = new range_validation_2.RangeValidation(this.costField, 0, null);
             this.setRangeValidations([rangeValidation]);
@@ -4035,7 +4038,7 @@ define("project/add-purchase-form", ["require", "exports", "common/form", "commo
     }(form_23.Form));
     exports.AddPurchaseForm = AddPurchaseForm;
 });
-define("project/list-purchase", ["require", "exports", "common/component", "common/button", "project/add-purchase-form", "common/string"], function (require, exports, component_45, button_25, add_purchase_form_1, string_3) {
+define("project/list-purchase", ["require", "exports", "common/component", "common/button", "project/add-purchase-form", "common/string", "common/system"], function (require, exports, component_45, button_25, add_purchase_form_1, string_3, system_33) {
     "use strict";
     var ListPurchase = (function (_super) {
         __extends(ListPurchase, _super);
@@ -4047,6 +4050,32 @@ define("project/list-purchase", ["require", "exports", "common/component", "comm
             this.form = new add_purchase_form_1.AddPurchaseForm(document.getElementById(this.id + "-form"));
             this.formarea = this.root.getElementsByClassName('list-purchase-formarea')[0];
             this.showformBtn = new button_25.Button(document.getElementById(this.id + "-showform"), this.toggleForm.bind(this));
+            var removeBtnsRaw = this.root.getElementsByClassName('list-purchase-remove');
+            this.removeBtns = [];
+            for (var i = 0; i < removeBtnsRaw.length; i++) {
+            }
+        };
+        ListPurchase.prototype.showRemoveDialog = function (raw) {
+            system_33.System.showConfirmDialog(this.removePurchase.bind(null, raw), "Are you sure", "Once it is deleted, you will not be able to retrieve it back");
+        };
+        ListPurchase.prototype.removePurchase = function (raw) {
+            var purchase_id = raw.getAttribute('data-purchase-id');
+            var data = {};
+            data['purchase_id'] = purchase_id;
+            $.ajax({
+                url: system_33.System.getBaseUrl() + "/purchase/remove",
+                data: system_33.System.addCsrf(data),
+                context: this,
+                dataType: "json",
+                method: "post",
+                success: function (data) {
+                    if (data.status) {
+                        window.location.reload();
+                    }
+                },
+                error: function (data) {
+                }
+            });
         };
         ListPurchase.prototype.toggleForm = function () {
             var hidden = this.formarea.classList.contains('app-hide');
@@ -4088,14 +4117,14 @@ define("project/list-purchase", ["require", "exports", "common/component", "comm
     }(component_45.Component));
     exports.ListPurchase = ListPurchase;
 });
-define("project/add-warehouse-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_24, input_field_29, text_area_field_9, system_33) {
+define("project/add-warehouse-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system"], function (require, exports, form_24, input_field_29, text_area_field_9, system_34) {
     "use strict";
     var AddWarehouseForm = (function (_super) {
         __extends(AddWarehouseForm, _super);
         function AddWarehouseForm(root) {
             var _this = _super.call(this, root) || this;
             _this.successCb = function (data) {
-                window.location.href = system_33.System.getBaseUrl() + "/inventory/index";
+                window.location.href = system_34.System.getBaseUrl() + "/inventory/index";
             };
             return _this;
         }
@@ -4147,7 +4176,7 @@ define("project/add-warehouse", ["require", "exports", "common/component", "proj
     }(component_46.Component));
     exports.AddWarehouse = AddWarehouse;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role", "project/list-warehouse", "project/list-purchase", "project/add-warehouse"], function (require, exports, component_47, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_34, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1, list_warehouse_1, list_purchase_1, add_warehouse_1) {
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role", "project/list-warehouse", "project/list-purchase", "project/add-warehouse"], function (require, exports, component_47, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_35, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1, list_warehouse_1, list_purchase_1, add_warehouse_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -4263,7 +4292,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_34.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_35.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };

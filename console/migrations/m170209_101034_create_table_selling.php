@@ -17,7 +17,7 @@ class m170209_101034_create_table_selling extends Migration
             updated_at int not null,
             status int not null default 10,
             foreign key(ship_id) references ship(id)
-            )");
+            ) ENGINE=InnoDB");
     }
 
     public function down()

@@ -12,7 +12,7 @@ class m170209_185357_create_table_entity_type extends Migration
             description text null,
             created_at int not null,
             updated_at int not null,
-            status int not null default 10)");
+            status int not null default 10) ENGINE=InnoDB");
 
     }
 

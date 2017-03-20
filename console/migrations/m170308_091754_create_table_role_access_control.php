@@ -15,7 +15,7 @@ class m170308_091754_create_table_role_access_control extends Migration
             updated_at int not null,
             primary key(access_control_id, role_id),
             foreign key(access_control_id) references access_control(id),
-            foreign key(role_id) references role(id))");
+            foreign key(role_id) references role(id)) ENGINE=InnoDB");
     }
 
     public function down()

@@ -16,7 +16,7 @@ class m170210_082800_create_table_transaction extends Migration
             status int not null default 10,
             created_at int not null,
             updated_at int not null
-            )");
+            ) ENGINE=InnoDB");
     }
 
     public function down()

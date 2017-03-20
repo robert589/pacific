@@ -16,6 +16,8 @@ export class AddPurchaseForm extends Form{
 
     expiryDateField : InputField;
 
+    warehouseField : SearchField;
+
     constructor(root: HTMLElement) {
         super(root);
         this.successCb = function(data) {
@@ -30,6 +32,7 @@ export class AddPurchaseForm extends Form{
         this.quantityField = new InputField(document.getElementById(this.id + "-quantity"));
         this.costField = new CurrencyField(document.getElementById(this.id + "-cost"));
         this.expiryDateField = new InputField(document.getElementById(this.id + "-expiry-date"));
+        this.warehouseField = new SearchField(document.getElementById(this.id + "-warehouse"));
     }
     
     bindEvent() {
@@ -38,9 +41,11 @@ export class AddPurchaseForm extends Form{
 
     rules() {
         this.registerFields([this.codeField, this.dateField, this.quantityField,
+                    this.warehouseField,
                     this.costField, this.expiryDateField]);
 
         this.setRequiredField([this.codeField, this.dateField, this.quantityField,
+                    this.warehouseField,
                     this.costField, this.expiryDateField]);
 
         let rangeValidation : RangeValidation = new RangeValidation(this.costField, 0, null);

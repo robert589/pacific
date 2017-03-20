@@ -17,7 +17,7 @@ class m170318_100442_create_table_inventory extends Migration
             updated_at int not null,
             status smallint(6) not null,
             foreign key(entity_id) references entity(id)
-            )"
+            ) ENGINE=InnoDB"
         );
 
     }

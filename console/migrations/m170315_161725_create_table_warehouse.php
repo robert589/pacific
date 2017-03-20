@@ -10,8 +10,7 @@ class m170315_161725_create_table_warehouse extends Migration
             id int not null primary key,
             location text null,
             created_at int not null,
-            updated_at int not null,
-            foreign key(id) references user(id));");
+            updated_at int not null) ENGINE=InnoDB;");
     }
 
     public function down()

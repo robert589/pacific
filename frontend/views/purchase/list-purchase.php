@@ -39,7 +39,9 @@
                             if($model['active']) {
                                 return Button::widget(
                                         ['id' => 'lp-' . $model['id'], 
-                                        'newClass' => 'list-purchase-remove',
+                                        'newClass' => 'list-purchase-remove button-link',
+                                        'text' => 'Remove',
+                                        'color' => Button::NONE_COLOR,
                                         'options' => [
                                             'data-purchase-id' => $model['id']
                                         ]

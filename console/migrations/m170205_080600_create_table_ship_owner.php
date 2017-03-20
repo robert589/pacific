@@ -15,7 +15,7 @@ class m170205_080600_create_table_ship_owner extends Migration
                 status smallint(6) not null,
                 primary key(ship_id, owner_id),
                 foreign key(ship_id) references ship(id),
-                foreign key(owner_id) references owner(id))");
+                foreign key(owner_id) references owner(id)) ENGINE=InnoDB");
     }
 
     public function down()

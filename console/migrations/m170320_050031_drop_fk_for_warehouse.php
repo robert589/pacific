@@ -2,16 +2,17 @@
 
 use yii\db\Migration;
 
-class m170224_070613_drop_table_entity_owner_temp extends Migration
+class m170320_050031_drop_fk_for_warehouse extends Migration
 {
     public function up()
     {
-        $this->execute("DROP TABLE entity_owner_temp");
+        $this->execute("ALTER TABLE warehouse add foreign key(id) references entity(id)");
+
     }
 
     public function down()
     {
-        echo "m170224_070613_drop_table_entity_owner_temp cannot be reverted.\n";
+        echo "m170320_050031_drop_fk_for_warehouse cannot be reverted.\n";
 
         return false;
     }

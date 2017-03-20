@@ -21,7 +21,7 @@ class m170318_062327_create_table_purchase extends Migration
             foreign key(created_by) references user(id),
             foreign key(updated_by) references user(id),
             foreign key(entity_id) references entity(id)
-            )"
+            ) ENGINE=InnoDB"
         );
     }
 

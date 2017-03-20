@@ -2,16 +2,16 @@
 
 use yii\db\Migration;
 
-class m170224_061207_drop_foreign_key_entity_id_in_entity_owner extends Migration
+class m170320_051259_add_default_warehouse_to_purchase extends Migration
 {
     public function up()
     {
-        $this->execute("ALTER TABLE entity_owner_temp drop foreign key entity_owner_temp_ibfk_1");
+        $this->execute("ALTER TABLE purchase add warehouse_id int not null, add foreign key(warehouse_id) references warehouse(id)");
     }
 
     public function down()
     {
-        echo "m170224_061207_drop_foreign_key_entity_id_in_entity_owner cannot be reverted.\n";
+        echo "m170320_051259_add_default_warehouse_to_purchase cannot be reverted.\n";
 
         return false;
     }

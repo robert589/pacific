@@ -11,7 +11,7 @@ class m170314_122837_create_table_entity_unit extends Migration
             unit varchar(255) not null,
             created_at int not null,
             updated_at int not null,
-            foreign key(entity_id) references entity(id))");
+            foreign key(entity_id) references entity(id))ENGINE=InnoDB");
     }
 
     public function down()

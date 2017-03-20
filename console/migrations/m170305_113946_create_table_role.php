@@ -12,7 +12,7 @@ class m170305_113946_create_table_role extends Migration
             description text null,
             created_at int not null,
             updated_at int not null,
-            status int not null)");
+            status int not null) ENGINE=InnoDB");
     }
 
     public function down()

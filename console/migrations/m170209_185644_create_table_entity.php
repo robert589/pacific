@@ -15,7 +15,7 @@ class m170209_185644_create_table_entity extends Migration
             created_at int not null,
             updated_at int not null,
             foreign key(type_id) references entity_type(id)
-            )");
+            ) ENGINE=InnoDB");
     }
 
     public function down()

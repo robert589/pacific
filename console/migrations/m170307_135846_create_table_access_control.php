@@ -14,7 +14,7 @@ class m170307_135846_create_table_access_control extends Migration
             status smallint(6) not null,
             created_at int not null,
             updated_at int not null
-            )");
+            ) ENGINE=InnoDB");
     }
 
     public function down()

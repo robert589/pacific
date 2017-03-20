@@ -12,7 +12,7 @@ class m161223_061006_create_admin_table extends Migration
      */
     public function up()
     {
-        $this->execute("CREATE TABLE admin(id int not null primary key, foreign key(id) references user(id))");
+        $this->execute("CREATE TABLE admin(id int not null primary key, foreign key(id) references user(id)) ENGINE=InnoDB");
     }
 
     /**

@@ -8,7 +8,7 @@ class m170205_075243_create_table_owner extends Migration
     {
         $this->execute("CREATE TABLE owner(
             id int not null primary key,
-            foreign key(id) references user(id))");
+            foreign key(id) references user(id)) ENGINE=InnoDB");
     }
 
     public function down()

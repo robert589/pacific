@@ -63,6 +63,7 @@ class AddWarehouseForm extends RModel
         }
         
         $warehouse = new Warehouse();
+        $warehouse->id = $entity->id;
         $warehouse->location = $this->location;
         return $warehouse->save();
     }

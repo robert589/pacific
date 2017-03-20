@@ -48,13 +48,20 @@
     </div>
     
     <div class="form-horizontal">
-
         <div class="form-field-left">
             Tanggal Kadaluarsa
         </div>
-        
         <?= InputField::widget(['id' => $id . '-expiry-date', 'placeholder' => 'Expired Date', 
                                'name' => 'expiry_date', 'datepicker' => true]) ?>
+    </div>
+    <div class="form-horizontal">
+        <div class="form-field-left">
+            Warehouse
+        </div>
+    
+        <?= SearchField::widget(['id' => $id . '-warehouse', 'placeholder' => 'Cari Warehouse', 
+                               'name' => 'warehouse_id', 
+                                'url' => \Yii::$app->request->baseUrl . "/warehouse/search"]) ?>
     </div>
     
 

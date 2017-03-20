@@ -16,7 +16,7 @@ class m170224_070236_create_table_entity_owner extends Migration
                 primary key(entity_id, owner_id),
                 foreign key(entity_id) references entity(id),
                 foreign key(owner_id) references owner(id)
-            ); ");
+            ) ENGINE=InnoDB; ");
     }
 
     public function down()
