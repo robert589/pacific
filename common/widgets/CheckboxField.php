@@ -16,7 +16,6 @@ class CheckboxField extends Widget {
     public $item;
     
     public function init() {
-        
     }
     
     public function run() {

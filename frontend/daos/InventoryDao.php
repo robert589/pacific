@@ -12,6 +12,15 @@ use common\components\Dao;
  */
 class InventoryDao implements Dao
 {
+    const GET_WAREHOUSE_INFO = "select entity.*,    
+                                        warehouse.location as warehouse_location, 
+                                        warehouse.id as warehouse_id,
+                                        warehouse.selling_place as warehouse_selling_place
+                                from warehouse, entity
+                                where warehouse.id = entity.id and 
+                                    warehouse.id = :warehouse_id and
+                                    entity.status = :entity_status";
+    
     const GET_WAREHOUSE_LIST = "select entity.*,    
                                         warehouse.location as warehouse_location, 
                                         warehouse.id as warehouse_id
@@ -35,6 +44,26 @@ class InventoryDao implements Dao
                         warehouse.id = entity.id and
                         entity.status = IFNULL(:entity_status, entity.status)
                     limit 4";
+    
+    /**
+     * 
+     * @param int $warehouseId
+     * @param int $status
+     * @return WarehouseVo
+     */
+    public function getWarehouseInfo($warehouseId, $status = Entity::STATUS_ACTIVE) {
+        $result = \Yii::$app->db
+            ->createCommand(self::GET_WAREHOUSE_INFO)
+            ->bindParam(':warehouse_id', $warehouseId )
+            ->bindParam(':entity_status', $status)
+            ->queryOne();
+        
+        if(!$result) {
+            return null;
+        }
+        
+        return $this->buildWarehouseVoBuilder($result)->build();
+    }
     
     public function getInventoryList() {
         $results = \Yii::$app->db

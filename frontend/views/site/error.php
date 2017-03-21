@@ -7,7 +7,8 @@
 
 use yii\helpers\Html;
 
-$this->title = $name;
+$this->title = isset($name) ? $name : "Error!";
+$message = isset($message) ? $message : "Oops, we found something wrong here!";
 ?>
 <div class="site-error">
 

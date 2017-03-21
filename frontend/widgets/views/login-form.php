@@ -9,7 +9,7 @@
         ['id' => $id, 
          'method' => 'post', 
          'url' => \Yii::$app->request->baseUrl . '/site/login', 
-        'widget_class' => 'form-horizontal login-form' , 'enable_button' => false
+        'widget_class' => 'login-form' , 'enable_button' => false
         ]) ?>
     <div class="form-field">
         <?= InputField::widget(['id' => $id . '-email-field', 

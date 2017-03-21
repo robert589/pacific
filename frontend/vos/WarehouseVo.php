@@ -16,6 +16,8 @@ class WarehouseVo implements RVo
 
     private $location;
 
+    private $sellingPlace;
+    
     private $createdAt;
 
     private $updatedAt;
@@ -23,7 +25,8 @@ class WarehouseVo implements RVo
     public function __construct(WarehouseVoBuilder $builder) { 
         $this->entity = $builder->getEntity(); 
         $this->location = $builder->getLocation(); 
-        $this->createdAt = $builder->getCreatedAt(); 
+        $this->createdAt = $builder->getCreatedAt();
+        $this->sellingPlace = $builder->getSellingPlace();
         $this->updatedAt = $builder->getUpdatedAt(); 
     }
 
@@ -43,5 +46,13 @@ class WarehouseVo implements RVo
 
     public function getUpdatedAt() { 
         return $this->updatedAt; 
+    }
+    
+    /**     
+     * 
+     * @return int
+     */
+    public function isSellingPlace() {
+        return boolval($this->sellingPlace) ? 1 : 0;
     }
 }

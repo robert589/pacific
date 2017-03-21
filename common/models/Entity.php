@@ -35,4 +35,21 @@ class Entity extends ActiveRecord
             self::STATUS_DELETED => "Removed"
         ];
     }
+    
+    public static function getDuplicateEntityName($entityId, $newCode ) {
+        $entity = self::find()->where(['id' => $entityId, 'status' => self::STATUS_ACTIVE])->one();
+        
+        if(!$entity) {
+            return null;
+        }
+        if(intval($entity->code) === intval($newCode)) {
+            return null;
+        }
+        $duplicationEntity = Entity::find()->where(['code' => $this->code])->one();
+        if($duplicationEntity) {
+            return $duplicationEntity->name;
+        }
+        
+        return null;
+    }
 }

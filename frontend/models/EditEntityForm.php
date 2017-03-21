@@ -41,7 +41,7 @@ class EditEntityForm extends RModel
         return [
             ['id', 'integer'],
             ['id', 'required'],
-            ['id', 'checkExist'],
+            ['id', 'getEntity'],
             
             ['user_id', 'integer'],
             ['user_id', 'required'],
@@ -68,16 +68,13 @@ class EditEntityForm extends RModel
     }
     
     public function isNewCodeDuplicate() {
-        if(intval($this->entity->code) === intval($this->code)) {
-            return;
-        }
-        $entity = Entity::find()->where(['code' => $this->code])->one();
-        if($entity) {
-            return $this->addError('code', 'This code has been used by: ' . $entity->name);
+        $duplicateEntityName = Entity::getDuplicateEntityName($this->id, $this->code);
+        if($duplicateEntityName) {
+            return $this->addError('code', 'This code has been used by: ' . $duplicateEntityName);
         }
     }
     
-    public function checkExist() {
+    public function getEntity() {
         $this->entity = Entity::find()->where(['id' => $this->id])->one();
         if(!$this->entity) {
             return $this->addError('id', 'Entity does not exist');

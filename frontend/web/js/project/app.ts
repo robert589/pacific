@@ -30,6 +30,7 @@ import {AddRole} from './add-role';
 import {ListWarehouse} from './list-warehouse';
 import {ListPurchase} from './list-purchase';
 import {AddWarehouse} from './add-warehouse';
+import {EditWarehouse} from './edit-warehouse';
 
 export class App extends Component{
 
@@ -96,6 +97,8 @@ export class App extends Component{
     addRole : AddRole;
 
     viewCode : ViewCode;
+
+    editWarehouse : EditWarehouse;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -192,6 +195,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('list-warehouse').length !== 0) {
             this.listWarehouse = new ListWarehouse(document.getElementById("ilw"));
+        }
+        else if(this.root.getElementsByClassName('edit-warehouse').length !== 0) {
+            this.editWarehouse = new EditWarehouse(document.getElementById("iew"));
         }
         else if(this.root.getElementsByClassName('add-wh').length !== 0) {
             this.addWarehouse = new AddWarehouse(document.getElementById("iaw"));

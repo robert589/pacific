@@ -17,6 +17,8 @@ class WarehouseVoBuilder extends RVoBuilder
     public $location;
 
     public $createdAt;
+    
+    public $sellingPlace;
 
     public $updatedAt;
 
@@ -25,6 +27,7 @@ class WarehouseVoBuilder extends RVoBuilder
            ['entity','string'],
            ['location','string'],
            ['createdAt','string'],
+            ['sellingPlace', 'string'],
            ['updatedAt','string'],
         ];
     }
@@ -64,4 +67,14 @@ class WarehouseVoBuilder extends RVoBuilder
     public function setUpdatedAt($updatedAt) { 
         $this->updatedAt = $updatedAt; 
     }
+    
+    function getSellingPlace() {
+        return $this->sellingPlace;
+    }
+
+    function setSellingPlace($sellingPlace) {
+        $this->sellingPlace = $sellingPlace;
+    }
+
+
 }

@@ -18,7 +18,7 @@
                 [
                     'class' => 'yii\grid\ActionColumn',
                     'header'=>'Actions',    
-                    'template' => '{view} {remove}',
+                    'template' => '{view} - {edit} - {remove}',
                     'urlCreator' => function ($action, $model, $key, $index) {
                         
                     },
@@ -46,6 +46,20 @@
                                             'color' => Button::NONE_COLOR, 
                                             'newClass' => 'list-warehouse-remove button-link',
                                         'options' => 
+                                            [
+                                                'data-entity-id' => $model['id']
+                                            ]
+                                        ]);
+                            }
+                        },
+                        'edit' => function ($url, $model) {
+                            if($model['active']) {
+                                return Button::widget(
+                                        ['id' => 'ilw-' . $model['id'],
+                                            'text' => 'Edit',
+                                            'color' => Button::NONE_COLOR, 
+                                            'newClass' => 'list-warehouse-edit button-link',
+                                            'options' => 
                                             [
                                                 'data-entity-id' => $model['id']
                                             ]

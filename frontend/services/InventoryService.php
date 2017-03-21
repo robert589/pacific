@@ -11,11 +11,18 @@ use common\components\RService;
 class InventoryService extends RService
 {
     
+    const GET_WAREHOUSE_INFO = "getwarehouseinfo";
+    
     const GET_WAREHOUSE_LIST = "getwarehouselist";
+    
     //attributes
     public $user_id;
     
+    public $warehouse_id;
+    
     private $inventoryDao;
+    
+    private $warehouse;
     
     public function init() {
         $this->inventoryDao = new InventoryDao();
@@ -24,9 +31,21 @@ class InventoryService extends RService
     public function rules() {
         return [
             ['user_id', 'integer'],
-            ['user_id', 'required']
+            ['user_id', 'required'],
+            
+            ['warehouse_id', 'integer'],
+            ['warehouse_id', 'required', 'on' => [self::GET_WAREHOUSE_INFO]],
+            ['warehouse_id', 'isWarehouse']
         ];
     }
+    
+    public function isWarehouse() {
+        $this->warehouse = $this->inventoryDao->getWarehouseInfo($this->warehouse_id);
+        if(!$this->warehouse) {
+            $this->addError('warehouse_id', 'Not a warehouse');
+        }
+    }
+    
     
     public function searchWarehouse($query) {
         if(!$this->validate()) {
@@ -56,6 +75,15 @@ class InventoryService extends RService
             ]
         ]);
         
+    }
+    
+    public function getWarehouseInfo() {
+        $this->setScenario(self::GET_WAREHOUSE_INFO);
+        if(!$this->validate()) {
+            return null;
+        }
+        
+        return $this->warehouse;
     }
     
     public function getWarehouseList() {

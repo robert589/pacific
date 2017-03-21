@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use Yii;
 use frontend\models\AddWarehouseForm;
 use frontend\services\InventoryService;
+use frontend\models\EditWarehouseForm;
 use common\widgets\SearchFieldDropdownItem;
 use yii\web\Controller;
 /**
@@ -45,7 +46,28 @@ class InventoryController extends Controller
     public function actionAddWarehouse() {
         return $this->render('add-warehouse', ['id' => 'iaw']);
     }
-
+    
+    public function actionEditWarehouse() {
+        $this->service->warehouse_id = filter_input(INPUT_GET, "id");
+        $vo = $this->service->getWarehouseInfo();
+        if(!$vo) {
+            return $this->render('../site/error');
+        }
+        
+        return $this->render('edit-warehouse', ['id' => 'iew', 'vo' => $vo]);
+        
+    }
+    
+    public function actionPEditWh() {
+        $data = array();
+        $model = new EditWarehouseForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $data['status'] = $model->edit() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
     public function actionSearchWarehouse() {
         $id = filter_var($_GET['id']);
         $query = filter_var($_GET['q']);

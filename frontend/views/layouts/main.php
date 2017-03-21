@@ -96,8 +96,7 @@ AppAsset::register($this);
                                         'items' => [
                                             ['label' => 'Daftar Pembelian', 
                                              'href' => Yii::$app->request->baseUrl . "/purchase/index"],
-                                            ['label' => 'Buat Pembelian', 
-                                             'href' => Yii::$app->request->baseUrl . "/purchase/add"],
+                                            
                                         ]
 
                                     ],   
@@ -108,8 +107,8 @@ AppAsset::register($this);
                                         'items' => [
                                             ['label' => 'Daftar Aset', 
                                              'href' => Yii::$app->request->baseUrl . "/inventory/index"],
-                                            ['label' => 'Buat Aset', 
-                                             'href' => Yii::$app->request->baseUrl . "/inventory/create"]
+                                            ['label' => 'Daftar Warehouse',
+                                            'href' => Yii::$app->request->baseUrl . "/inventory/list-warehouse"]
                                         ]
 
                                     ],  
