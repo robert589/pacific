@@ -10,32 +10,21 @@ class DailySellingView extends Widget {
 
     public $id;
     
-    public $vos;
+    public $provider;
     
     public $date;
     
-    public $productId;
-
+    public $totalSaldo;
+    
     public function init() {
         
     }
     
     public function run() {
         return $this->render('daily-selling-view', 
-                ['id' => $this->id, 'vos' => $this->vos,
-                    'dailySaldo' => Currency::parse($this->countDailySaldo()),
-                    'date' => $this->date, 'productId' => $this->productId]);
-    }
-    
-    private function countDailySaldo() {
-        $total = 0;
-        if(is_array($this->vos) && count($this->vos) > 0) {
-            foreach($this->vos as $vo) {
-                $total += floatVal($vo->getTotal());
-            }
-        }
-        
-        return $total;
-
+                ['id' => $this->id, 
+                    'provider' => $this->provider,
+                    'totalSaldo' => $this->totalSaldo,
+                    'date' => $this->date]);
     }
 }

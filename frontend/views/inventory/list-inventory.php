@@ -14,7 +14,8 @@
             'columns' => [
                 'product_name',
                 'warehouse_name',
-                'quantity'
+                'quantity',
+                'selling_place'
 
             ]
         ]); ?>

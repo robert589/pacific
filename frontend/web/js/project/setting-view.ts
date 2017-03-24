@@ -1,10 +1,7 @@
 import {Component} from '../common/component';
-import {AddSellingForm, AddSellingFormSuccessJson} from './add-selling-form';
-import {DailySellingItem} from './daily-selling-item';
 
 
-export class DailySellingView extends Component{
-   
+export class SettingView extends Component{
     
     constructor(root: HTMLElement) {
         super(root);
@@ -12,13 +9,12 @@ export class DailySellingView extends Component{
     
     decorate() {
         super.decorate();
-    
+        
     }
     
     bindEvent() {
         super.bindEvent();
-    }
-
+   }
     detach() {
         super.detach();
     }

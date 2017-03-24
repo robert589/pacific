@@ -14,6 +14,7 @@
                 'id',
                 'name',
                 'location',
+                'selling_place',
                 'status',
                 [
                     'class' => 'yii\grid\ActionColumn',

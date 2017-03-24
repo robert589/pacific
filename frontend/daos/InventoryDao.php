@@ -23,7 +23,8 @@ class InventoryDao implements Dao
     
     const GET_WAREHOUSE_LIST = "select entity.*,    
                                         warehouse.location as warehouse_location, 
-                                        warehouse.id as warehouse_id
+                                        warehouse.id as warehouse_id,
+                                        warehouse.selling_place as warehouse_selling_place
                                 from warehouse, entity
                                 where warehouse.id = entity.id";
     

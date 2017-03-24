@@ -1,17 +1,14 @@
 .daily-selling-header {
   display: flex;
+  margin-bottom: 24px;
 }
 .daily-selling-header > .input-field {
   width: 300px;
-  margin-bottom: 8px;
 }
 .daily-selling-header > .search-field {
   width: 300px;
-  margin-bottom: 8px;
   margin-right: 8px;
 }
-.daily-selling-refresh {
-  max-width: 120px;
-  margin-bottom: 8px;
+.daily-selling-sas {
   margin-left: 8px;
 }

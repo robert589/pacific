@@ -14,8 +14,7 @@ class SellingDao implements Dao
     const GET_DAILY_SELLING_VIEW = "SELECT selling_info.*, buyer.name as buyer_name
                                     FROM (SELECT *
                                         from selling
-                                        where selling.product_id = :product_id and
-                                              selling.date = :date and 
+                                        where selling.date = :date and 
                                               selling.status = :status) selling_info 
                                     LEFT JOIN entity buyer 
                                     on buyer.id = selling_info.buyer_id";
@@ -79,10 +78,9 @@ class SellingDao implements Dao
     
     }
     
-    public function getDailySellingView($productId, $date, $status = Selling::STATUS_ACTIVE ) {
+    public function getDailySellingView($date, $status = Selling::STATUS_ACTIVE ) {
         $results = \Yii::$app->db   
             ->createCommand(self::GET_DAILY_SELLING_VIEW)
-            ->bindParam(':product_id', $productId)
             ->bindParam(':date', $date)
             ->bindParam(':status', $status)
             ->queryAll();

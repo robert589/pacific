@@ -4,6 +4,7 @@ namespace frontend\services;
 use common\validators\DateValidator;
 use frontend\daos\SellingDao;
 use common\components\RService;
+use yii\data\ArrayDataProvider;
 /**
  * SellingService service
  *
@@ -37,7 +38,6 @@ class SellingService extends RService
             ['user_id', 'required'],
             
             ['product_id', 'integer'],
-            ['product_id', 'required', 'on' => self::GET_DAILY_SELLING_VIEW],
             ['product_id', 'required', 'on' => self::GET_SELLING_VIEW],
             
             ['date', 'string'],
@@ -68,8 +68,26 @@ class SellingService extends RService
         if(!$this->validate()) {
             return false;
         }
+        
+        $models = [];
+        $model = [];
+        $vos = $this->sellingDao->getDailySellingView($this->date);
+        
+        foreach($vos as $vo) {
+            $model['product'] = $vo->getProduct()->getName();
+            $model['buyer'] = $vo->getBuyer()->getName();
+            $model['price'] = $vo->getPrice();
+            $model['unit'] = $vo->getUnit();
+            $model['total'] = $vo->getTotal();
+            $models[] = $model;
+        }
     
-        return $this->sellingDao->getDailySellingView($this->product_id, $this->date);
+        return new ArrayDataProvider([
+            'allModels' => $models,
+            'pagination' => [
+                'pageSize' => 10
+            ]
+        ]);
     }
 
 

@@ -46,6 +46,7 @@ input[type=checkbox]{margin:4px 4px 0 0}
 
 
 
+
 .as-form{display:-ms-flexbox;display:flex;margin-top:16px}.as-form>.button{-ms-flex-item-align:end;align-self:flex-end;max-width:60px;height:40px}.as-form>.form-field{margin-bottom:0;margin-right:8px}.as-form-switch{height:42px;margin:0 8px 0 0;-ms-flex-item-align:end;align-self:flex-end}
 .at-form{display:-ms-flexbox;display:flex;margin-top:16px}.at-form>.button{-ms-flex-item-align:end;align-self:flex-end;max-width:60px;height:40px}.at-form>.form-field{margin-right:8px;margin-bottom:0}
 
@@ -57,13 +58,15 @@ input[type=checkbox]{margin:4px 4px 0 0}
 
 .astock-form{max-width:500px}
 
-.app-container,.app-menu{padding-left:8px;width:100%}.app-fullwidth,.app-menu,.container{width:100%}.app-menu{height:40px;position:fixed;top:0;border-bottom:1px solid #d3d3d3;z-index:1}.app-container{margin-top:40px}.app-hide{display:none!important}.app-row{display:-ms-flexbox;display:flex}.list-item{display:inline-block;vertical-align:top}.container{max-width:1200px;margin:auto}body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#333;margin:0}html{font-size:10px;-webkit-tap-highlight-color:transparent;font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}:after,:before{box-sizing:border-box}*{box-sizing:border-box}button:hover{cursor:pointer}.required{color:red}
+.app-container,.app-menu{padding-left:8px;width:100%}.app-fullwidth,.app-menu,.container{width:100%}.app-menu{height:40px;position:fixed;top:0;border-bottom:1px solid #d3d3d3;z-index:1}.app-container{margin-top:40px}.app-hide{display:none!important}.app-row{display:-ms-flexbox;display:flex}.list-item{display:inline-block;vertical-align:top}.container{max-width:1200px;margin:auto}body{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:14px;line-height:1.42857143;color:#333;margin:0}html{font-size:10px;-webkit-tap-highlight-color:transparent;font-family:sans-serif;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%}:after,:before{box-sizing:border-box}*{box-sizing:border-box}button:hover{cursor:pointer}.required{color:red}.table{margin-bottom:0}
 
 
 
 
 
 
+
+.cc-warehouse-edit,.cc-warehouse-edit>.button,.cc-warehouse-edit>.search-field,.cc-warehouse-label,.cc-warehouse-view{display:inline-block}
 
 
 
@@ -97,12 +100,15 @@ input[type=checkbox]{margin:4px 4px 0 0}
 .daily-report-header{display:-ms-flexbox;display:flex}.daily-report-header>.input-field{width:300px;margin-bottom:8px}.daily-report-header>.search-field{width:300px;margin-bottom:8px;margin-right:8px}.daily-report-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
 .ds-item-field,.ds-item-remove{padding:8px;border:1px solid #000}.ds-item-view{display:-ms-flexbox;display:flex}.ds-item-field{width:100%;word-break:break-all}
 .ds-view-footer,.ds-view-header{display:-ms-flexbox;display:flex}.ds-view-header-field{width:100%;padding:8px;background:#d3d3d3;border:1px solid #000}.ds-view-footer-item2{padding:8px;border:1px solid #000;width:200%}.ds-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:300%}.ds-view-area{margin:16px 0 0}
-.daily-selling-header{display:-ms-flexbox;display:flex}.daily-selling-header>.input-field{width:300px;margin-bottom:8px}.daily-selling-header>.search-field{width:300px;margin-bottom:8px;margin-right:8px}.daily-selling-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
+.daily-selling-header{display:-ms-flexbox;display:flex;margin-bottom:24px}.daily-selling-header>.input-field{width:300px}.daily-selling-header>.search-field{width:300px;margin-right:8px}.daily-selling-sas{margin-left:8px}
 .dt-item-field,.dt-item-remove{padding:8px;border:1px solid #000}.dt-item-view{display:-ms-flexbox;display:flex}.dt-item-field{width:100%;word-break:break-all}
 .dt-view-footer,.dt-view-header{display:-ms-flexbox;display:flex}.dt-view-footer-item2,.dt-view-footer-item3,.dt-view-header-field{padding:8px;border:1px solid #000}.dt-view-header-field{width:100%;background:#d3d3d3}.dt-view-footer-item2{width:200%}.dt-view-footer-item3{background:orange;font-weight:700;width:300%}.dt-view-area{margin:16px 0 0}
 .daily-transact-header{display:-ms-flexbox;display:flex}.daily-transact-header>.input-field{width:300px;margin-bottom:8px}.daily-transact-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
 
 .dynamic-wfield{max-width:500px}
+
+
+
 
 
 
@@ -150,7 +156,10 @@ input[type=checkbox]{margin:4px 4px 0 0}
 
 .selling-item-field,.selling-item-remove{padding:8px;border:1px solid #000}.selling-item-view{display:-ms-flexbox;display:flex}.selling-item-field{word-break:break-all;width:100%}
 .selling-view-footer,.selling-view-header{display:-ms-flexbox;display:flex}.selling-view-footer-item2,.selling-view-header-field{padding:8px;width:100%;border:1px solid #000}.selling-view-header-field{background:#d3d3d3}.selling-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:400%}.selling-view-area{margin:16px 0 0}
+
+
 .ship-owner-header{display:-ms-flexbox;display:flex}.ship-owner-header>.search-field{width:300px;margin-right:10px;margin-bottom:10px}.ship-owner-header>.button{width:100px;margin-bottom:10px}
+
 
 .transaction-item-view{display:-ms-flexbox;display:flex}.transaction-item-remove{padding:8px;border:1px solid #000}.transaction-item-field,.transaction-item-field2{word-break:break-all;padding:8px;border:1px solid #000}.transaction-item-field{width:100%}.transaction-item-field2{width:200%}
 .transaction-view-action,.transaction-view-footer,.transaction-view-header{display:-ms-flexbox;display:flex}.transaction-view-header-field,.transaction-view-header-field2{padding:8px;background:#d3d3d3;border:1px solid #000}.transaction-view-header-field{width:100%}.transaction-view-header-field2{width:200%}.transaction-view-date{text-align:center;font-weight:700;font-size:18px;margin-bottom:8px}.transaction-view-title{text-align:center;font-weight:700;font-size:24px}.transaction-view-action>.button{width:160px;margin-right:8px}.transaction-view-footer-item2,.transaction-view-footer-item3{padding:8px;border:1px solid #000;width:100%}.transaction-view-footer-item3{background:orange;font-weight:700}.transaction-view-area{margin:16px 0 0}

@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use common\caches\SettingCache;
 use frontend\services\CodeService;
 use frontend\widgets\TransactionView;
 use frontend\models\ChangeTransactionStatusForm;
@@ -22,6 +23,8 @@ class TransactionController extends Controller
     private $codeService;
     
     public function init() {
+        SettingCache::get("ayam");
+        
         $this->codeService = new CodeService();
         $this->codeService->user_id = Yii::$app->user->getId();
         

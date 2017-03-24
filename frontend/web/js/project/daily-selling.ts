@@ -4,11 +4,9 @@ import {InputField} from './../common/input-field';
 import {System} from './../common/system';
 import {DailySellingView} from './daily-selling-view';
 import {Button} from './../common/button';
-
+import {AddSellingFormModal} from './add-selling-form-modal';
 
 export class DailySelling extends Component{
-
-    productSF : SearchField;
 
     date : InputField;
 
@@ -16,7 +14,9 @@ export class DailySelling extends Component{
 
     sellingView : DailySellingView;
 
-    refresh : Button;
+    asfModalBtn : Button;
+
+    asfModal : AddSellingFormModal;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -24,26 +24,26 @@ export class DailySelling extends Component{
     
     decorate() {
         super.decorate();
-        this.productSF = new SearchField(document.getElementById(this.id + "-product"));
         this.date = new InputField(document.getElementById(this.id + "-date"));    
         this.area = <HTMLElement> this.root.getElementsByClassName('daily-selling-area')[0];
-        this.refresh = new Button(document.getElementById(this.id + "-refresh"), this.getView.bind(this));
+        this.asfModalBtn = new Button(document.getElementById(this.id + "-asf-modal-btn"), this.showModal.bind(this));
+        this.asfModal = new AddSellingFormModal(document.getElementById(this.id + "-asf-modal"));
+    }
 
+    showModal() {
+        this.asfModal.show();
     }
     
     bindEvent() {
         super.bindEvent();
-        this.productSF.attachEvent(SearchField.GET_VALUE_EVENT, this.enableDateField.bind(this));
-        this.productSF.attachEvent(SearchField.LOSE_VALUE_EVENT, this.disableDateField.bind(this));
         this.date.attachEvent(InputField.VALUE_CHANGED, this.getView.bind(this));
     }
 
     getView() {
         let data = {};
-        data['product_id'] = this.productSF.getValue();
         data['date'] = this.date.getValue();
         this.area.innerHTML = "Loading . . .";
-        this.refresh.disable(true);
+        this.asfModalBtn.disable(true);
         $.ajax({
             url : System.getBaseUrl() + "/selling/get-daily-selling-view",
             data :  System.addCsrf(data),
@@ -53,7 +53,7 @@ export class DailySelling extends Component{
             success : function(data) {
                 if(data.status) {
                     this.addViewToArea(data.views);
-                    this.refresh.disable(false);
+                    this.asfModalBtn.disable(false);
                 }
             },
             error : function(data) {
@@ -95,4 +95,6 @@ export class DailySelling extends Component{
     
     unbindEvent() {
         // no event to unbind
-    }}
+    }
+
+}

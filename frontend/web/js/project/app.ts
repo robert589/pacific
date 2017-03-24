@@ -30,6 +30,7 @@ import {AddRole} from './add-role';
 import {ListWarehouse} from './list-warehouse';
 import {ListPurchase} from './list-purchase';
 import {AddWarehouse} from './add-warehouse';
+import {SystemSetting} from './system-setting';
 import {EditWarehouse} from './edit-warehouse';
 
 export class App extends Component{
@@ -99,6 +100,8 @@ export class App extends Component{
     viewCode : ViewCode;
 
     editWarehouse : EditWarehouse;
+
+    systemSetting : SystemSetting;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -201,6 +204,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('add-wh').length !== 0) {
             this.addWarehouse = new AddWarehouse(document.getElementById("iaw"));
+        }
+        else if(this.root.getElementsByClassName('system-setting').length !== 0) {
+            this.systemSetting = new SystemSetting(document.getElementById("sss"));
         }
         this.hamburgerIcon = <HTMLElement> 
                         this.root.getElementsByClassName('app-hamburger')[0];   

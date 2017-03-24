@@ -98,6 +98,7 @@ class InventoryService extends RService
             $model['name'] = $vo->getEntity()->getName();
             $model['location'] = $vo->getLocation();
             $model['status'] = $vo->getEntity()->getStatusText();
+            $model['selling_place'] = $vo->isSellingPlace();
             $model['active'] = $vo->getEntity()->isActive();
             $model['code'] = $vo->getEntity()->getCode();
             $models[] = $model;

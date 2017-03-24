@@ -1,4 +1,4 @@
-<?php
+<?php 
     use common\widgets\SearchField;
     use common\widgets\InputField;
     use common\widgets\Button;

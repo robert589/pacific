@@ -1,0 +1,15 @@
+.cc-warehouse-view {
+  display: inline-block;
+}
+.cc-warehouse-edit {
+  display: inline-block;
+}
+.cc-warehouse-edit > .button {
+  display: inline-block;
+}
+.cc-warehouse-edit > .search-field {
+  display: inline-block;
+}
+.cc-warehouse-label {
+  display: inline-block;
+}

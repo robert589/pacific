@@ -13,8 +13,6 @@ class SellingView extends Widget {
     
     public $currentSaldo;
     
-    public $productId;
-    
     public $date;
     
     public function init() {
