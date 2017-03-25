@@ -155,7 +155,7 @@ input[type=checkbox]{margin:4px 4px 0 0}
 
 
 .selling-item-field,.selling-item-remove{padding:8px;border:1px solid #000}.selling-item-view{display:-ms-flexbox;display:flex}.selling-item-field{word-break:break-all;width:100%}
-.selling-view-footer,.selling-view-header{display:-ms-flexbox;display:flex}.selling-view-footer-item2,.selling-view-header-field{padding:8px;width:100%;border:1px solid #000}.selling-view-header-field{background:#d3d3d3}.selling-view-footer-item3{background:orange;font-weight:700;padding:8px 13px;border:1px solid #000;width:400%}.selling-view-area{margin:16px 0 0}
+.selling-view-footer,.selling-view-header{display:-ms-flexbox;display:flex}.selling-view-header-field{width:100%;padding:8px;background:#d3d3d3;border:1px solid #000}.selling-view-footer-item2{padding:8px;border:1px solid #d3d3d3;width:100%}.selling-view-footer-item3{background:#f9f9f9;font-weight:700;padding:8px 13px;border:1px solid #d3d3d3;width:400%}.selling-view-area{margin:16px 0 0}
 
 
 .ship-owner-header{display:-ms-flexbox;display:flex}.ship-owner-header>.search-field{width:300px;margin-right:10px;margin-bottom:10px}.ship-owner-header>.button{width:100px;margin-bottom:10px}

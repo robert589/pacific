@@ -1,6 +1,7 @@
 <?php
 namespace frontend\vos;
 
+use common\libraries\Currency;
 use yii\db\ActiveRecord;
 use common\components\RVo;
 /**
@@ -12,6 +13,8 @@ class SellingVo implements RVo
     public static function createBuilder() { return new SellingVoBuilder();} 
     //attributes
 
+    private $id;
+    
     private $product;
 
     private $buyer;
@@ -43,9 +46,14 @@ class SellingVo implements RVo
         $this->status = $builder->getStatus(); 
         $this->remark = $builder->getRemark(); 
         $this->warehouse = $builder->getWarehouse(); 
+        $this->id = $builder->getId();
     }
 
     //getters
+    
+    public function getId() {
+        return $this->id;
+    }
 
     public function getProduct() { 
         return $this->product; 
@@ -63,6 +71,10 @@ class SellingVo implements RVo
         return $this->price; 
     }
     
+    public function getPriceView() {
+        return Currency::parse($this->getPrice());
+    }
+    
     public function getTotal() {
         return doubleval($this->price) * doubleval($this->unit);
     }
@@ -70,7 +82,11 @@ class SellingVo implements RVo
     public function getUnit() { 
         return $this->unit; 
     }
-
+    
+    public function getTotalView() {
+        return Currency::parse($this->getTotal());
+    }
+    
     public function getCreatedAt() { 
         return $this->createdAt; 
     }

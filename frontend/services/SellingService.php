@@ -65,12 +65,13 @@ class SellingService extends RService
         $model = [];
         
         foreach($vos as $vo) {
+            $model['id'] = $vo->getId();
             $model['date'] = $vo->getDate();
             $model['product'] = $vo->getProduct()->getName();
             $model['buyer'] = $vo->getBuyer()->getName();
-            $model['price'] = $vo->getPrice();
+            $model['price'] = $vo->getPriceView();
             $model['unit'] = $vo->getUnit();
-            $model['total'] = $vo->getTotal();
+            $model['total'] = $vo->getTotalView();
             $models[] = $model;
         }
         
@@ -95,9 +96,9 @@ class SellingService extends RService
         foreach($vos as $vo) {
             $model['product'] = $vo->getProduct()->getName();
             $model['buyer'] = $vo->getBuyer()->getName();
-            $model['price'] = $vo->getPrice();
+            $model['price'] = $vo->getPriceView();
             $model['unit'] = $vo->getUnit();
-            $model['total'] = $vo->getTotal();
+            $model['total'] = $vo->getTotalView();
             $models[] = $model;
         }
     

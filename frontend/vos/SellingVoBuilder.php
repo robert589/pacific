@@ -11,7 +11,8 @@ class SellingVoBuilder extends RVoBuilder
 {
     function build() { return new SellingVo($this);  }
     //attributes
-
+    public $id;
+    
     public $product;
 
     public $buyer;
@@ -34,6 +35,7 @@ class SellingVoBuilder extends RVoBuilder
 
     public function rules() { 
         return [
+           ['id', 'string'],
            ['product','string'],
            ['buyer','string'],
            ['date','string'],
@@ -130,4 +132,14 @@ class SellingVoBuilder extends RVoBuilder
     public function setWarehouse($warehouse) { 
         $this->warehouse = $warehouse; 
     }
+    
+    function getId() {
+        return $this->id;
+    }
+
+    function setId($id) {
+        $this->id = $id;
+    }
+
+
 }
