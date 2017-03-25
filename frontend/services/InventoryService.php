@@ -1,8 +1,10 @@
 <?php
 namespace frontend\services;
 
+use frontend\daos\EntityDao;
 use yii\data\ArrayDataProvider;
 use frontend\daos\InventoryDao;
+use frontend\validators\InInventoryValidator;
 use common\components\RService;
 /**
  * InventoryService service
@@ -15,17 +17,24 @@ class InventoryService extends RService
     
     const GET_WAREHOUSE_LIST = "getwarehouselist";
     
+    const CHECK_INVENTORY_TYPE = "checkinventorytype";
+    
     //attributes
     public $user_id;
     
     public $warehouse_id;
     
+    public $entity_id;
+    
     private $inventoryDao;
+    
+    private $entityDao;
     
     private $warehouse;
     
     public function init() {
         $this->inventoryDao = new InventoryDao();
+        $this->entityDao = new EntityDao();
     }
     
     public function rules() {
@@ -35,8 +44,18 @@ class InventoryService extends RService
             
             ['warehouse_id', 'integer'],
             ['warehouse_id', 'required', 'on' => [self::GET_WAREHOUSE_INFO]],
-            ['warehouse_id', 'isWarehouse']
+            ['warehouse_id', 'isWarehouse'],
+            
+            ['entity_id', 'integer'],
+            ['entity_id', 'required', 'on' => [self::CHECK_INVENTORY_TYPE] ],
+            ['entity_id', InInventoryValidator::className(), 'on' => [self::CHECK_INVENTORY_TYPE]]
+            
         ];
+    }
+    
+    public function isInventoryType() {
+        $this->setScenario(self::CHECK_INVENTORY_TYPE);
+        return $this->validate();
     }
     
     public function isWarehouse() {
@@ -44,6 +63,14 @@ class InventoryService extends RService
         if(!$this->warehouse) {
             $this->addError('warehouse_id', 'Not a warehouse');
         }
+    }
+    
+    public function searchSellingWarehouse($query) {
+        if(!$this->validate()) {
+            return null;
+        }
+        
+        return $this->inventoryDao->searchSellingWarehouse($query);
     }
     
     

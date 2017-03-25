@@ -31,7 +31,8 @@ class EntityDao implements Dao
                                     where entity.name like :query and 
                                             entity.type_id = entity_type.id and
                                             entity.type_id = :type_id and
-                                            entity.status = :status ";
+                                            entity.status = :status
+                                    order by entity.id asc";
     
     const SEARCH_ENTITIES_BY_TYPE_AND_OWNER  = "SELECT entity.*
                                                 from entity, entity_type, entity_owner
@@ -40,7 +41,8 @@ class EntityDao implements Dao
                                                     entity.type_id = :type_id and
                                                     entity.status = :status and
                                                     entity.id  = entity_owner.entity_id and
-                                                    entity_owner.owner_id = :owner_id";
+                                                    entity_owner.owner_id = :owner_id 
+                                                order by entity.id asc";
     
     const GET_ENTITY_OWNERSHIP = "select user.first_name as user_first_name, user.last_name as user_last_name,
                                         user.id as user_id

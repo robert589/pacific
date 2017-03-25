@@ -10,17 +10,18 @@
 }
 .ds-view-footer {
   display: flex;
+  margin: 8px 0;
 }
 .ds-view-footer-item2 {
   padding: 8px;
-  border: 1px solid black;
+  border: 1px solid lightgray;
   width: 200%;
 }
 .ds-view-footer-item3 {
-  background: orange;
+  background: #f9f9f9;
   font-weight: bold;
   padding: 8px 13px;
-  border: 1px solid black;
+  border: 1px solid lightgray;
   width: 300%;
 }
 .ds-view-area {

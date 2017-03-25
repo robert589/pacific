@@ -52,4 +52,13 @@ class Entity extends ActiveRecord
         
         return null;
     }
+    
+    public static function inInventory($entityId) {
+        $model = self::find()->where(['id' => $entityId])->one();
+        if(!$model) {
+            return 0;
+        }
+        
+        return $model['in_inventory'];
+    }
 }

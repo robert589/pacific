@@ -1,8 +1,11 @@
 <?php
 namespace frontend\models;
 
+use common\validators\InInventoryValidator;
 use common\models\Selling;
 use common\components\RModel;
+use common\models\Inventory;
+use common\models\Entity;
 use common\validators\DateValidator;
 use frontend\daos\SellingDao;
 
@@ -20,15 +23,15 @@ class AddSellingForm extends RModel
 
     public $remark;
 
-    public $total;
-
-    public $tonase;
+    public $unit;
 
     public $price;
 
     public $product_id;
     
     public $buyer_id;
+    
+    public $warehouse_id;
     
     private $sellingDao;
     
@@ -48,22 +51,17 @@ class AddSellingForm extends RModel
             
             ['buyer_id', 'integer'],
             
-            ['total', 'double'],
-            ['tonase', 'double'],
-            ['price', 'double'],
-            ['total', 'validateFields']
-        ];
-    }
-    
-    public function validateFields() {
-        if($this->total <= 0.0000000001) {
-            if($this->price <= 0.0000000001 || $this->tonase <= 0.00000000001) {
-                $this->addError('total', 'Wajib diisi');
-                $this->addError('tonase', 'Wajib diisi');
-                $this->addError('price  ', 'Wajib diisi');
-
+            ['warehouse_id', 'integer'],
+            ['warehouse_id', 'required', 'when' => function ($model) {
+                return Entity::inInventory($model->product_id);
             }
-        }
+            ],
+            ['unit', 'double'],
+            ['unit', 'required'],
+            
+            ['price', 'double'],
+            ['price', 'required'],
+        ];
     }
     
     public function init() {
@@ -81,17 +79,15 @@ class AddSellingForm extends RModel
         $selling->product_id = $this->product_id;
         $selling->buyer_id = $this->buyer_id;
         $selling->status = Selling::STATUS_ACTIVE;
-        if(!$this->total || $this->total <= 0.00000000001) {
-           $selling->price = $this->price;
-           $selling->tonase = $this->tonase;
-        } else {
-            $selling->total = $this->total;
-        }
+        $selling->price = $this->price;
+        $selling->unit   = $this->unit;
+        $selling->warehouse_id = $this->warehouse_id;
         
         if(!$selling->save()) {
-            return NULL;
+            return false;
         }
         
-        return $this->sellingDao->getSellingInfo($selling->id);
+        Inventory::remove($this->product_id, $this->warehouse_id, $this->unit);
+        return true;
     }
 }

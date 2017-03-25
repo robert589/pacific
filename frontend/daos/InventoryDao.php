@@ -46,6 +46,16 @@ class InventoryDao implements Dao
                         entity.status = IFNULL(:entity_status, entity.status)
                     limit 4";
     
+    
+    const SEARCH_SELLING_WAREHOUSE = "select warehouse.location as warehouse_location,
+                                    warehouse.id as warehouse_id, 
+                                    entity.*
+                    from warehouse, entity
+                    where entity.name LIKE :query and 
+                        warehouse.id = entity.id and
+                        warehouse.selling_place = 1 and
+                        entity.status = IFNULL(:entity_status, entity.status)
+                    limit 4";   
     /**
      * 
      * @param int $warehouseId
@@ -90,6 +100,23 @@ class InventoryDao implements Dao
         
         return $vos;
     }
+    
+    public function searchSellingWarehouse($query, $status = Entity::STATUS_ACTIVE) {
+        $query  = "%" . $query . "%";
+        $results = \Yii::$app->db
+            ->createCommand(self::SEARCH_SELLING_WAREHOUSE)
+            ->bindParam(':query', $query)
+            ->bindParam(':entity_status', $status)
+            ->queryAll();
+        
+        $vos = [];
+        foreach($results as $result) {
+            $vos[] = $this->buildWarehouseVoBuilder($result)->build();
+        }
+        
+        return $vos;
+    }
+    
     public function searchWarehouse($query, $status = Entity::STATUS_ACTIVE) {
         $query  = "%" . $query . "%";
         $results = \Yii::$app->db

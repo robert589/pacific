@@ -37,6 +37,16 @@ export class DailySelling extends Component{
     bindEvent() {
         super.bindEvent();
         this.date.attachEvent(InputField.VALUE_CHANGED, this.getView.bind(this));
+        this.date.attachEvent(InputField.VALUE_CHANGED, this.setModalDate.bind(this));
+
+    }
+
+    setModalDate() {
+        let value : string = <string> this.date.getValue();
+
+        if(!System.isEmptyValue(value)) {
+            this.asfModal.setDate(<string>this.date.getValue());
+        }
     }
 
     getView() {

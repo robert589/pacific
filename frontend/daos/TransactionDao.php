@@ -16,7 +16,9 @@ class TransactionDao implements Dao
     const GET_DAILY_TRANSACTION_VIEW = "SELECT transaction.*, entity.name as entity_name
                                 from transaction, entity
                                 where transaction.date = :date
-                                and transaction.status = :status and entity.id = transaction.entity_id";
+                                and transaction.status = :status 
+                                and entity.id = transaction.entity_id
+                                ";
     
     const GET_TRANSACTION_INFO = "SELECT transaction.*, entity.name as entity_name
                                 from transaction, entity

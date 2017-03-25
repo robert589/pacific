@@ -33,18 +33,9 @@ class SellingController extends Controller
         $model = new AddSellingForm();
         $model->user_id = \Yii::$app->user->getId();
         $model->loadData($_POST);
-        $sellingVo = $model->add();
-        $data['status'] = $sellingVo ? 1 : 0;
+        $data['status'] = $model->add() ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
-        
-        if($data['status']) {
-            $data['views'] = 
-                    DailySellingItem::widget(
-                            ['id' => 'dsi-' . $sellingVo->getId(), 'vo' => $sellingVo]);
-        }
-        
         return json_encode($data);
-        
     }
     
     public function actionCustom() {
@@ -82,17 +73,15 @@ class SellingController extends Controller
     public function actionGetSellingView() {
         $this->service->loadData($_POST);
         
-        $vos = $this->service->getSellingView();
-        if(!is_array($vos)) {
+        $provider = $this->service->getSellingView();
+        if(!$provider) {
             $data['status'] = 0;
             $data['errors'] = $this->service->hasErrors() ? $this->service->getErrors() : null;
             return json_encode($data);
         }
         $data['status'] = 1;
-        $data['views'] = SellingView::widget(['id' => 'rv', 'vos' => $vos,
-                               'productId' => $this->service->product_id,
-                            'currentSaldo' => "0",
-                            'date' => $this->service->date]);
+        $data['views'] = SellingView::widget(['id' => 'rv', 
+                            'provider' => $provider]);
         
         return json_encode($data);
         

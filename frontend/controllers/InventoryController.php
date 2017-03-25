@@ -20,6 +20,16 @@ class InventoryController extends Controller
         $this->service->user_id = \Yii::$app->user->getId();
     }
     
+    public function actionInInventory() {
+        $this->service->loadData($_POST);
+        $data = [];
+        $data['status'] = !$this->service->hasErrors() ? 1 : 0;
+        $data['in'] = $this->service->isInventoryType() ? 1 : 0;
+        $data['errors'] = $this->service->getErrors();
+        return json_encode($data);
+        
+        
+    }
     /**
      * List Warehouse
      */
@@ -65,6 +75,27 @@ class InventoryController extends Controller
         $model->loadData($_POST);
         $data['status'] = $model->edit() ? 1 : 0;
         $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
+    public function actionSearchSellingWh() {
+        $id = filter_var($_GET['id']);
+        $query = filter_var($_GET['q']);
+        $vos = $this->service->searchSellingWarehouse($query);
+        $views = '';
+        if(count($vos) !== 0) {
+            foreach($vos as $vo) {
+                $views .= SearchFieldDropdownItem::widget(['id' => $id . $vo->getEntity()->getId(), 'itemId' => $vo->getEntity()->getId(), 
+                    'text' => $vo->getEntity()->getName()]);
+            }
+            $data = array();
+            $data['status'] = 1;
+            $data['views'] = $views;
+        } else {
+            $data['status'] = 1;
+            $data['views'] = 'No Matching Found';
+        }
+        
         return json_encode($data);
     }
     

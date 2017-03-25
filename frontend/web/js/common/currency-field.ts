@@ -6,7 +6,9 @@ import {KeyCode} from './key-code';
 import {Math} from './math';
 
 export class CurrencyField extends Field {
-    
+
+    public static get VALUE_CHANGED() {return "INPUT_FIELD_VALUE_CHANGED"};
+
     public static get CHAR_TO_EXCEL() : string { return "="};
 
     input :  InputField;
@@ -16,6 +18,8 @@ export class CurrencyField extends Field {
     defaultValue : string;
 
     excelState : boolean = false;
+
+    valueChangedEvent : CustomEvent;
 
     constructor(root : HTMLElement) {
         super(root);
@@ -37,6 +41,14 @@ export class CurrencyField extends Field {
         this.input.attachInputElement("blur", this.updateField.bind(this));
         this.input.attachInputElement("focus", this.convertFromCurrency.bind(this));
 
+        this.valueChangedEvent = new CustomEvent(CurrencyField.VALUE_CHANGED);
+
+        this.input.attachEvent(InputField.VALUE_CHANGED, this.triggerValueChangedEvent.bind(this));
+
+    }
+
+    triggerValueChangedEvent() {
+        this.root.dispatchEvent(this.valueChangedEvent);
     }
 
     convertFromCurrency() {
@@ -47,7 +59,7 @@ export class CurrencyField extends Field {
         this.input.setValue("" + Math.convertFromCurrency(curVal));
     }
 
-    evalValue(e) {
+    evalValue() {
         //console
         if(this.excelState) {
             let curValue : string = <string> this.input.getValue();
@@ -79,7 +91,7 @@ export class CurrencyField extends Field {
 
         }
         else if(keyCode === KeyCode.ENTER_KEY && this.excelState) {
-            this.evalValue(e);
+            this.evalValue();
         }
         else  {
             e.preventDefault();
@@ -143,6 +155,14 @@ export class CurrencyField extends Field {
             this.input.setValue("");
         }
         this.input.setValue(number + "");
+        this.updateField();
     }
-    
+
+    disable() {
+        this.input.disable();
+    }   
+
+    enable() {
+        this.input.enable();
+    }
 }

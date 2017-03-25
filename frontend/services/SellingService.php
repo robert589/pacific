@@ -60,7 +60,26 @@ class SellingService extends RService
             return false;
         }
         
-        return $this->sellingDao->getSellingView($this->product_id, $this->from, $this->to);
+        $vos = $this->sellingDao->getSellingView($this->product_id, $this->from, $this->to);
+        $models = [];
+        $model = [];
+        
+        foreach($vos as $vo) {
+            $model['date'] = $vo->getDate();
+            $model['product'] = $vo->getProduct()->getName();
+            $model['buyer'] = $vo->getBuyer()->getName();
+            $model['price'] = $vo->getPrice();
+            $model['unit'] = $vo->getUnit();
+            $model['total'] = $vo->getTotal();
+            $models[] = $model;
+        }
+        
+        return new ArrayDataProvider([
+            'allModels' => $models,
+            'pagination' => [
+                'pageSize' => 10
+            ]
+        ]);
     }
 
     public function getDailySellingView() {

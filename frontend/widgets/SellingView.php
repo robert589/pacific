@@ -9,7 +9,7 @@ class SellingView extends Widget {
     
     public $id;
     
-    public $vos;
+    public $provider;
     
     public $currentSaldo;
     
@@ -21,11 +21,7 @@ class SellingView extends Widget {
     
     public function run() {
         return $this->render('selling-view',
-                ['id' => $this->id, 'vos' => $this->vos,
-                    'dailySaldo' => Currency::parse($this->countDailySaldo()),
-                    'productId' => $this->productId,
-                    'date' => $this->date,
-                    'currentSaldo' => $this->currentSaldo]);
+                ['id' => $this->id, 'provider' => $this->provider]);
         
     }
     

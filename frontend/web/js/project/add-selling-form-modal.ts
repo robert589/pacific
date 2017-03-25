@@ -24,4 +24,8 @@ export class AddSellingFormModal extends Modal{
     unbindEvent() {
         // no event to unbind
     }
+
+    setDate(date : string) {
+        this.form.setDate(date);
+    }
 }

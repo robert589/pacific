@@ -8,6 +8,7 @@
     
     <?=    InputField::widget(['id' => $id . '-input', 
         'type' => InputField::TEXT, 
+        'disabled' => $disabled,
         'placeholder' => $defaultValue]) ?>
     
     <div class="field-error app-hide">     

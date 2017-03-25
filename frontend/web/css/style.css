@@ -39,7 +39,6 @@ html {
     padding-top: 0;
     background: #455160;
     margin-left: 0;
-    height: 100%;
 }
 
 #sidebar {
@@ -202,7 +201,6 @@ a.account {
 	line-height: 16px;
 	color: #555;
 	position: absolute;
-	z-index: 110;
 	display: block;
 	padding: 0px 0 0 0px;
 	width: 64px;

@@ -16,13 +16,17 @@ class CurrencyField extends Widget {
     
     public $newClass;
     
+    public $disabled;
+    
     public function init() {
     
     }
     
     public function run() {
         return $this->render('currency-field', ['id' => $this->id,
-            'name' => $this->name, 'value' => $this->value, 'defaultValue' => $this->defaultValue,
+            'name' => $this->name, 'value' => $this->value, 
+            'defaultValue' => $this->defaultValue,
+            'disabled' => $this->disabled,
             'newClass' => $this->newClass]);
     }
 }

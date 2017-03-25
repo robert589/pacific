@@ -2,6 +2,7 @@
 namespace frontend\daos;
 
 use Yii;
+use frontend\vos\WarehouseVo;
 use frontend\vos\EntityVo;
 use common\components\Dao;
 use common\models\Selling;
@@ -11,16 +12,26 @@ use frontend\vos\SellingVo;
  */
 class SellingDao implements Dao
 {
-    const GET_DAILY_SELLING_VIEW = "SELECT selling_info.*, buyer.name as buyer_name
+    const GET_DAILY_SELLING_VIEW = "SELECT selling_info.*, 
+                                            buyer.name as buyer_name,
+                                            warehouse.name as warehouse_name,
+                                            product.name as product_name
                                     FROM (SELECT *
                                         from selling
                                         where selling.date = :date and 
                                               selling.status = :status) selling_info 
                                     LEFT JOIN entity buyer 
-                                    on buyer.id = selling_info.buyer_id";
+                                    on buyer.id = selling_info.buyer_id
+                                    LEFT JOIN entity warehouse
+                                    on warehouse.id = selling_info.warehouse_id
+                                    LEFT JOIN entity product
+                                    on product.id = selling_info.product_id";
     
     const GET_ALL_SELLINGS_IN_BETWEEN = "
-                SELECT selling_info.*, buyer.name as buyer_name
+                SELECT selling_info.*, 
+                       buyer.name as buyer_name,
+                    warehouse.name as warehouse_name,
+                    product.name as product_name
                 FROM (
                     SELECT * 
                     FROM `selling`
@@ -30,7 +41,11 @@ class SellingDao implements Dao
                     ORDER BY STR_TO_DATE(date, '%d/%m/%Y') ASC
                 ) selling_info
                 LEFT JOIN entity buyer
-                on buyer.id = selling_info.buyer_id;";
+                on buyer.id = selling_info.buyer_id
+                LEFT JOIN entity warehouse
+                on warehouse.id = selling_info.warehouse_id
+                LEFT JOIN entity product
+                on product.id = selling_info.product_id;";
     
     const GET_SELLING_INFO = "SELECT selling_info.*, buyer.name as buyer_name
                                 FROM (SELECT *
@@ -66,12 +81,7 @@ class SellingDao implements Dao
         
         $vos = [];
         foreach($results as $result) {
-            $builder = SellingVo::createBuilder();
-            $builder->loadData($result);
-            $buyerBuilder = EntityVo::createBuilder();
-            $buyerBuilder->loadData($result, "buyer");
-            $builder->setBuyer($buyerBuilder->build());
-            $vos[] = $builder->build();
+            $vos[] = $this->getSellingVoBuilder($result)->build();
         }
         
         return $vos;
@@ -87,16 +97,31 @@ class SellingDao implements Dao
         
         $vos = [];
         foreach($results as $result) {
-            $builder = SellingVo::createBuilder();
-            $builder->loadData($result);
-            $buyerBuilder = EntityVo::createBuilder();
-            $buyerBuilder->loadData($result, "buyer");
-            $builder->setBuyer($buyerBuilder->build());
-            $vos[] = $builder->build();
+            $vos[] = $this->getSellingVoBuilder($result)->build();
         }
         
         return $vos;
     }
     
+    
+    private function getSellingVoBuilder($result) {
+        $builder = SellingVo::createBuilder();
+        $builder->loadData($result);
+        
+        $buyerBuilder = EntityVo::createBuilder();
+        $buyerBuilder->loadData($result, "buyer");
+        $builder->setBuyer($buyerBuilder->build());
+        
+        $productBuilder = EntityVo::createBuilder();
+        $productBuilder->loadData($result, "product");
+        $builder->setProduct($productBuilder->build());
+        
+        $warehouseBuilder = WarehouseVo::createBuilder();
+        $warehouseBuilder->loadData($result, "warehouse");
+        $builder->setWarehouse($warehouseBuilder->build());
+
+        return $builder;
+
+    }
 }
 
