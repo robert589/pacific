@@ -105,8 +105,10 @@ AppAsset::register($this);
                                         'label' => 'Inventaris',
                                         'href' => '#',
                                         'items' => [
-                                            ['label' => 'Daftar Aset', 
+                                            ['label' => 'Daftar Inventori', 
                                              'href' => Yii::$app->request->baseUrl . "/inventory/index"],
+                                            ['label' => 'Daftar Aset',
+                                            'href' => Yii::$app->request->baseUrl . "/inventory/list-asset"],
                                             ['label' => 'Daftar Warehouse',
                                             'href' => Yii::$app->request->baseUrl . "/inventory/list-warehouse"]
                                         ]

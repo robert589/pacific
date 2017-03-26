@@ -2,6 +2,7 @@
 namespace frontend\controllers;
 
 use Yii;
+use frontend\models\AddAssetForm;
 use frontend\models\AddWarehouseForm;
 use frontend\services\InventoryService;
 use frontend\models\EditWarehouseForm;
@@ -20,6 +21,10 @@ class InventoryController extends Controller
         $this->service->user_id = \Yii::$app->user->getId();
     }
     
+    /**
+     * @Deprecated
+     * @return type
+     */
     public function actionInInventory() {
         $this->service->loadData($_POST);
         $data = [];
@@ -27,9 +32,28 @@ class InventoryController extends Controller
         $data['in'] = $this->service->isInventoryType() ? 1 : 0;
         $data['errors'] = $this->service->getErrors();
         return json_encode($data);
-        
-        
     }
+    
+    public function actionListAsset() {
+        $provider = $this->service->getAssetList();
+        
+        if(!$provider) {
+            return $this->redirect(['site/error']);
+        }
+        
+        return $this->render('list-asset', ['id' => 'ila', 'provider' => $provider]);
+    }
+    
+    public function actionPCreateAsset() {
+        $data = array();
+        $model = new AddAssetForm();
+        $model->user_id = \Yii::$app->user->getId();
+        $model->loadData($_POST);
+        $data['status'] = $model->add() ? 1 : 0;
+        $data['errors'] = $model->hasErrors() ? $model->getErrors() : null;
+        return json_encode($data);
+    }
+    
     /**
      * List Warehouse
      */

@@ -17,22 +17,18 @@
         ]) ?>   
         
     <div class="form-field">
-
         <?= InputField::widget(['id' => $id . '-code', 'placeholder' => 'Kode', 'name' => 'code']) ?>
     </div>
     <div class="form-field">
-    <?= InputField::widget(['id' => $id . '-name', 'placeholder' => 'Nama', 'name' => 'name']) ?>
+        <?= InputField::widget(['id' => $id . '-name', 'placeholder' => 'Nama', 'name' => 'name']) ?>
     </div>
 
     <div class="form-field">
-    <?= TextAreaField::widget(['id' => $id . '-desc', 'placeholder' => 'Keterangan', 'rows' => 3, 'name' => 'description']) ?>
+        <?= TextAreaField::widget(['id' => $id . '-desc', 'placeholder' => 'Keterangan', 'rows' => 3, 'name' => 'description']) ?>
     </div>
     <div class="form-field">
-    <?= SearchField::widget(['id' => $id . '-type-id', 'placeholder' => 'Cari Tipe', 
+        <?= SearchField::widget(['id' => $id . '-type-id', 'placeholder' => 'Cari Tipe', 
                 'url' => \Yii::$app->request->baseUrl . "/code/search-type", 'name' => 'type_id']) ?>
-    </div>
-    <div class="form-field">
-        <?= CheckboxField::widget(['id' => $id . '-in-inventory', 'name' => 'in_inventory', 'item' => 'In Inventory']) ?>
     </div>
     <?= Button::widget(['id' => $id . '-submit-btn' , 
         'text' => 'Add', 'newClass' => 'form-submit']) ?>

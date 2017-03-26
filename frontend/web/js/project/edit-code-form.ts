@@ -19,7 +19,6 @@ export class EditCodeForm extends Form{
 
     unitField : InputField;
 
-    inInventoryField : CheckboxField;
 
     constructor(root: HTMLElement) {
         super(root);
@@ -32,7 +31,7 @@ export class EditCodeForm extends Form{
         this.setRequiredField([this.nameField, this.typeIdField,
                             this.idField, this.codeField]);
         this.registerFields([this.nameField, this.descField, this.idField,
-            this.unitField, this.inInventoryField,
+            this.unitField, 
             this.typeIdField, this.codeField]);
     }
 
@@ -42,7 +41,6 @@ export class EditCodeForm extends Form{
         this.codeField = new InputField(document.getElementById(this.id + "-code"));
         this.typeIdField = new SearchField(document.getElementById(this.id + "-type-id"));
         this.nameField = new InputField(document.getElementById(this.id + "-name"));
-        this.inInventoryField = new CheckboxField(document.getElementById(this.id + "-in-inventory"));
         this.unitField = new InputField(document.getElementById(this.id + "-unit"));
         this.descField = new TextAreaField(document.getElementById(this.id + "-desc"));
     }

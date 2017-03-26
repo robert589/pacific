@@ -153,8 +153,17 @@ export abstract class Form extends Component {
         return <JSON> data;
     }
 
+    /**
+     * Can be overriden
+     */
+    protected beforeSubmit() {
+
+    }
+
     submit(e) {
         e.preventDefault();
+        
+        this.beforeSubmit();
         
         if(this.enableSubmit !== 0) {
             return false;

@@ -32,6 +32,7 @@ import {ListPurchase} from './list-purchase';
 import {AddWarehouse} from './add-warehouse';
 import {SystemSetting} from './system-setting';
 import {EditWarehouse} from './edit-warehouse';
+import {ListAsset} from './list-asset';
 
 export class App extends Component{
 
@@ -99,6 +100,8 @@ export class App extends Component{
 
     viewCode : ViewCode;
 
+    listAsset : ListAsset; 
+
     editWarehouse : EditWarehouse;
 
     systemSetting : SystemSetting;
@@ -117,7 +120,7 @@ export class App extends Component{
         } 
         else if(this.root.getElementsByClassName('create-owner').length !== 0) {
             this.createOwner = new CreateOwner(document.getElementById("oco"));
-        } 
+        }   
         else if(this.root.getElementsByClassName('list-owner').length !== 0) {
             this.listOwner = new ListOwner(document.getElementById("olo"));
         } 
@@ -147,6 +150,9 @@ export class App extends Component{
         }
         else if(this.root.getElementsByClassName('list-code').length !== 0) {
             this.listCode = new ListCode(document.getElementById("clc"));
+        }
+        else if(this.root.getElementsByClassName('list-asset').length !== 0) {
+            this.listAsset = new ListAsset(document.getElementById('ila'));
         }
         else if(this.root.getElementsByClassName('list-purchase').length !== 0) {
             this.listPurchase = new ListPurchase(document.getElementById("plp"));

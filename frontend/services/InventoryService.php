@@ -82,6 +82,30 @@ class InventoryService extends RService
         return $this->inventoryDao->searchWarehouse($query);
     }
     
+    public function getAssetList() {
+        if(!$this->validate()) {
+            return null;
+        }
+        $vos = $this->inventoryDao->getAssetList(NULL);
+        $models = [];
+        $model = [];
+        foreach($vos as $vo) {
+            $model['code'] = $vo->getEntity()->getCode();
+            $model['name'] = $vo->getEntity()->getName();
+            $model['method'] = $vo->getMethod();
+            $model['fixed_asset'] => $vo->isFixedAsset();
+            $model['total'] = $vo->getTotal();
+            $models[] = $model;
+        }
+        return new ArrayDataProvider([
+            'allModels' => $models,
+            'pagination' => [
+                'pageSize' => 10
+            ]
+        ]);
+        
+    }
+    
     public function getInventoryList() {
         if(!$this->validate()) {
             return null;

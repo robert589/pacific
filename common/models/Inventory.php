@@ -12,10 +12,7 @@ class Inventory extends ActiveRecord
     const STATUS_ACTIVE = 10;
     
     const STATUS_DELETED = 0;
-    
-    const FIFO_TYPE = 1;
-    
-    const LIFO_TYPE = 2;    
+     
     
     public static function tableName()
     {
@@ -41,13 +38,6 @@ class Inventory extends ActiveRecord
         ];
     }
     
-    public static function getType() {
-        return [
-            self::FIFO_TYPE => "FIFO",
-            self::LIFO_TYPE => "LIFO"
-        ];
-    }
-
     public static function add($entityId, $warehouseId, $quantity) {
         return Inventory::updateAllCounters(['quantity' => $quantity], 'warehouse_id=' . intval($warehouseId) .
                                                                             ' AND entity_id=' . intval($entityId));    

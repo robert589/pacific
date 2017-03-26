@@ -6,7 +6,7 @@
 ?>
 <div id="<?= $id ?>" class="list-inventory view">
     <div class="view-header">
-        Daftar Aset
+        Inventori
     </div>
     
     <?=  GridView::widget(
@@ -14,9 +14,7 @@
             'columns' => [
                 'product_name',
                 'warehouse_name',
-                'quantity',
-                'selling_place'
-
+                'quantity'
             ]
         ]); ?>
     

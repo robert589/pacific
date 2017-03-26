@@ -107,6 +107,11 @@ define("common/modal", ["require", "exports", "common/component", "common/button
             this.root.classList.add('modal-show');
             this.root.classList.remove('modal-hide');
         };
+        /**
+         * Can be overriden
+         */
+        Modal.prototype.beforeHide = function () {
+        };
         Modal.prototype.hide = function () {
             this.root.classList.add('modal-hide');
             this.root.classList.remove('modal-show');
@@ -606,8 +611,14 @@ define("common/form", ["require", "exports", "common/component", "common/system"
             }
             return data;
         };
+        /**
+         * Can be overriden
+         */
+        Form.prototype.beforeSubmit = function () {
+        };
         Form.prototype.submit = function (e) {
             e.preventDefault();
+            this.beforeSubmit();
             if (this.enableSubmit !== 0) {
                 return false;
             }
@@ -2655,39 +2666,7 @@ define("project/create-code-type", ["require", "exports", "common/component", "p
     }(component_25.Component));
     exports.CreateCodeType = CreateCodeType;
 });
-define("common/checkbox-field", ["require", "exports", "common/Field"], function (require, exports, Field_5) {
-    "use strict";
-    var CheckboxField = (function (_super) {
-        __extends(CheckboxField, _super);
-        function CheckboxField(root) {
-            return _super.call(this, root) || this;
-        }
-        Object.defineProperty(CheckboxField, "CHECKBOX_FIELD_CHANGE_VALUE", {
-            get: function () { return "CHECKBOX_FIELD_CHANGE_VALUE"; },
-            enumerable: true,
-            configurable: true
-        });
-        CheckboxField.prototype.decorate = function () {
-            _super.prototype.decorate.call(this);
-            this.inputElement = this.root.getElementsByClassName('checkbox-field-item')[0];
-        };
-        CheckboxField.prototype.bindEvent = function () {
-            this.changeValueEvent = new CustomEvent(CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE);
-            this.inputElement.addEventListener('change', function (data) {
-                this.root.dispatchEvent(this.changeValueEvent);
-            }.bind(this));
-        };
-        CheckboxField.prototype.detach = function () {
-            this.inputElement = null;
-        };
-        CheckboxField.prototype.getValue = function () {
-            return this.inputElement.checked ? 1 : 0;
-        };
-        return CheckboxField;
-    }(Field_5.Field));
-    exports.CheckboxField = CheckboxField;
-});
-define("project/create-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system", "common/checkbox-field"], function (require, exports, form_9, input_field_13, text_area_field_4, search_field_6, system_20, checkbox_field_1) {
+define("project/create-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system"], function (require, exports, form_9, input_field_13, text_area_field_4, search_field_6, system_20) {
     "use strict";
     var CreateCodeForm = (function (_super) {
         __extends(CreateCodeForm, _super);
@@ -2701,7 +2680,6 @@ define("project/create-code-form", ["require", "exports", "common/form", "common
         CreateCodeForm.prototype.rules = function () {
             this.setRequiredField([this.nameField, this.typeIdField, this.codeField]);
             this.registerFields([this.nameField, this.descField, this.typeIdField,
-                this.inInventoryField,
                 this.codeField]);
         };
         CreateCodeForm.prototype.decorate = function () {
@@ -2710,7 +2688,6 @@ define("project/create-code-form", ["require", "exports", "common/form", "common
             this.typeIdField = new search_field_6.SearchField(document.getElementById(this.id + "-type-id"));
             this.nameField = new input_field_13.InputField(document.getElementById(this.id + "-name"));
             this.descField = new text_area_field_4.TextAreaField(document.getElementById(this.id + "-desc"));
-            this.inInventoryField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-in-inventory"));
         };
         CreateCodeForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
@@ -2970,7 +2947,39 @@ define("project/daily-transaction", ["require", "exports", "common/component", "
     }(component_29.Component));
     exports.DailyTransaction = DailyTransaction;
 });
-define("project/custom-transaction-form", ["require", "exports", "common/form", "common/search-field", "common/input-field", "common/checkbox-field"], function (require, exports, form_11, search_field_8, input_field_16, checkbox_field_2) {
+define("common/checkbox-field", ["require", "exports", "common/Field"], function (require, exports, Field_5) {
+    "use strict";
+    var CheckboxField = (function (_super) {
+        __extends(CheckboxField, _super);
+        function CheckboxField(root) {
+            return _super.call(this, root) || this;
+        }
+        Object.defineProperty(CheckboxField, "CHECKBOX_FIELD_CHANGE_VALUE", {
+            get: function () { return "CHECKBOX_FIELD_CHANGE_VALUE"; },
+            enumerable: true,
+            configurable: true
+        });
+        CheckboxField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.inputElement = this.root.getElementsByClassName('checkbox-field-item')[0];
+        };
+        CheckboxField.prototype.bindEvent = function () {
+            this.changeValueEvent = new CustomEvent(CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE);
+            this.inputElement.addEventListener('change', function (data) {
+                this.root.dispatchEvent(this.changeValueEvent);
+            }.bind(this));
+        };
+        CheckboxField.prototype.detach = function () {
+            this.inputElement = null;
+        };
+        CheckboxField.prototype.getValue = function () {
+            return this.inputElement.checked ? 1 : 0;
+        };
+        return CheckboxField;
+    }(Field_5.Field));
+    exports.CheckboxField = CheckboxField;
+});
+define("project/custom-transaction-form", ["require", "exports", "common/form", "common/search-field", "common/input-field", "common/checkbox-field"], function (require, exports, form_11, search_field_8, input_field_16, checkbox_field_1) {
     "use strict";
     var CustomTransactionForm = (function (_super) {
         __extends(CustomTransactionForm, _super);
@@ -3001,21 +3010,21 @@ define("project/custom-transaction-form", ["require", "exports", "common/form", 
             this.code = new search_field_8.SearchField(document.getElementById(this.id + "-code"));
             this.from = new input_field_16.InputField(document.getElementById(this.id + "-from"));
             this.to = new input_field_16.InputField(document.getElementById(this.id + "-to"));
-            this.showCodeField = new checkbox_field_2.CheckboxField(document.getElementById(this.id + "-show-code"));
-            this.showSaldoField = new checkbox_field_2.CheckboxField(document.getElementById(this.id + "-show-saldo"));
-            this.showDateField = new checkbox_field_2.CheckboxField(document.getElementById(this.id + "-show-date"));
-            this.showRemarkField = new checkbox_field_2.CheckboxField(document.getElementById(this.id + "-show-remark"));
-            this.showCreditField = new checkbox_field_2.CheckboxField(document.getElementById(this.id + "-show-credit"));
-            this.showDebetField = new checkbox_field_2.CheckboxField(document.getElementById(this.id + "-show-debet"));
+            this.showCodeField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-code"));
+            this.showSaldoField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-saldo"));
+            this.showDateField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-date"));
+            this.showRemarkField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-remark"));
+            this.showCreditField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-credit"));
+            this.showDebetField = new checkbox_field_1.CheckboxField(document.getElementById(this.id + "-show-debet"));
         };
         CustomTransactionForm.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            this.showCodeField.attachEvent(checkbox_field_2.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
-            this.showSaldoField.attachEvent(checkbox_field_2.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
-            this.showDateField.attachEvent(checkbox_field_2.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
-            this.showRemarkField.attachEvent(checkbox_field_2.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
-            this.showDebetField.attachEvent(checkbox_field_2.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
-            this.showCreditField.attachEvent(checkbox_field_2.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+            this.showCodeField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+            this.showSaldoField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+            this.showDateField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+            this.showRemarkField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+            this.showDebetField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
+            this.showCreditField.attachEvent(checkbox_field_1.CheckboxField.CHECKBOX_FIELD_CHANGE_VALUE, this.refreshSubmit.bind(this));
         };
         CustomTransactionForm.prototype.refreshSubmit = function (e) {
             if (this.validate(false)) {
@@ -3565,7 +3574,7 @@ define("project/list-user", ["require", "exports", "common/component", "common/s
     }(component_37.Component));
     exports.ListUser = ListUser;
 });
-define("project/edit-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system", "common/checkbox-field"], function (require, exports, form_17, input_field_22, text_area_field_6, search_field_11, system_27, checkbox_field_3) {
+define("project/edit-code-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/search-field", "common/system"], function (require, exports, form_17, input_field_22, text_area_field_6, search_field_11, system_27) {
     "use strict";
     var EditCodeForm = (function (_super) {
         __extends(EditCodeForm, _super);
@@ -3580,7 +3589,7 @@ define("project/edit-code-form", ["require", "exports", "common/form", "common/i
             this.setRequiredField([this.nameField, this.typeIdField,
                 this.idField, this.codeField]);
             this.registerFields([this.nameField, this.descField, this.idField,
-                this.unitField, this.inInventoryField,
+                this.unitField,
                 this.typeIdField, this.codeField]);
         };
         EditCodeForm.prototype.decorate = function () {
@@ -3589,7 +3598,6 @@ define("project/edit-code-form", ["require", "exports", "common/form", "common/i
             this.codeField = new input_field_22.InputField(document.getElementById(this.id + "-code"));
             this.typeIdField = new search_field_11.SearchField(document.getElementById(this.id + "-type-id"));
             this.nameField = new input_field_22.InputField(document.getElementById(this.id + "-name"));
-            this.inInventoryField = new checkbox_field_3.CheckboxField(document.getElementById(this.id + "-in-inventory"));
             this.unitField = new input_field_22.InputField(document.getElementById(this.id + "-unit"));
             this.descField = new text_area_field_6.TextAreaField(document.getElementById(this.id + "-desc"));
         };
@@ -4286,7 +4294,7 @@ define("project/system-setting", ["require", "exports", "common/component"], fun
     }(component_47.Component));
     exports.SystemSetting = SystemSetting;
 });
-define("project/edit-warehouse-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system", "common/checkbox-field"], function (require, exports, form_25, input_field_30, text_area_field_10, system_36, checkbox_field_4) {
+define("project/edit-warehouse-form", ["require", "exports", "common/form", "common/input-field", "common/text-area-field", "common/system", "common/checkbox-field"], function (require, exports, form_25, input_field_30, text_area_field_10, system_36, checkbox_field_2) {
     "use strict";
     var EditWarehouseForm = (function (_super) {
         __extends(EditWarehouseForm, _super);
@@ -4309,7 +4317,7 @@ define("project/edit-warehouse-form", ["require", "exports", "common/form", "com
             this.locationField = new text_area_field_10.TextAreaField(document.getElementById(this.id + "-location"));
             this.idField = new input_field_30.InputField(document.getElementById(this.id + "-id"));
             this.nameField = new input_field_30.InputField(document.getElementById(this.id + "-name"));
-            this.sellingPlaceField = new checkbox_field_4.CheckboxField(document.getElementById(this.id + "-selling-place"));
+            this.sellingPlaceField = new checkbox_field_2.CheckboxField(document.getElementById(this.id + "-selling-place"));
             this.descField = new text_area_field_10.TextAreaField(document.getElementById(this.id + "-desc"));
         };
         EditWarehouseForm.prototype.bindEvent = function () {
@@ -4349,7 +4357,216 @@ define("project/edit-warehouse", ["require", "exports", "common/component", "pro
     }(component_48.Component));
     exports.EditWarehouse = EditWarehouse;
 });
-define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role", "project/list-warehouse", "project/list-purchase", "project/add-warehouse", "project/system-setting", "project/edit-warehouse"], function (require, exports, component_49, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_37, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1, list_warehouse_1, list_purchase_1, add_warehouse_1, system_setting_1, edit_warehouse_1) {
+define("common/dropdown-field", ["require", "exports", "common/Field", "common/input-field", "common/system"], function (require, exports, field_2, input_field_31, system_37) {
+    "use strict";
+    var DropdownField = (function (_super) {
+        __extends(DropdownField, _super);
+        function DropdownField(root) {
+            var _this = _super.call(this, root) || this;
+            _this.initValue();
+            return _this;
+        }
+        Object.defineProperty(DropdownField, "CHANGE_VALUE", {
+            get: function () { return "DROPDOWN_FIELD_CHANGED_VALUE"; },
+            enumerable: true,
+            configurable: true
+        });
+        DropdownField.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.upIcon = this.root.getElementsByClassName('dropdown-field-down')[0];
+            this.downIcon = this.root.getElementsByClassName('dropdown-field-up')[0];
+            this.dropdown = this.root.getElementsByClassName('dropdown-field-dropdown')[0];
+            this.inputArea = this.root.getElementsByClassName('dropdown-field-input')[0];
+            this.placeholderElement = this.root.getElementsByClassName('dropdown-field-placeholder')[0];
+            this.textElement = this.root.getElementsByClassName('dropdown-field-text')[0];
+            this.dropdowns = [];
+            var rawDropdowns = this.root.getElementsByClassName('dropdown-field-item');
+            for (var i = 0; i < rawDropdowns.length; i++) {
+                this.dropdowns.push(rawDropdowns.item(i));
+            }
+            this.inputElement = new input_field_31.InputField(document.getElementById(this.id + "-input"));
+        };
+        DropdownField.prototype.initValue = function () {
+            var index = this.root.getAttribute('data-index');
+            if (!system_37.System.isEmptyValue(index)) {
+                var text = this.root.getAttribute('data-text');
+                if (system_37.System.isEmptyValue(text)) {
+                    text = this.findTextFromIndex(index);
+                }
+                this.setValue(text, index);
+            }
+        };
+        DropdownField.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+            this.changedValueEvent = new CustomEvent(DropdownField.CHANGE_VALUE);
+            this.inputArea.addEventListener('click', this.toggleDropdown.bind(this));
+            for (var i = 0; i < this.dropdowns.length; i++) {
+                this.dropdowns[i].addEventListener('click', this.clickDropdownItem.bind(this));
+            }
+        };
+        DropdownField.prototype.findTextFromIndex = function (targetIndex) {
+            for (var i = 0; i < this.dropdowns.length; i++) {
+                var index = this.dropdowns[i].getAttribute('data-index');
+                if (index === targetIndex) {
+                    return this.dropdowns[i].innerHTML;
+                }
+            }
+            return null;
+        };
+        DropdownField.prototype.clickDropdownItem = function (e) {
+            var element = e.target;
+            var index = element.getAttribute('data-index');
+            var text = element.innerHTML;
+            this.hideDropdown();
+            this.setValue(text, index);
+        };
+        DropdownField.prototype.setValue = function (text, index) {
+            this.inputElement.setValue(index);
+            this.textElement.innerHTML = text;
+            this.placeholderElement.classList.add('app-hide');
+            this.textElement.classList.remove('app-hide');
+            //release Event
+            this.root.dispatchEvent(this.changedValueEvent);
+        };
+        DropdownField.prototype.toggleDropdown = function () {
+            if (this.dropdown.classList.contains('app-hide')) {
+                this.showDropdown();
+            }
+            else {
+                this.hideDropdown();
+            }
+        };
+        DropdownField.prototype.hideDropdown = function () {
+            this.dropdown.classList.add('app-hide');
+            this.downIcon.classList.add('app-hide');
+            this.upIcon.classList.remove('app-hide');
+        };
+        DropdownField.prototype.showDropdown = function () {
+            this.downIcon.classList.remove('app-hide');
+            this.upIcon.classList.add('app-hide');
+            this.dropdown.classList.remove('app-hide');
+        };
+        DropdownField.prototype.getValue = function () {
+            return this.inputElement.getValue();
+        };
+        DropdownField.prototype.disable = function () {
+            this.inputElement.disable();
+        };
+        DropdownField.prototype.enable = function () {
+            this.inputElement.enable();
+        };
+        return DropdownField;
+    }(field_2.Field));
+    exports.DropdownField = DropdownField;
+});
+define("project/add-asset-form", ["require", "exports", "common/form", "common/dropdown-field", "common/input-field", "common/search-field", "common/text-area-field", "common/checkbox-field"], function (require, exports, form_26, dropdown_field_1, input_field_32, search_field_15, text_area_field_11, checkbox_field_3) {
+    "use strict";
+    var AddAssetForm = (function (_super) {
+        __extends(AddAssetForm, _super);
+        function AddAssetForm(root) {
+            var _this = _super.call(this, root) || this;
+            _this.successCb = _this.successCallback;
+            _this.failCb = _this.failCallback;
+            return _this;
+        }
+        AddAssetForm.prototype.rules = function () {
+            this.registerFields([this.codeField, this.nameField, this.fixedAssetField,
+                this.descField, this.typeField, this.methodField]);
+            this.setRequiredField([this.codeField, this.nameField,
+                this.typeField, this.methodField]);
+        };
+        AddAssetForm.prototype.setStatus = function (status) {
+            this.statusEl.innerHTML = status;
+        };
+        AddAssetForm.prototype.failCallback = function () {
+            this.setStatus("Error!");
+        };
+        AddAssetForm.prototype.successCallback = function (data) {
+            this.typeField.reset();
+            this.codeField.setValue("");
+            this.nameField.setValue("");
+            this.descField.resetValue();
+            this.setStatus("Success");
+        };
+        AddAssetForm.prototype.beforeSubmit = function () {
+            this.setStatus("");
+        };
+        AddAssetForm.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.codeField = new input_field_32.InputField(document.getElementById(this.id + "-code"));
+            this.nameField = new input_field_32.InputField(document.getElementById(this.id + "-name"));
+            this.descField = new text_area_field_11.TextAreaField(document.getElementById(this.id + "-desc"));
+            this.fixedAssetField = new checkbox_field_3.CheckboxField(document.getElementById(this.id + "-fixed-asset"));
+            this.statusEl = this.root.getElementsByClassName('asset-form-status')[0];
+            this.typeField = new search_field_15.SearchField(document.getElementById(this.id + "-type-id"));
+            this.methodField = new dropdown_field_1.DropdownField(document.getElementById(this.id + "-method"));
+        };
+        AddAssetForm.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddAssetForm.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddAssetForm.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddAssetForm;
+    }(form_26.Form));
+    exports.AddAssetForm = AddAssetForm;
+});
+define("project/add-asset-form-modal", ["require", "exports", "common/modal", "project/add-asset-form"], function (require, exports, modal_4, add_asset_form_1) {
+    "use strict";
+    var AddAssetFormModal = (function (_super) {
+        __extends(AddAssetFormModal, _super);
+        function AddAssetFormModal(root) {
+            return _super.call(this, root) || this;
+        }
+        AddAssetFormModal.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.form = new add_asset_form_1.AddAssetForm(document.getElementById(this.id + "-form"));
+        };
+        AddAssetFormModal.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        AddAssetFormModal.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        AddAssetFormModal.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return AddAssetFormModal;
+    }(modal_4.Modal));
+    exports.AddAssetFormModal = AddAssetFormModal;
+});
+define("project/list-asset", ["require", "exports", "common/component", "project/add-asset-form-modal", "common/button"], function (require, exports, component_49, add_asset_form_modal_1, button_25) {
+    "use strict";
+    var ListAsset = (function (_super) {
+        __extends(ListAsset, _super);
+        function ListAsset(root) {
+            return _super.call(this, root) || this;
+        }
+        ListAsset.prototype.decorate = function () {
+            _super.prototype.decorate.call(this);
+            this.asfModal = new add_asset_form_modal_1.AddAssetFormModal(document.getElementById(this.id + "-modal"));
+            this.triggerAsfModalBtn = new button_25.Button(document.getElementById(this.id + "-triggerasf-modal"), this.triggerAsfModal.bind(this));
+        };
+        ListAsset.prototype.triggerAsfModal = function () {
+            this.asfModal.show();
+        };
+        ListAsset.prototype.bindEvent = function () {
+            _super.prototype.bindEvent.call(this);
+        };
+        ListAsset.prototype.detach = function () {
+            _super.prototype.detach.call(this);
+        };
+        ListAsset.prototype.unbindEvent = function () {
+            // no event to unbind
+        };
+        return ListAsset;
+    }(component_49.Component));
+    exports.ListAsset = ListAsset;
+});
+define("project/app", ["require", "exports", "common/component", "project/login", "project/create-owner", "project/list-owner", "project/create-ship", "project/list-ship", "project/ship-ownership", "project/daily-report", "project/custom-report", "common/system", "project/daily-selling", "project/custom-selling", "project/list-code", "project/list-code-type", "project/create-code-type", "project/create-code", "project/daily-transaction", "project/custom-transaction", "project/change-password", "project/assign-code-to-ship", "project/edit-ship", "project/add-entity-relation", "project/list-user", "project/edit-code", "project/edit-code-type", "project/add-user", "project/list-role", "project/view-code", "project/add-role", "project/list-warehouse", "project/list-purchase", "project/add-warehouse", "project/system-setting", "project/edit-warehouse", "project/list-asset"], function (require, exports, component_50, login_1, create_owner_1, list_owner_1, create_ship_1, list_ship_1, ship_ownership_1, daily_report_1, custom_report_1, system_38, daily_selling_1, custom_selling_1, list_code_1, list_code_type_1, create_code_type_1, create_code_1, daily_transaction_1, custom_transaction_1, change_password_1, assign_code_to_ship_1, edit_ship_1, add_entity_relation_1, list_user_1, edit_code_1, edit_code_type_1, add_user_1, list_role_1, view_code_1, add_role_1, list_warehouse_1, list_purchase_1, add_warehouse_1, system_setting_1, edit_warehouse_1, list_asset_1) {
     "use strict";
     var App = (function (_super) {
         __extends(App, _super);
@@ -4397,6 +4614,9 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             }
             else if (this.root.getElementsByClassName('list-code').length !== 0) {
                 this.listCode = new list_code_1.ListCode(document.getElementById("clc"));
+            }
+            else if (this.root.getElementsByClassName('list-asset').length !== 0) {
+                this.listAsset = new list_asset_1.ListAsset(document.getElementById('ila'));
             }
             else if (this.root.getElementsByClassName('list-purchase').length !== 0) {
                 this.listPurchase = new list_purchase_1.ListPurchase(document.getElementById("plp"));
@@ -4471,7 +4691,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
         };
         App.prototype.bindEvent = function () {
             _super.prototype.bindEvent.call(this);
-            if (!system_37.System.isEmptyValue(this.hamburgerIcon)) {
+            if (!system_38.System.isEmptyValue(this.hamburgerIcon)) {
                 this.hamburgerIcon.addEventListener('click', this.toggleLeftSide.bind(this));
             }
         };
@@ -4482,7 +4702,7 @@ define("project/app", ["require", "exports", "common/component", "project/login"
             // no event to unbind
         };
         return App;
-    }(component_49.Component));
+    }(component_50.Component));
     exports.App = App;
 });
 define("project/init", ["require", "exports", "project/app"], function (require, exports, app_1) {

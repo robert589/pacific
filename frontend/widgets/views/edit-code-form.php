@@ -44,11 +44,6 @@
                     'value' => $vo->getEntitySellingUnitVo()->getUnit(), 'name' => 'unit']) ?>
     </div>
 
-    <div class="form-field">
-        <?=     CheckboxField::widget(['id' => $id . '-in-inventory', 'item' => 'In Inventory', 
-                    'checked' => $vo->inInventory(), 'name' => 'in_inventory']) ?>
-    </div>
-
     <?= InputField::widget(['id' => $id . '-id', 'placeholder' => 'Kode',     
             'value' => $vo->getId(), 'type' => InputField::HIDDEN,
             'name' => 'id']) ?>

@@ -15,6 +15,13 @@ export abstract class Modal extends Component {
         this.root.classList.remove('modal-hide');
     }
     
+    /**
+     * Can be overriden
+     */
+    protected beforeHide() {
+
+    }
+
     public hide() {
         this.root.classList.add('modal-hide');
         this.root.classList.remove('modal-show');

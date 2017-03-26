@@ -28,6 +28,8 @@ input[type=checkbox]{margin:4px 4px 0 0}
 
 .ac-role-header{margin-bottom:16px;font-size:16px;font-weight:700}
 
+.asset-form-status{display:inline-block;margin-top:4px;font-weight:700}
+
 
 
 
@@ -106,6 +108,7 @@ input[type=checkbox]{margin:4px 4px 0 0}
 .daily-transact-header{display:-ms-flexbox;display:flex}.daily-transact-header>.input-field{width:300px;margin-bottom:8px}.daily-transact-refresh{max-width:120px;margin-bottom:8px;margin-left:8px}
 
 .dynamic-wfield{max-width:500px}
+
 
 
 

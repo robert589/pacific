@@ -2,6 +2,7 @@
 namespace frontend\daos;
 
 use Yii;
+use frontend\vos\AssetVo;
 use common\models\Entity;
 use frontend\vos\EntityVo;
 use frontend\vos\WarehouseVo;
@@ -36,6 +37,11 @@ class InventoryDao implements Dao
                                 where warehouse.id = entity_warehouse.id and
                                     asset.id = inventory.entity_id and 
                                     inventory.warehouse_id = warehouse.id";
+    
+    const GET_ASSET_LIST = "select entity.*, asset.method as asset_method
+                            from asset, entity
+                            where asset.id = entity.id and
+                                entity.status = IFNULL(:status, entity.status)";
     
     const SEARCH_WAREHOUSE = "select warehouse.location as warehouse_location,
                                     warehouse.id as warehouse_id, 
@@ -74,6 +80,32 @@ class InventoryDao implements Dao
         }
         
         return $this->buildWarehouseVoBuilder($result)->build();
+    }
+    
+    public function getAssetList() {
+        $results = \Yii::$app->db
+            ->createCommand(self::GET_ASSET_LIST)
+            ->bindParam(':status', $status)
+            ->queryAll();
+        
+        $vos = [];
+        
+        foreach($results  as $result) {
+            $vos[] = $this->getAssetBuilder($result)->build();
+        }
+        return $vos;
+        
+    }
+    
+    private function getAssetBuilder($result) {
+        $builder = AssetVo::createBuilder();
+        $builder->loadData($result, "asset");
+        
+        $entityBuilder = EntityVo::createBuilder();
+        $entityBuilder->loadData($result);
+        $builder->setEntity($entityBuilder->build());
+        
+        return $builder;
     }
     
     public function getInventoryList() {

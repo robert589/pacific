@@ -28,6 +28,7 @@ class Modal extends Widget {
         if($this->size === null) {
             $this->size = self::SIZE_SMALL;
         }
+        
         return $this->render('modal', ['id' => $this->id, 'newClass' => $this->newClass,
             'title' => $this->title, 'content' => $content, 'size' => $this->size]);
     }
