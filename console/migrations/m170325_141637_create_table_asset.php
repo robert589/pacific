@@ -10,8 +10,7 @@ class m170325_141637_create_table_asset extends Migration
             id int not null primary key,
             method int not null,
             created_at int not null,
-            updated_at int not null,
-            foreign key(id) references asset(id))");
+            updated_at int not null)");
     }
 
     public function down()
