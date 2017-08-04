@@ -93,7 +93,7 @@ class InventoryService extends RService
             $model['code'] = $vo->getEntity()->getCode();
             $model['name'] = $vo->getEntity()->getName();
             $model['method'] = $vo->getMethod();
-            $model['fixed_asset'] => $vo->isFixedAsset();
+            $model['fixed_asset'] = $vo->isFixedAsset();
             $model['total'] = $vo->getTotal();
             $models[] = $model;
         }

@@ -4,7 +4,7 @@ namespace common\widgets;
 
 use Yii;
 
-class Button extends \yii\bootstrap\Widget
+class Button extends \yii\base\Widget
 {
     
     const BLUE_COLOR = "button-blue";

@@ -23,7 +23,7 @@ class TransactionController extends Controller
     private $codeService;
     
     public function init() {
-        SettingCache::get("ayam");
+//        SettingCache::get("ayam");
         
         $this->codeService = new CodeService();
         $this->codeService->user_id = Yii::$app->user->getId();
