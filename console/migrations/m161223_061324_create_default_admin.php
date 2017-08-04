@@ -11,7 +11,7 @@ class m161223_061324_create_default_admin extends Migration
         $model = new SignupForm();
         $model->first_name = "Admin";
         $model->last_name = "Pacific";
-        $model->email = "admin.pacific@justgivit.com";
+        $model->email = "yusdiedy@gmail.com";
         $model->password = "nC431Le3";
         $user = $model->signup();
         
