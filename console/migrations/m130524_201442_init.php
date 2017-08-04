@@ -5,8 +5,6 @@ class m130524_201442_init extends Migration
 {
     public function up()
     {   
-        $this->execute("  SET GLOBAL FOREIGN_KEY_CHECKS = 1;");
-        $this->execute("SET GLOBAL default_storage_engine=InnoDB;");
         $tableOptions = null;
         if ($this->db->driverName === 'mysql') {
             // http://stackoverflow.com/questions/766809/whats-the-difference-between-utf8-general-ci-and-utf8-unicode-ci
